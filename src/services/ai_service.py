@@ -250,60 +250,95 @@ class AIService:
         
         return content_data
     
-    def generate_image_ideas(self, topic: str, count: int = 5, image_context: Optional[str] = None) -> List[Dict[str, Any]]:
+    async def generate_image_ideas(self, topic: str, count: int = 3, context: Optional[str] = None) -> List[Dict[str, Any]]:
         """
         Generate image ideas for a topic
+        
+        Args:
+            topic: The topic to generate images for
+            count: Number of image ideas to generate
+            context: Optional context for image generation
+            
+        Returns:
+            List of image ideas with descriptions
         """
         try:
-            logger.info(f"Generating {count} image ideas for topic: {topic}")
-            
+            # Enhanced prompt for better image ideas
+            context_str = f"Context: {context}\n" if context else ""
             prompt = f"""
             Generate {count} creative image ideas for social media posts about: {topic}
+            {context_str}
             
-            Each idea should include:
-            - Visual concept
-            - Color scheme suggestions
-            - Style recommendations
-            - Text overlay suggestions (if any)
-            - Mood/atmosphere
+            For each image idea, provide:
+            - A detailed visual description (what the image should look like)
+            - The mood/emotion it should convey
+            - Color palette suggestions
+            - Style recommendations (modern, minimalist, bold, etc.)
             
-            {f"Additional context: {image_context}" if image_context else ""}
-            
-            IMPORTANT: Return ONLY valid JSON in this exact format:
-            {{
-                "ideas": [
-                    {{
-                        "title": "Image idea title",
-                        "description": "Detailed visual description",
-                        "colors": ["primary", "colors"],
-                        "style": "photographic",
-                        "text_overlay": "suggested text if any",
-                        "mood": "overall mood/atmosphere"
-                    }}
-                ]
-            }}
-            
-            Do not include any text before or after the JSON.
+            Format as JSON array with objects containing:
+            - "description": detailed visual description
+            - "mood": mood/emotion
+            - "colors": color palette
+            - "style": style recommendation
+            - "purpose": what this image achieves for the post
             """
             
-            response = self.client.generate_content(prompt)
-            response_text = self._get_response_text(response)
+            model = genai.GenerativeModel('gemini-2.5-flash')
+            response = await model.generate_content_async(prompt)
             
-            # Try to extract JSON from response
-            ideas_data = self._extract_json_from_response(response_text)
-            
-            if ideas_data and "ideas" in ideas_data:
-                ideas = ideas_data["ideas"]
-                logger.info(f"Generated {len(ideas)} image ideas")
-                return ideas
+            if response.text:
+                # Extract JSON from response
+                json_match = re.search(r'\[.*?\]', response.text, re.DOTALL)
+                if json_match:
+                    ideas = json.loads(json_match.group())
+                    # Validate and enhance ideas
+                    enhanced_ideas = []
+                    for idea in ideas:
+                        if 'description' in idea:
+                            # Enhance description with context preservation
+                            enhanced_idea = {
+                                'description': idea['description'],
+                                'mood': idea.get('mood', 'professional'),
+                                'colors': idea.get('colors', 'vibrant'),
+                                'style': idea.get('style', 'modern'),
+                                'purpose': idea.get('purpose', 'engagement'),
+                                'context': context or topic  # Preserve context
+                            }
+                            enhanced_ideas.append(enhanced_idea)
+                    
+                    logger.info(f"Generated {len(enhanced_ideas)} image ideas for topic: {topic}")
+                    return enhanced_ideas
+                else:
+                    # Fallback to simple ideas
+                    return [{
+                        'description': f'An engaging image about {topic}',
+                        'mood': 'professional',
+                        'colors': 'brand colors',
+                        'style': 'modern',
+                        'purpose': 'engagement',
+                        'context': context or topic
+                    }]
             else:
-                # Fallback
-                logger.warning("Failed to parse image ideas JSON, using enhanced fallback")
-                return self._create_fallback_image_ideas(response_text, topic, count)
+                return [{
+                    'description': f'An engaging image about {topic}',
+                    'mood': 'professional',
+                    'colors': 'brand colors',
+                    'style': 'modern',
+                    'purpose': 'engagement',
+                    'context': context or topic
+                }]
                 
         except Exception as e:
-            logger.error(f"Failed to generate image ideas: {e}")
-            return self._create_fallback_image_ideas("", topic, count)
+            logger.error(f"Error generating image ideas: {e}")
+            # Return fallback ideas with context preservation
+            return [{
+                'description': f'A professional image about {topic}',
+                'mood': 'professional',
+                'colors': 'neutral',
+                'style': 'clean',
+                'purpose': 'engagement',
+                'context': context or topic
+            }]
     
     def _create_fallback_image_ideas(self, response_text: str, topic: str, count: int) -> List[Dict[str, Any]]:
         """
@@ -495,3 +530,80 @@ class AIService:
             improvements.append("Content looks good as is")
             
         return improvements
+    
+    async def generate_image(self, prompt: str) -> str:
+        """
+        Generate an image from text prompt using Gemini API
+        
+        Args:
+            prompt: Text description of the image to generate
+            
+        Returns:
+            URL of the generated image
+        """
+        try:
+            logger.info(f"Generating image from prompt: {prompt[:50]}...")
+            
+            # Use the existing image generation service
+            from .image_gen import ImageGenerationService
+            image_service = ImageGenerationService()
+            
+            # Generate image
+            image_data = await image_service.generate_image_from_text_async(
+                prompt=prompt,
+                size="1024x1024",
+                quality="high",
+                style="photorealistic"
+            )
+            
+            if image_data and image_data.get("image_url"):
+                logger.info(f"Image generated successfully: {image_data['image_url']}")
+                return image_data["image_url"]
+            else:
+                logger.error("Image generation failed - no image URL returned")
+                raise Exception("Image generation failed")
+                
+        except Exception as e:
+            logger.error(f"Failed to generate image: {e}")
+            raise Exception(f"Image generation failed: {str(e)}")
+    
+    async def generate_content(self, prompt: str, platform: str = "general") -> str:
+        """
+        Generate text content from prompt using Gemini API
+        
+        Args:
+            prompt: Text prompt for content generation
+            platform: Target platform for content optimization
+            
+        Returns:
+            Generated text content
+        """
+        try:
+            logger.info(f"Generating content from prompt: {prompt[:50]}...")
+            
+            # Add platform-specific context if provided
+            platform_context = f"""
+            Generate content optimized for {platform}:
+            - Keep it engaging and platform-appropriate
+            - Use {platform}-specific formatting and style
+            - Make it shareable and interactive
+            """ if platform != "general" else ""
+            
+            full_prompt = f"""
+            {prompt}
+            
+            {platform_context}
+            
+            Generate high-quality, engaging content based on the above requirements.
+            Return only the generated content without any additional text or formatting.
+            """
+            
+            response = self.client.generate_content(full_prompt)
+            response_text = self._get_response_text(response)
+            
+            logger.info(f"Content generated successfully: {len(response_text)} characters")
+            return response_text.strip()
+            
+        except Exception as e:
+            logger.error(f"Failed to generate content: {e}")
+            raise Exception(f"Content generation failed: {str(e)}")

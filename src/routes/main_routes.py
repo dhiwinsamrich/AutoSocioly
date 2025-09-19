@@ -7,6 +7,7 @@ import asyncio
 
 from ..models import ContentRequest, PostRequest
 from ..services import APIService
+from ..services.ai_service import AIService
 from ..utils.logger_config import get_logger
 
 logger = get_logger(__name__)
@@ -50,7 +51,7 @@ async def create_content_api(
             caption_length=caption_length,
             hashtag_count=hashtag_count,
             image_context=image_context,
-        generate_variants=generate_variants
+            generate_variants=generate_variants
         )
         
         logger.info(f"Creating content for workflow {workflow_id}", extra={
@@ -90,6 +91,8 @@ async def create_content_api(
             "tone": tone,
             "content": platform_content,
             "image_url": first_image_url,
+            "original_image_url": first_image_url,  # Store original image separately
+            "generated_images": generated_images,  # Store all generated images
             "analytics": performance_analysis
         }
         
@@ -119,6 +122,197 @@ async def create_content_api(
             "error": str(e),
             "message": "Failed to create content"
         }, status_code=500)
+
+@router.post("/edit-content")
+async def edit_content_api(
+    workflow_id: str = Form(...),
+    platform: str = Form(...),
+    content_type: str = Form(...),  # 'caption' or 'hashtags'
+    new_content: str = Form(...)
+):
+    """Edit content (caption or hashtags) for a specific platform"""
+    try:
+        logger.info(f"Editing {content_type} for workflow {workflow_id}, platform {platform}")
+        
+        # Check if workflow exists
+        if workflow_id not in active_workflows:
+            raise HTTPException(status_code=404, detail="Workflow not found")
+        
+        # Initialize AI service for content generation
+        ai_service = AIService()
+        
+        # Get current content
+        workflow_data = active_workflows[workflow_id]
+        current_content = workflow_data["content"].get(platform, {})
+        
+        if content_type == "caption":
+            # Generate new caption based on user input
+            enhanced_prompt = f"""
+            Original topic: {workflow_data['topic']}
+            Platform: {platform}
+            Current caption: {current_content.get('caption', '')}
+            User request: {new_content}
+            
+            Please generate a new caption based on the user's requirements.
+            Keep the same tone ({workflow_data['tone']}) and optimize for {platform}.
+            """
+            
+            new_caption = await ai_service.generate_content(enhanced_prompt, platform)
+            
+            # Update content
+            current_content["caption"] = new_caption
+            current_content["character_count"] = len(new_caption)
+            
+        elif content_type == "hashtags":
+            # Generate new hashtags based on user input
+            enhanced_prompt = f"""
+            Original topic: {workflow_data['topic']}
+            Platform: {platform}
+            Current hashtags: {current_content.get('hashtags', [])}
+            User request: {new_content}
+            
+            Please generate new hashtags based on the user's requirements.
+            Provide {workflow_data.get('hashtag_count', 10)} relevant hashtags for {platform}.
+            Return only the hashtags as a comma-separated list.
+            """
+            
+            hashtag_response = await ai_service.generate_content(enhanced_prompt, platform)
+            new_hashtags = [tag.strip() for tag in hashtag_response.split(',') if tag.strip()]
+            
+            # Update content
+            current_content["hashtags"] = new_hashtags
+        
+        # Update workflow data
+        workflow_data["content"][platform] = current_content
+        
+        logger.info(f"Successfully edited {content_type} for workflow {workflow_id}")
+        
+        return JSONResponse({
+            "success": True,
+            "message": f"{content_type.capitalize()} updated successfully!",
+            "updated_content": current_content
+        })
+        
+    except Exception as e:
+        logger.error(f"Error editing content: {str(e)}", exc_info=True)
+        return JSONResponse({
+            "success": False,
+            "error": str(e),
+            "message": f"Failed to edit {content_type}"
+        }, status_code=500)
+
+@router.post("/regenerate-image")
+async def regenerate_image_api(request: Request):
+    """
+    Regenerate a single image based on user prompt and original image context
+    """
+    try:
+        data = await request.json()
+        workflow_id = data.get("workflow_id")
+        prompt = data.get("prompt")
+        original_image_url = data.get("original_image_url")
+        preserve_context = data.get("preserve_context", True)
+        
+        if not workflow_id or not prompt:
+            raise HTTPException(status_code=400, detail="Workflow ID and prompt are required")
+        
+        # Check if workflow exists
+        if workflow_id not in active_workflows:
+            raise HTTPException(status_code=404, detail="Workflow not found")
+        
+        # Get current workflow data
+        workflow_data = active_workflows[workflow_id]
+        
+        # Use the workflow service to regenerate image with context preservation
+        from ..services.workflow_service import SocialMediaWorkflow
+        workflow = SocialMediaWorkflow()
+        
+        result = await workflow.regenerate_image_with_prompt(
+            content_id=workflow_id,
+            new_prompt=prompt,
+            preserve_context=preserve_context
+        )
+        
+        if result['success']:
+            # Update workflow with new image
+            workflow_data["image_url"] = result['image_url']
+            workflow_data["last_regenerated_at"] = datetime.now()
+            
+            # Initialize regeneration history if not exists
+            if "regeneration_history" not in workflow_data:
+                workflow_data["regeneration_history"] = []
+            
+            # Add to regeneration history
+            workflow_data["regeneration_history"].append({
+                "prompt": prompt,
+                "previous_image_url": workflow_data.get("image_url"),
+                "new_image_url": result['image_url'],
+                "regenerated_at": datetime.now()
+            })
+            
+            return JSONResponse({
+                "success": True,
+                "image_url": result['image_url'],
+                "original_image_url": workflow_data.get("original_image_url"),
+                "context_preserved": result.get('context_preserved', False),
+                "message": "Image regenerated successfully"
+            })
+        else:
+            raise HTTPException(status_code=500, detail=result['error'])
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Failed to regenerate image: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to regenerate image: {str(e)}")
+
+@router.post("/modify-image")
+async def modify_image_api(request: Request):
+    """
+    Modify an existing image based on user feedback
+    """
+    try:
+        data = await request.json()
+        workflow_id = data.get("workflow_id")
+        feedback = data.get("feedback")
+        image_url = data.get("image_url")
+        
+        if not workflow_id or not feedback or not image_url:
+            raise HTTPException(status_code=400, detail="Workflow ID, feedback, and image_url are required")
+        
+        # Check if workflow exists
+        if workflow_id not in active_workflows:
+            raise HTTPException(status_code=404, detail="Workflow not found")
+        
+        # Use the workflow service to modify image
+        from ..services.workflow_service import SocialMediaWorkflow
+        workflow = SocialMediaWorkflow()
+        
+        result = await workflow.modify_image_with_feedback(
+            content_id=workflow_id,
+            feedback=feedback,
+            image_url=image_url
+        )
+        
+        if result['success']:
+            # Update workflow with new image
+            workflow_data = active_workflows[workflow_id]
+            workflow_data["image_url"] = result['image_url']
+            
+            return JSONResponse({
+                "success": True,
+                "image_url": result['image_url'],
+                "feedback": result['feedback'],
+                "message": "Image modified successfully"
+            })
+        else:
+            raise HTTPException(status_code=500, detail=result['error'])
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Failed to modify image: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to modify image: {str(e)}")
 
 @router.post("/publish-content")
 async def publish_content_api(
@@ -197,46 +391,6 @@ async def get_workflow_status(workflow_id: str):
             "message": "Failed to get workflow status"
         }, status_code=500)
 
-@router.get("/test-review")
-async def test_review_page(request: Request):
-    """Test the review page with sample data"""
-    sample_data = {
-        "request": request,
-        "workflow_id": "test-workflow-123",
-        "topic": "Test coffee shop promotion",
-        "platforms": ["twitter", "instagram", "facebook"],
-        "tone": "professional",
-        "content": {
-            "twitter": {
-                "caption": "☕ Start your day right! Our new artisanal coffee blend is here to energize your mornings. Made with 100% organic beans, it's the perfect pick-me-up! #CoffeeLovers #MorningBoost",
-                "hashtags": ["CoffeeLovers", "MorningBoost", "ArtisanalCoffee", "OrganicCoffee", "CoffeeTime"],
-                "engagement_score": "high",
-                "character_count": 180
-            },
-            "instagram": {
-                "caption": "✨ NEW: Our signature artisanal coffee blend is finally here! ☕\n\nCrafted with love from 100% organic beans, this rich and smooth blend will transform your morning routine. Perfect for those who appreciate quality and sustainability.\n\n📍 Visit us today and experience the difference!\n\n#CoffeeLovers #ArtisanalCoffee #OrganicCoffee #MorningRoutine #CoffeeAddict #SustainableCoffee",
-                "hashtags": ["CoffeeLovers", "ArtisanalCoffee", "OrganicCoffee", "MorningRoutine", "CoffeeAddict", "SustainableCoffee", "CoffeeTime", "MorningVibes"],
-                "engagement_score": "high",
-                "character_count": 420
-            },
-            "facebook": {
-                "caption": "🌟 EXCITING NEWS! 🌟\n\nWe're thrilled to introduce our brand new artisanal coffee blend! After months of careful selection and testing, we've created something truly special for our coffee-loving community.\n\nWhat makes it special?\n✅ 100% organic beans sourced ethically\n✅ Hand-roasted in small batches for optimal flavor\n✅ Rich, smooth taste that coffee connoisseurs will love\n✅ Sustainable packaging that's good for the planet\n\nWhether you're a coffee enthusiast or just looking for your daily caffeine fix, this blend is perfect for you. Come visit us today and taste the difference quality makes!\n\n#CoffeeLovers #ArtisanalCoffee #OrganicCoffee #NewProduct #CoffeeShop",
-                "hashtags": ["CoffeeLovers", "ArtisanalCoffee", "OrganicCoffee", "NewProduct", "CoffeeShop", "SustainableCoffee", "QualityCoffee"],
-                "engagement_score": "medium",
-                "character_count": 680
-            }
-        },
-        "image_url": "/static/uploads/sample-coffee.jpg",
-        "enhanced_prompt": "Create engaging social media content for a premium coffee shop's new artisanal blend launch. Focus on the organic, hand-roasted aspects while appealing to both casual coffee drinkers and enthusiasts. Include sensory descriptions, sustainability messaging, and clear calls-to-action.",
-        "analytics": {
-            "predicted_engagement": "High",
-            "estimated_reach": "15K-25K users",
-            "optimal_posting_time": "7-9 AM",
-            "content_score": "8.5/10"
-        }
-    }
-    return templates.TemplateResponse("review.html", sample_data)
-
 @router.get("/accounts")
 async def get_accounts():
     """Get connected social media accounts"""
@@ -247,12 +401,9 @@ async def get_accounts():
         api_service = APIService()
         
         # Get accounts
-        accounts = await api_service.get_platform_accounts()
+        accounts_result = await api_service.get_platform_accounts()
         
-        return JSONResponse({
-            "success": True,
-            "accounts": accounts
-        })
+        return JSONResponse(accounts_result)
         
     except Exception as e:
         logger.error(f"Error getting accounts: {str(e)}", exc_info=True)

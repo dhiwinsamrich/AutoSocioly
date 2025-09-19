@@ -295,11 +295,26 @@ class APIService:
         try:
             logger.info("Getting platform accounts")
             
-            # Create temporary workflow to access GetLate service
-            workflow = SocialMediaWorkflow()
-            accounts = await asyncio.get_event_loop().run_in_executor(
-                None, workflow.getlate_service.get_accounts
+            # Initialize GetLate service directly
+            from ..services.getlate_service import GetLateService
+            from ..config import settings
+            
+            logger.info(f"Using GetLate API key: {settings.GETLATE_API_KEY[:10]}...")
+            logger.info(f"Using GetLate base URL: {settings.GETLATE_BASE_URL}")
+            
+            getlate_service = GetLateService(
+                api_key=settings.GETLATE_API_KEY,
+                base_url=settings.GETLATE_BASE_URL
             )
+            
+            logger.info("GetLate service initialized, calling get_accounts...")
+            
+            # Get accounts from GetLate service (run in executor since it's not async)
+            accounts = await asyncio.get_event_loop().run_in_executor(
+                None, getlate_service.get_accounts
+            )
+            
+            logger.info(f"Retrieved {len(accounts)} accounts from GetLate")
             
             # Format accounts data
             accounts_data = []
@@ -329,7 +344,7 @@ class APIService:
             }
             
         except Exception as e:
-            logger.error(f"Get accounts error: {e}")
+            logger.error(f"Get accounts error: {e}", exc_info=True)
             return {
                 "success": False,
                 "error": str(e),
@@ -530,3 +545,98 @@ class APIService:
                 "error": str(e),
                 "message": "Failed to get analytics"
             }
+
+    async def post_content(self, workflow_id: str, platforms: List[str], 
+                          selected_variants: Optional[Dict[str, int]] = None,
+                          schedule_time: Optional[str] = None) -> Dict[str, Any]:
+        """
+        Post content to selected platforms
+        
+        Args:
+            workflow_id: Workflow ID
+            platforms: List of platforms to post to
+            selected_variants: Dict mapping platform to variant index
+            schedule_time: Optional schedule time
+            
+        Returns:
+            Posting results
+        """
+        try:
+            workflow = self.workflows.get(workflow_id)
+            if not workflow:
+                raise ValueError(f"Workflow {workflow_id} not found")
+            
+            if workflow['status'] != 'completed':
+                raise ValueError(f"Workflow {workflow_id} is not completed")
+            
+            # Update workflow status
+            workflow['status'] = 'publishing'
+            workflow['progress'] = 80
+            
+            results = {}
+            
+            # Get linked accounts
+            accounts = await self.getlate_service.get_accounts()
+            if not accounts:
+                raise ValueError("No linked social media accounts found")
+            
+            # Post to each platform
+            for platform in platforms:
+                try:
+                    # Get account for platform
+                    account = next((acc for acc in accounts if acc['platform'] == platform), None)
+                    if not account:
+                        results[platform] = {"error": f"No account found for {platform}"}
+                        continue
+                    
+                    # Select variant if specified
+                    if selected_variants and platform in selected_variants:
+                        variant_index = selected_variants[platform]
+                        content = workflow['content']['variants'][variant_index]
+                    else:
+                        # Use first variant as default
+                        content = workflow['content']['variants'][0]
+                    
+                    # Get media files if available
+                    media_files = []
+                    if workflow.get('images'):
+                        media_files = workflow['images']
+                    
+                    # Post using Getlate API
+                    post_result = await self.getlate_service.post_content_with_media(
+                        account_id=account['id'],
+                        content=content['content'],
+                        media_files=media_files,
+                        platform=platform,
+                        scheduled_time=schedule_time,
+                        hashtags=content.get('hashtags', []),
+                        mentions=content.get('mentions', [])
+                    )
+                    
+                    results[platform] = {
+                        "success": True,
+                        "post_id": post_result.get('id'),
+                        "url": post_result.get('url'),
+                        "platform_data": post_result
+                    }
+                    
+                    logger.info(f"Successfully posted to {platform}: {post_result.get('id')}")
+                    
+                except Exception as e:
+                    logger.error(f"Failed to post to {platform}: {e}")
+                    results[platform] = {"error": str(e)}
+            
+            # Update workflow with results
+            workflow['posting_results'] = results
+            workflow['status'] = 'published'
+            workflow['progress'] = 100
+            workflow['completed_at'] = datetime.now().isoformat()
+            
+            return results
+            
+        except Exception as e:
+            logger.error(f"Posting workflow failed: {e}")
+            if workflow_id in self.workflows:
+                self.workflows[workflow_id]['status'] = 'failed'
+                self.workflows[workflow_id]['error'] = str(e)
+            raise

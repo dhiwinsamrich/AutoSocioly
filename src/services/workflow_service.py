@@ -95,11 +95,9 @@ class SocialMediaWorkflow:
                 logger.info("Generating image ideas and actual images")
                 self.current_step = "image_generation"
                 
-                # First generate image ideas
-                image_ideas = await asyncio.get_event_loop().run_in_executor(
-                    None,
-                    self.ai_service.generate_image_ideas,
-                    topic, 3, image_context
+                # First generate image ideas (only 1 for single image generation)
+                image_ideas = await self.ai_service.generate_image_ideas(
+                    topic, 1, image_context
                 )
                 
                 # Then generate actual images based on the ideas
@@ -109,9 +107,7 @@ class SocialMediaWorkflow:
                         image_description = idea.get("description", "")
                         if image_description:
                             # Generate image using the description
-                            image_data = await asyncio.get_event_loop().run_in_executor(
-                                None,
-                                self.image_gen_service.generate_image_from_text,
+                            image_data = await self.image_gen_service.generate_image_from_text_async(
                                 image_description,
                                 f"{topic}_{i}"
                             )
@@ -167,9 +163,109 @@ class SocialMediaWorkflow:
             return ContentResponse(
                 success=False,
                 workflow_id=self.workflow_id,
+                platform_content={},  # Required field - empty dict for error case
                 error=str(e),
                 message="Content generation failed"
             )
+    
+    async def post_content_workflow(
+        self,
+        workflow_id: str,
+        platforms: List[str],
+        selected_variants: Optional[Dict[str, int]] = None,
+        schedule_time: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Post content to selected platforms
+        
+        Args:
+            workflow_id: Workflow ID
+            platforms: List of platforms to post to
+            selected_variants: Dict mapping platform to variant index
+            schedule_time: Optional schedule time
+            
+        Returns:
+            Posting results
+        """
+        try:
+            workflow = self.workflows.get(workflow_id)
+            if not workflow:
+                raise ValueError(f"Workflow {workflow_id} not found")
+            
+            if workflow['status'] != 'completed':
+                raise ValueError(f"Workflow {workflow_id} is not completed")
+            
+            # Update workflow status
+            workflow['status'] = 'publishing'
+            workflow['progress'] = 80
+            
+            results = {}
+            
+            # Get linked accounts
+            accounts = await self.get_linked_accounts()
+            if not accounts:
+                raise ValueError("No linked social media accounts found")
+            
+            # Post to each platform
+            for platform in platforms:
+                try:
+                    # Get account for platform
+                    account = next((acc for acc in accounts if acc['platform'] == platform), None)
+                    if not account:
+                        results[platform] = {"error": f"No account found for {platform}"}
+                        continue
+                    
+                    # Select variant if specified
+                    if selected_variants and platform in selected_variants:
+                        variant_index = selected_variants[platform]
+                        content = workflow['content']['variants'][variant_index]
+                    else:
+                        # Use first variant as default
+                        content = workflow['content']['variants'][0]
+                    
+                    # Get media files if available
+                    media_files = []
+                    if workflow.get('images'):
+                        media_files = workflow['images']
+                    
+                    # Post using Getlate API
+                    post_result = await self.getlate_service.post_content_with_media(
+                        account_id=account['id'],
+                        content=content['content'],
+                        media_files=media_files,
+                        platform=platform,
+                        scheduled_time=schedule_time,
+                        hashtags=content.get('hashtags', []),
+                        mentions=content.get('mentions', [])
+                    )
+                    
+                    results[platform] = {
+                        "success": True,
+                        "post_id": post_result.get('id'),
+                        "url": post_result.get('url'),
+                        "platform_data": post_result
+                    }
+                    
+                    logger.info(f"Successfully posted to {platform}: {post_result.get('id')}")
+                    
+                except Exception as e:
+                    logger.error(f"Failed to post to {platform}: {e}")
+                    results[platform] = {"error": str(e)}
+            
+            # Update workflow with results
+            workflow['posting_results'] = results
+            workflow['status'] = 'published'
+            workflow['progress'] = 100
+            workflow['completed_at'] = datetime.now().isoformat()
+            
+            return results
+            
+        except Exception as e:
+            logger.error(f"Posting workflow failed: {e}")
+            if workflow_id in self.workflows:
+                self.workflows[workflow_id]['status'] = 'failed'
+                self.workflows[workflow_id]['error'] = str(e)
+            raise
     
     async def post_content_workflow(
         self,
@@ -472,3 +568,163 @@ class SocialMediaWorkflow:
         }
         
         return step_progress.get(self.current_step, 0)
+
+    async def get_linked_accounts(self) -> List[Dict[str, Any]]:
+        """
+        Get all linked social media accounts
+        
+        Returns:
+            List of linked account information
+        """
+        try:
+            accounts = await self.getlate_service.get_accounts()
+            return accounts
+        except Exception as e:
+            logger.error(f"Failed to get linked accounts: {e}")
+            return []
+
+    async def regenerate_image_with_prompt(self, content_id: str, new_prompt: str, preserve_context: bool = True) -> Dict[str, Any]:
+        """
+        Regenerate an image with a new prompt while preserving context
+        
+        Args:
+            content_id: The content ID to regenerate image for
+            new_prompt: The new image prompt
+            preserve_context: Whether to preserve original context
+            
+        Returns:
+            Dict with success status and new image data
+        """
+        try:
+            logger.info(f"Regenerating image for content {content_id} with new prompt")
+            
+            # Get original content to preserve context
+            original_content = None
+            if preserve_context:
+                original_content = self.content_manager.get_content(content_id)
+            
+            # Use image generation service with context preservation
+            from .image_gen import ImageGenerationService
+            image_service = ImageGenerationService()
+            
+            # Generate new image with enhanced prompt that includes context
+            enhanced_prompt = new_prompt
+            if original_content and preserve_context:
+                context = original_content.get('context', '')
+                if context:
+                    enhanced_prompt = f"{new_prompt} (maintaining context: {context})"
+            
+            # Generate image using the async method
+            image_result = await image_service.agenerate_image_from_text(
+                prompt=enhanced_prompt,
+                size="1024x1024",
+                quality="high",
+                style="photorealistic",
+                context=original_content.get('context') if original_content else None
+            )
+            
+            if image_result and image_result.get("image_url"):
+                # Update content with new image
+                update_data = {
+                    "image_url": image_result["image_url"],
+                    "image_prompt": new_prompt,
+                    "regenerated_at": datetime.now().isoformat(),
+                    "regeneration_context": enhanced_prompt
+                }
+                
+                success = self.content_manager.update_content(content_id, update_data)
+                
+                if success:
+                    logger.info(f"Image regenerated successfully for content {content_id}")
+                    return {
+                        "success": True,
+                        "image_url": image_result["image_url"],
+                        "prompt": new_prompt,
+                        "context_preserved": preserve_context
+                    }
+                else:
+                    logger.error(f"Failed to update content {content_id} with new image")
+                    return {
+                        "success": False,
+                        "error": "Failed to update content with new image"
+                    }
+            else:
+                logger.error(f"Failed to generate new image for content {content_id}")
+                return {
+                    "success": False,
+                    "error": "Failed to generate new image"
+                }
+                
+        except Exception as e:
+            logger.error(f"Error regenerating image for content {content_id}: {e}")
+            return {
+                "success": False,
+                "error": str(e)
+            }
+    
+    async def modify_image_with_feedback(self, content_id: str, feedback: str, image_url: str) -> Dict[str, Any]:
+        """
+        Modify an existing image based on user feedback
+        
+        Args:
+            content_id: The content ID
+            feedback: User feedback for modification
+            image_url: Current image URL
+            
+        Returns:
+            Dict with success status and modified image data
+        """
+        try:
+            logger.info(f"Modifying image for content {content_id} based on feedback: {feedback}")
+            
+            # Get original content for context
+            original_content = self.content_manager.get_content(content_id)
+            
+            # Use image generation service for modification
+            from .image_gen import ImageGenerationService
+            image_service = ImageGenerationService()
+            
+            # Modify image with feedback
+            modification_result = await image_service.amodify_image(
+                image_url=image_url,
+                modification_prompt=feedback,
+                preserve_core_elements=True,
+                context=original_content.get('context') if original_content else None
+            )
+            
+            if modification_result and modification_result.get("image_url"):
+                # Update content with modified image
+                update_data = {
+                    "image_url": modification_result["image_url"],
+                    "modification_feedback": feedback,
+                    "modified_at": datetime.now().isoformat()
+                }
+                
+                success = self.content_manager.update_content(content_id, update_data)
+                
+                if success:
+                    logger.info(f"Image modified successfully for content {content_id}")
+                    return {
+                        "success": True,
+                        "image_url": modification_result["image_url"],
+                        "feedback": feedback
+                    }
+                else:
+                    logger.error(f"Failed to update content {content_id} with modified image")
+                    return {
+                        "success": False,
+                        "error": "Failed to update content with modified image"
+                    }
+            else:
+                logger.error(f"Failed to modify image for content {content_id}")
+                return {
+                    "success": False,
+                    "error": "Failed to modify image"
+                }
+                
+        except Exception as e:
+            logger.error(f"Error modifying image for content {content_id}: {e}")
+            return {
+                "success": False,
+                "error": str(e)
+            }

@@ -9,6 +9,7 @@ import json
 import base64
 import hashlib
 import io
+import asyncio
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, Any, Optional
@@ -36,16 +37,18 @@ class ImageGenerationService:
         
         logger.info("Image generation service initialized with Gemini API")
     
-    def generate_image_from_text(
+    async def generate_image_from_text_async(
         self,
         prompt: str,
         size: str = "1024x1024",
         quality: str = "high",
         style: str = "photorealistic",
-        negative_prompt: Optional[str] = None
+        negative_prompt: Optional[str] = None,
+        preserve_context: Optional[Dict[str, Any]] = None,
+        retry_count: int = 0
     ) -> Dict[str, Any]:
         """
-        Generate an image from text prompt
+        Async version of image generation with better error handling and context preservation
         
         Args:
             prompt: Text description of the image to generate
@@ -53,34 +56,55 @@ class ImageGenerationService:
             quality: Image quality (high, medium, low)
             style: Image style (photorealistic, artistic, cartoon, etc.)
             negative_prompt: Things to avoid in the image
+            preserve_context: Original image context for regeneration
+            retry_count: Current retry attempt number
             
         Returns:
             Generated image data with metadata
         """
         try:
-            logger.info(f"Generating image from text prompt: {prompt[:50]}...")
+            logger.info(f"Async generating image from text prompt: {prompt[:50]}... (retry {retry_count})")
             
-            # Enhance prompt with style and quality specifications
-            enhanced_prompt = f"""
-            Create a {style} image: {prompt}
-            
-            Technical specifications:
-            - Quality: {quality}
-            - Size: {size}
-            - Style: {style}
-            
-            {f"Avoid: {negative_prompt}" if negative_prompt else ""}
-            
-            Make the image visually appealing, high-quality, and suitable for social media.
-            """
+            # Build enhanced prompt with context preservation
+            if preserve_context:
+                enhanced_prompt = f"""
+                ORIGINAL IMAGE CONTEXT (PRESERVE THESE ELEMENTS):
+                - Core concept: {preserve_context.get('core_concept', '')}
+                - Key visual elements: {preserve_context.get('key_elements', '')}
+                - Style: {preserve_context.get('style', style)}
+                - Color scheme: {preserve_context.get('colors', 'vibrant')}
+                
+                MODIFICATION REQUEST:
+                {prompt}
+                
+                INSTRUCTIONS:
+                1. PRESERVE all core elements from the original context above
+                2. APPLY the modification request precisely
+                3. MAINTAIN visual coherence and professional quality
+                4. ENSURE the result is suitable for social media
+                """
+            else:
+                enhanced_prompt = f"""
+                Create a {style} image: {prompt}
+                
+                Technical specifications:
+                - Quality: {quality}
+                - Size: {size}
+                - Style: {style}
+                
+                {f"Avoid: {negative_prompt}" if negative_prompt else ""}
+                
+                Make the image visually appealing, high-quality, and suitable for social media.
+                """
             
             # Generate image using Gemini's image generation capabilities
-            response = self.client.generate_content(enhanced_prompt)
+            response = await asyncio.get_event_loop().run_in_executor(
+                None, self.client.generate_content, enhanced_prompt
+            )
             
-            # Extract image data from response
+            # Extract image data from response with better error handling
             image_bytes = None
             
-            # Try different ways to extract image data
             try:
                 # Method 1: Check if response has parts with inline data
                 if hasattr(response, 'parts') and response.parts:
@@ -112,25 +136,24 @@ class ImageGenerationService:
                 logger.warning(f"Error extracting image data: {extract_error}")
             
             if not image_bytes:
-                # If no image data found, create a simple placeholder image
-                logger.warning("No image data found in response, creating placeholder image")
-                
-                # Create a simple colored placeholder image
-                placeholder_size = (512, 512)
-                if "1024" in size:
-                    placeholder_size = (1024, 1024)
-                elif "512" in size:
-                    placeholder_size = (512, 512)
-                
-                # Create a simple gradient placeholder
-                img = Image.new('RGB', placeholder_size, color=(73, 109, 137))
-                
-                # Save placeholder to bytes
-                img_buffer = io.BytesIO()
-                img.save(img_buffer, format='PNG')
-                image_bytes = img_buffer.getvalue()
-                
-                logger.info(f"Created placeholder image {placeholder_size[0]}x{placeholder_size[1]}")
+                # If no image data found and we haven't retried too many times, retry with modified prompt
+                if retry_count < 2:
+                    logger.warning(f"No image data found, retrying with modified prompt (attempt {retry_count + 1})")
+                    # Try with a simpler, more direct prompt
+                    simple_prompt = f"Create a {style} image: {prompt}"
+                    return await self.generate_image_from_text_async(
+                        prompt=simple_prompt,
+                        size=size,
+                        quality=quality,
+                        style=style,
+                        negative_prompt=negative_prompt,
+                        preserve_context=preserve_context,
+                        retry_count=retry_count + 1
+                    )
+                else:
+                    # Max retries reached, create fallback but mark it as such
+                    logger.error("Max retries reached, creating fallback image")
+                    return await self._create_fallback_image(prompt, size, quality, style, preserve_context)
             
             # Save the generated image
             uploads_dir = Path("static/uploads")
@@ -162,35 +185,127 @@ class ImageGenerationService:
                     "format": "png",
                     "size_bytes": len(image_bytes),
                     "width": image.width,
-                    "height": image.height
+                    "height": image.height,
+                    "retry_count": retry_count,
+                    "generation_method": "async_with_context_preservation",
+                    "success": True
                 }
             }
+            
+            # Add preserve context to metadata if available
+            if preserve_context:
+                image_data["metadata"]["preserve_context"] = preserve_context
             
             logger.info(f"Image generated successfully - Style: {style}, Quality: {quality}, Size: {image.width}x{image.height}")
             return image_data
             
         except Exception as e:
             logger.error(f"Failed to generate image: {e}")
-            # Return fallback data instead of raising exception
-            fallback_filename = f"fallback_{hash(prompt) % 1000000}.jpg"
-            return {
-                "image_url": f"/static/uploads/{fallback_filename}",
+            
+            # If we haven't retried too many times, retry
+            if retry_count < 2:
+                logger.info(f"Retrying image generation due to error (attempt {retry_count + 1})")
+                return await self.generate_image_from_text_async(
+                    prompt=prompt,
+                    size=size,
+                    quality=quality,
+                    style=style,
+                    negative_prompt=negative_prompt,
+                    preserve_context=preserve_context,
+                    retry_count=retry_count + 1
+                )
+            else:
+                # Max retries reached, create fallback
+                logger.error("Max retries reached due to persistent errors, creating fallback")
+                return await self._create_fallback_image(prompt, size, quality, style, preserve_context)
+
+    async def _create_fallback_image(self, prompt: str, size: str, quality: str, style: str, preserve_context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """
+        Create a fallback image when generation fails completely
+        """
+        try:
+            logger.warning("Creating fallback image due to generation failure")
+            
+            # Determine size
+            placeholder_size = (512, 512)
+            if "1024" in size:
+                placeholder_size = (1024, 1024)
+            elif "512" in size:
+                placeholder_size = (512, 512)
+            
+            # Create a simple but meaningful placeholder based on the prompt
+            img = Image.new('RGB', placeholder_size, color=(73, 109, 137))
+            
+            # Add some basic visual elements based on the prompt
+            if "social" in prompt.lower() or "media" in prompt.lower():
+                # Create a simple social media themed placeholder
+                img = Image.new('RGB', placeholder_size, color=(59, 130, 246))  # Blue theme
+            elif "business" in prompt.lower() or "professional" in prompt.lower():
+                # Create a business themed placeholder
+                img = Image.new('RGB', placeholder_size, color(17, 24, 39))  # Dark theme
+            elif "nature" in prompt.lower() or "outdoor" in prompt.lower():
+                # Create a nature themed placeholder
+                img = Image.new('RGB', placeholder_size, color=(34, 197, 94))  # Green theme
+            
+            # Save placeholder to bytes
+            img_buffer = io.BytesIO()
+            img.save(img_buffer, format='PNG')
+            image_bytes = img_buffer.getvalue()
+            
+            # Save the fallback image
+            uploads_dir = Path("static/uploads")
+            uploads_dir.mkdir(parents=True, exist_ok=True)
+            
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"fallback_{timestamp}_{hash(prompt) % 10000}.png"
+            filepath = uploads_dir / filename
+            
+            img.save(filepath, "PNG")
+            
+            logger.info(f"Created fallback image {placeholder_size[0]}x{placeholder_size[1]}")
+            
+            fallback_data = {
+                "image_url": f"/static/uploads/{filename}",
                 "prompt": prompt,
-                "enhanced_prompt": prompt,
+                "enhanced_prompt": f"FALLBACK IMAGE - Original prompt: {prompt}",
                 "size": size,
                 "quality": quality,
                 "style": style,
                 "generation_time": datetime.now().isoformat(),
-                "error": str(e),
+                "filepath": str(filepath),
+                "error": "Image generation failed - fallback created",
                 "metadata": {
                     "model": "gemini-2.5-flash-image-preview",
                     "seed": hash(prompt),
-                    "format": "jpeg",
-                    "fallback": True
+                    "format": "png",
+                    "size_bytes": len(image_bytes),
+                    "width": placeholder_size[0],
+                    "height": placeholder_size[1],
+                    "fallback": True,
+                    "generation_method": "fallback",
+                    "success": False
+                }
+            }
+            
+            if preserve_context:
+                fallback_data["metadata"]["preserve_context"] = preserve_context
+            
+            return fallback_data
+            
+        except Exception as e:
+            logger.error(f"Failed to create fallback image: {e}")
+            # Last resort - return error data
+            return {
+                "image_url": None,
+                "prompt": prompt,
+                "error": f"Both generation and fallback failed: {str(e)}",
+                "metadata": {
+                    "success": False,
+                    "complete_failure": True
                 }
             }
     
-    def generate_social_media_image(
+    async def generate_social_media_image(
         self,
         topic: str,
         platform: str,
@@ -245,7 +360,7 @@ class ImageGenerationService:
             """
             
             # Generate base image
-            image_data = self.generate_image_from_text(
+            image_data = await self.generate_image_from_text_async(
                 prompt=prompt,
                 size=platform_specs['recommended_size'],
                 quality="high",
@@ -271,7 +386,7 @@ class ImageGenerationService:
             logger.error(f"Failed to generate social media image: {e}")
             raise Exception(f"Social media image generation failed: {str(e)}")
     
-    def generate_multiple_image_variants(
+    async def generate_multiple_image_variants(
         self,
         topic: str,
         platform: str,
@@ -313,7 +428,7 @@ class ImageGenerationService:
                 if include_text:
                     text_content = f"{topic} - Variant {i+1}"
                 
-                variant = self.generate_social_media_image(
+                variant = await self.generate_social_media_image(
                     topic=topic,
                     platform=platform,
                     style=style,
@@ -651,3 +766,112 @@ class ImageGenerationService:
             prompts.append(f"Add text: {modifications['text_addition']}")
         
         return "; ".join(prompts) if prompts else "Create a fresh, unique variation"
+    
+    async def modify_image_preserving_core(
+        self,
+        original_prompt: str,
+        modification_request: str,
+        original_image_url: Optional[str] = None,
+        platform: Optional[str] = None,
+        preserve_elements: List[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Modify an image while preserving core elements and composition
+        
+        Args:
+            original_prompt: Original image generation prompt
+            modification_request: User's modification request
+            original_image_url: URL of the original image (optional)
+            platform: Target platform for optimizations
+            preserve_elements: Specific elements to preserve (optional)
+            
+        Returns:
+            Modified image data with preservation tracking
+        """
+        try:
+            logger.info(f"Modifying image with core preservation - Original: {original_prompt[:50]}...")
+            
+            # Default elements to preserve if not specified
+            if preserve_elements is None:
+                preserve_elements = [
+                    "main subject/composition",
+                    "overall style and aesthetic", 
+                    "color palette and mood",
+                    "key visual features",
+                    "aspect ratio and dimensions"
+                ]
+            
+            # Build preservation context
+            preservation_context = "\n".join([f"- {element}" for element in preserve_elements])
+            
+            # Platform-specific optimizations
+            platform_context = ""
+            if platform:
+                specs = self._get_platform_image_specs(platform)
+                platform_context = f"""
+                Platform Requirements ({platform}):
+                - Aspect ratio: {specs['aspect_ratio']}
+                - Recommended size: {specs['recommended_size']}
+                - Style preference: {specs['style_preference']}
+                """
+            
+            # Create precision modification prompt
+            precision_prompt = f"""
+            IMAGE MODIFICATION WITH CORE PRESERVATION
+            
+            ORIGINAL IMAGE SPECIFICATIONS:
+            {original_prompt}
+            
+            ELEMENTS TO PRESERVE AT ALL COSTS:
+            {preservation_context}
+            
+            USER MODIFICATION REQUEST:
+            {modification_request}
+            
+            {platform_context}
+            
+            GENERATION INSTRUCTIONS:
+            1. ANALYZE the original specifications to identify core visual elements
+            2. PRESERVE these elements exactly as specified above
+            3. APPLY modifications surgically and precisely:
+               - Only modify what is specifically requested
+               - Maintain visual coherence with preserved elements
+               - Ensure changes complement existing composition
+            4. MAINTAIN professional quality and platform suitability
+            5. OUTPUT exactly one refined image that balances preservation with enhancement
+            
+            CRITICAL REQUIREMENTS:
+            - Do not alter preserved elements
+            - Make modifications subtle and integrated
+            - Maintain original image's essence and character
+            - Ensure the result looks like an enhanced version, not a replacement
+            
+            Generate the modified image now.
+            """
+            
+            # Generate modified image with enhanced parameters for precision
+            modified_image_data = self.generate_image_from_text(
+                prompt=precision_prompt,
+                quality="high",
+                style="photorealistic" if platform in ["linkedin", "facebook"] else "artistic",
+                size="1024x1024"  # Consistent size for better control
+            )
+            
+            # Add preservation tracking metadata
+            modified_image_data.update({
+                "modification_type": "core_preservation",
+                "original_prompt": original_prompt,
+                "modification_request": modification_request,
+                "preserved_elements": preserve_elements,
+                "platform": platform,
+                "preservation_score": "high",  # Confidence in preservation
+                "modification_precision": "surgical",
+                "generation_approach": "precision_modification"
+            })
+            
+            logger.info(f"Image modified with core preservation - Success")
+            return modified_image_data
+            
+        except Exception as e:
+            logger.error(f"Failed to modify image with core preservation: {e}")
+            raise Exception(f"Precision image modification failed: {str(e)}")

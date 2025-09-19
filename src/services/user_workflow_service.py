@@ -322,7 +322,7 @@ class UserWorkflowService:
                 
                 # Generate actual image using first idea
                 if image_ideas:
-                    main_image = self.image_gen.generate_social_media_image(
+                    main_image = await self.image_gen.generate_social_media_image(
                         topic=topic,
                         platform=platforms[0],  # Use first platform
                         style="engaging"
@@ -348,7 +348,7 @@ class UserWorkflowService:
         for image in images:
             try:
                 # Get image path from image data
-                image_path = image.get("image_path") or image.get("local_path")
+                image_path = image.get("image_path") or image.get("local_path") or image.get("filepath")
                 
                 if image_path and Path(image_path).exists():
                     # Create public URL using ngrok
@@ -420,7 +420,7 @@ class UserWorkflowService:
             
             if regenerate_image and image_prompt:
                 # Generate completely new image
-                new_image = self.image_gen.generate_social_media_image(
+                new_image = await self.image_gen.generate_social_media_image(
                     topic=image_prompt,
                     platform=list(content_package["platform_content"].keys())[0],
                     style="modified"
@@ -434,7 +434,7 @@ class UserWorkflowService:
                 logger.info(f"Image modification requested: {image_prompt}")
                 
                 # For now, generate a new image with the modification prompt
-                modified_image = self.image_gen.generate_social_media_image(
+                modified_image = await self.image_gen.generate_social_media_image(
                     topic=f"{session['user_input']} - {image_prompt}",
                     platform=list(content_package["platform_content"].keys())[0],
                     style="modified"

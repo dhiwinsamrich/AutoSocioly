@@ -1,0 +1,156 @@
+2025-09-19 14:40:54 - src.routes.main_routes - ERROR - publish_content_api:340 - Error publishing content: 1 validation error for PostRequest
+platforms
+  List should have at least 1 item after validation, not 0 [type=too_short, input_value=[], input_type=list]
+    For further information visit https://errors.pydantic.dev/2.8/v/too_short
+Traceback (most recent call last):
+  File "D:\@White Mastery Systems\AutoSocioly\src\routes\main_routes.py", line 314, in publish_content_api
+    publish_request = PostRequest(
+        content_id=workflow_id,
+        platforms=list(selected_variants.keys()) if selected_variants else []
+    )
+  File "C:\Users\dhiwi\AppData\Roaming\Python\Python313\site-packages\pydantic\main.py", line 192, in __init__
+    self.__pydantic_validator__.validate_python(data, self_instance=self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for PostRequest
+platforms
+  List should have at least 1 item after validation, not 0 [type=too_short, input_value=[], input_type=list]
+    For further information visit https://errors.pydantic.dev/2.8/v/too_short
+2025-09-19 15:27:15 - src.routes.main_routes - ERROR - create_content_api:119 - Error creating content: Encountered unknown tag 'else'.
+Traceback (most recent call last):
+  File "D:\@White Mastery Systems\AutoSocioly\src\routes\main_routes.py", line 105, in create_content_api
+    return templates.TemplateResponse("review.html", {
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+        "request": request,
+        ^^^^^^^^^^^^^^^^^^^
+    ...<8 lines>...
+        "analytics": performance_analysis
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    })
+    ^^
+  File "C:\Users\dhiwi\AppData\Roaming\Python\Python313\site-packages\starlette\templating.py", line 209, in TemplateResponse
+    template = self.get_template(name)
+  File "C:\Users\dhiwi\AppData\Roaming\Python\Python313\site-packages\starlette\templating.py", line 132, in get_template
+    return self.env.get_template(name)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\dhiwi\AppData\Roaming\Python\Python313\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\dhiwi\AppData\Roaming\Python\Python313\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "C:\Users\dhiwi\AppData\Roaming\Python\Python313\site-packages\jinja2\loaders.py", line 138, in load
+    code = environment.compile(source, name, filename)
+  File "C:\Users\dhiwi\AppData\Roaming\Python\Python313\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dhiwi\AppData\Roaming\Python\Python313\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "templates\review.html", line 446, in template
+    {% else %}
+jinja2.exceptions.TemplateSyntaxError: Encountered unknown tag 'else'.
+2025-09-19 15:28:22 - src.routes.main_routes - ERROR - create_content_api:119 - Error creating content: Encountered unknown tag 'else'.
+Traceback (most recent call last):
+  File "D:\@White Mastery Systems\AutoSocioly\src\routes\main_routes.py", line 105, in create_content_api
+    return templates.TemplateResponse("review.html", {
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+        "request": request,
+        ^^^^^^^^^^^^^^^^^^^
+    ...<8 lines>...
+        "analytics": performance_analysis
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    })
+    ^^
+  File "C:\Users\dhiwi\AppData\Roaming\Python\Python313\site-packages\starlette\templating.py", line 209, in TemplateResponse
+    template = self.get_template(name)
+  File "C:\Users\dhiwi\AppData\Roaming\Python\Python313\site-packages\starlette\templating.py", line 132, in get_template
+    return self.env.get_template(name)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\dhiwi\AppData\Roaming\Python\Python313\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\dhiwi\AppData\Roaming\Python\Python313\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "C:\Users\dhiwi\AppData\Roaming\Python\Python313\site-packages\jinja2\loaders.py", line 138, in load
+    code = environment.compile(source, name, filename)
+  File "C:\Users\dhiwi\AppData\Roaming\Python\Python313\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dhiwi\AppData\Roaming\Python\Python313\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "templates\review.html", line 446, in template
+    {% else %}
+jinja2.exceptions.TemplateSyntaxError: Encountered unknown tag 'else'.
+2025-09-19 16:13:01 - src.routes.main_routes - ERROR - edit_image_api:247 - Error editing image: 404: Workflow not found
+Traceback (most recent call last):
+  File "D:\@White Mastery Systems\AutoSocioly\src\routes\main_routes.py", line 216, in edit_image_api
+    raise HTTPException(status_code=404, detail="Workflow not found")
+fastapi.exceptions.HTTPException: 404: Workflow not found
+2025-09-19 17:11:00 - user_workflow_routes - ERROR - get_session_status:193 - Failed to get session status: 404: Session not found
+2025-09-19 17:11:02 - user_workflow_routes - ERROR - get_session_status:193 - Failed to get session status: 404: Session not found
+2025-09-19 17:11:04 - user_workflow_routes - ERROR - get_session_status:193 - Failed to get session status: 404: Session not found
+2025-09-19 17:11:06 - user_workflow_routes - ERROR - get_session_status:193 - Failed to get session status: 404: Session not found
+2025-09-19 17:11:08 - user_workflow_routes - ERROR - get_session_status:193 - Failed to get session status: 404: Session not found
+2025-09-19 17:11:10 - user_workflow_routes - ERROR - get_session_status:193 - Failed to get session status: 404: Session not found
+2025-09-19 17:11:12 - user_workflow_routes - ERROR - get_session_status:193 - Failed to get session status: 404: Session not found
+2025-09-19 17:11:14 - user_workflow_routes - ERROR - get_session_status:193 - Failed to get session status: 404: Session not found
+2025-09-19 17:11:16 - user_workflow_routes - ERROR - get_session_status:193 - Failed to get session status: 404: Session not found
+2025-09-19 17:11:18 - user_workflow_routes - ERROR - get_session_status:193 - Failed to get session status: 404: Session not found
+2025-09-19 17:11:20 - user_workflow_routes - ERROR - get_session_status:193 - Failed to get session status: 404: Session not found
+2025-09-19 17:32:07 - src.services.workflow_service - ERROR - create_content_workflow:165 - Content generation workflow failed: 'coroutine' object is not iterable
+2025-09-19 17:32:08 - api_service - ERROR - create_content:84 - Content creation error: 1 validation error for ContentResponse
+platform_content
+  Field required [type=missing, input_value={'success': False, 'workf...tent generation failed'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.8/v/missing
+2025-09-19 17:33:21 - image_gen - ERROR - generate_social_media_image:385 - Failed to generate social media image: 'ImageGenerationService' object has no attribute 'generate_image_from_text'
+2025-09-19 17:34:20 - api_service - ERROR - get_platform_accounts:332 - Get accounts error: 'coroutine' object has no attribute 'get'
+2025-09-19 17:34:56 - api_service - ERROR - get_platform_accounts:338 - Get accounts error: 'coroutine' object has no attribute 'get'
+2025-09-19 17:35:40 - api_service - ERROR - get_platform_accounts:340 - Get accounts error: 'coroutine' object has no attribute 'get'
+2025-09-19 17:36:14 - api_service - ERROR - get_platform_accounts:340 - Get accounts error: 'coroutine' object has no attribute 'get'
+2025-09-19 17:36:56 - api_service - ERROR - get_platform_accounts:347 - Get accounts error: 'coroutine' object has no attribute 'get'
+Traceback (most recent call last):
+  File "D:\@White Mastery Systems\AutoSocioly\src\services\api_service.py", line 313, in get_platform_accounts
+    accounts = await asyncio.get_event_loop().run_in_executor(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        None, getlate_service.get_accounts
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "D:\@White Mastery Systems\AutoSocioly\src\services\getlate_service.py", line 201, in get_accounts
+    for account_data in response.get('accounts', []):
+                        ^^^^^^^^^^^^
+AttributeError: 'coroutine' object has no attribute 'get'
+2025-09-19 17:39:51 - src.services.getlate_service - ERROR - get_accounts:247 - Failed to get accounts from GetLate API: Resource not found
+2025-09-19 17:42:16 - src.services.getlate_service - ERROR - get_accounts:247 - Failed to get accounts from GetLate API: Resource not found
+2025-09-19 17:43:39 - src.services.workflow_service - ERROR - create_content_workflow:165 - Content generation workflow failed: 'coroutine' object is not iterable
+2025-09-19 17:43:39 - api_service - ERROR - create_content:84 - Content creation error: 1 validation error for ContentResponse
+platform_content
+  Field required [type=missing, input_value={'success': False, 'workf...tent generation failed'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.8/v/missing
+2025-09-19 17:46:33 - image_gen - ERROR - generate_social_media_image:385 - Failed to generate social media image: 'ImageGenerationService' object has no attribute 'generate_image_from_text'
+2025-09-19 17:47:39 - image_gen - ERROR - generate_social_media_image:385 - Failed to generate social media image: 'ImageGenerationService' object has no attribute 'generate_image_from_text'
+2025-09-19 17:49:29 - image_gen - ERROR - generate_social_media_image:385 - Failed to generate social media image: 'ImageGenerationService' object has no attribute 'generate_image_from_text'
+2025-09-19 17:51:48 - image_gen - ERROR - generate_social_media_image:385 - Failed to generate social media image: 'ImageGenerationService' object has no attribute 'agenerate_image_from_text_async'
+2025-09-19 17:52:33 - image_gen - ERROR - generate_image_from_text_async:202 - Failed to generate image: name 'asyncio' is not defined
+2025-09-19 17:52:33 - image_gen - ERROR - generate_image_from_text_async:202 - Failed to generate image: name 'asyncio' is not defined
+2025-09-19 17:52:33 - image_gen - ERROR - generate_image_from_text_async:202 - Failed to generate image: name 'asyncio' is not defined
+2025-09-19 17:52:33 - image_gen - ERROR - generate_image_from_text_async:218 - Max retries reached due to persistent errors, creating fallback
+2025-09-19 17:58:09 - ai_service - ERROR - generate_image_ideas:332 - Error generating image ideas: 404 models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+2025-09-19 17:58:09 - src.services.workflow_service - ERROR - create_content_workflow:120 - Error generating image 1: 'ImageGenerationService' object has no attribute 'agenerate_image_from_text_async'
+2025-09-19 18:02:42 - src.routes.main_routes - ERROR - publish_content_api:357 - Error publishing content: 1 validation error for PostRequest
+platforms
+  List should have at least 1 item after validation, not 0 [type=too_short, input_value=[], input_type=list]
+    For further information visit https://errors.pydantic.dev/2.8/v/too_short
+Traceback (most recent call last):
+  File "D:\@White Mastery Systems\AutoSocioly\src\routes\main_routes.py", line 331, in publish_content_api
+    publish_request = PostRequest(
+        content_id=workflow_id,
+        platforms=list(selected_variants.keys()) if selected_variants else []
+    )
+  File "C:\Users\dhiwi\AppData\Roaming\Python\Python313\site-packages\pydantic\main.py", line 192, in __init__
+    self.__pydantic_validator__.validate_python(data, self_instance=self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for PostRequest
+platforms
+  List should have at least 1 item after validation, not 0 [type=too_short, input_value=[], input_type=list]
+    For further information visit https://errors.pydantic.dev/2.8/v/too_short
