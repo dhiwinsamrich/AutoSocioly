@@ -157,12 +157,12 @@
                         </button>
                     </div>
                     <p class="text-muted">AI-generated visual content for your social media posts</p>
-                    <div class="image-comparison">
+                    <div class="image-comparison" id="image-comparison-container">
                         {% if original_image_url and original_image_url != image_url %}
-                        <div class="image-container">
+                        <div class="image-container" id="original-image-container">
                             <h5>Original Image</h5>
                             <div class="image-preview">
-                                <img src="{{ original_image_url }}" alt="Original Image" class="image-preview">
+                                <img src="{{ original_image_url }}" alt="Original Image" class="image-preview" id="original-image">
                                 <div class="image-actions mt-2">
                                     <button class="btn btn-sm btn-outline-secondary" onclick="editImage()">
                                         <i class="fas fa-edit me-1"></i>Edit Image
@@ -172,28 +172,30 @@
                         </div>
                         {% endif %}
                         
-                        <div class="image-container">
+                        <div class="image-container" id="current-image-container">
                             <h5>Current Image</h5>
-                            {% if generated_images and generated_images|length > 0 %}
-                                {% if generated_images|length == 1 %}
-                                    <img src="{{ generated_images[0] }}" alt="Generated Image" class="image-preview">
+                            <div id="generated-images">
+                                {% if generated_images and generated_images|length > 0 %}
+                                    {% if generated_images|length == 1 %}
+                                        <img src="{{ generated_images[0] }}" alt="Generated Image" class="image-preview" id="main-generated-image">
+                                    {% else %}
+                                        <div class="row">
+                                            {% for image_url in generated_images %}
+                                                <div class="col-md-6 mb-3">
+                                                    <img src="{{ image_url }}" alt="Generated Image {{ loop.index }}" class="image-preview">
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                {% elif image_url %}
+                                    <img src="{{ image_url }}" alt="Generated Image" class="image-preview" id="main-generated-image">
                                 {% else %}
-                                    <div class="row">
-                                        {% for image_url in generated_images %}
-                                            <div class="col-md-6 mb-3">
-                                                <img src="{{ image_url }}" alt="Generated Image {{ loop.index }}" class="image-preview">
-                                            </div>
-                                        {% endfor %}
+                                    <div class="text-center py-5 bg-light rounded">
+                                        <i class="fas fa-image fa-3x text-muted mb-3"></i>
+                                        <p class="text-muted">No image generated</p>
                                     </div>
                                 {% endif %}
-                            {% elif image_url %}
-                                <img src="{{ image_url }}" alt="Generated Image" class="image-preview">
-                            {% else %}
-                                <div class="text-center py-5 bg-light rounded">
-                                    <i class="fas fa-image fa-3x text-muted mb-3"></i>
-                                    <p class="text-muted">No image generated</p>
-                                </div>
-                            {% endif %}
+                            </div>
                             <div class="image-actions mt-2">
                                 <button class="btn btn-sm btn-outline-secondary" onclick="editImage()">
                                     <i class="fas fa-edit me-1"></i>Edit Image
@@ -233,7 +235,8 @@
             <p class="text-muted">Platform-specific captions and content</p>
             
             {% if content %}
-                {% for platform, platform_data in content.items() %}
+                {% for platform, platform_data_list in content.items() %}
+                    {% set platform_data = platform_data_list[0] if platform_data_list and platform_data_list|length > 0 else {} %}
                     <div class="platform-card">
                         <div class="d-flex align-items-center mb-3">
                             <i class="fab fa-{{ platform|lower }} fa-2x text-primary me-3"></i>
@@ -250,8 +253,8 @@
                                     <i class="fas fa-edit me-1"></i>Edit Caption
                                 </button>
                             </div>
-                            <div class="bg-white p-3 rounded border" id="caption-{{ platform }}" style="cursor: pointer;" onclick="showCaptionModal('{{ platform }}', '{{ platform_data.content|escape }}')" title="Click to view full caption">
-                                {{ platform_data.content|safe|truncate(150) }}
+                            <div class="bg-white p-3 rounded border" id="caption-{{ platform }}" style="cursor: pointer;" onclick="showCaptionModal('{{ platform }}', '{{ platform_data.get('content', platform_data.get('caption', ''))|escape }}')" title="Click to view full caption">
+                                {{ platform_data.get('content', platform_data.get('caption', ''))|safe|truncate(150) }}
                             </div>
                         </div>
                         
@@ -283,13 +286,17 @@
                         <div class="row text-center">
                             <div class="col-4">
                                 <small class="text-muted">Engagement</small>
-                                <div class="fw-bold text-{{ 'success' if platform_data.engagement_score == 'high' else 'warning' if platform_data.engagement_score == 'medium' else 'danger' }}">
-                                    {{ platform_data.engagement_score|title }}
+                                <div class="fw-bold text-{{ 'success' if analytics and platform in analytics and analytics[platform] and analytics[platform][0].get('engagement_score') and analytics[platform][0].get('engagement_score')|int > 70 else 'warning' if analytics and platform in analytics and analytics[platform] and analytics[platform][0].get('engagement_score') and analytics[platform][0].get('engagement_score')|int > 40 else 'danger' }}">
+                                    {% if analytics and platform in analytics and analytics[platform] and analytics[platform][0].get('engagement_score') %}
+                                        {{ analytics[platform][0].get('engagement_score') }}%
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="col-4">
                                 <small class="text-muted">Characters</small>
-                                <div class="fw-bold">{{ platform_data.character_count }}</div>
+                                <div class="fw-bold">{{ platform_data.get('character_count', platform_data.get('content', '')|length) }}</div>
                             </div>
                             <div class="col-4">
                                 <small class="text-muted">Tone</small>
@@ -595,9 +602,21 @@
             btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Publishing...';
             btn.disabled = true;
 
-            // Prepare publish data
+            // Prepare publish data - create selected_variants from available platforms
             const formData = new FormData();
             formData.append('workflow_id', workflowData.workflow_id);
+            
+            // Add all available platforms as selected variants
+            // Backend expects selected_variants to be a dict with platform names as keys
+            const selectedVariants = {};
+            workflowData.platforms.forEach(platform => {
+                selectedVariants[platform] = true;  // Mark each platform as selected
+            });
+            
+            // Convert selectedVariants to FormData format
+            Object.keys(selectedVariants).forEach(platform => {
+                formData.append(`selected_variants[${platform}]`, 'true');
+            });
 
             // Publish content
             fetch('/publish-content', {
@@ -736,25 +755,27 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    // Update the image display with comparison view
-                    const imagesContainer = document.getElementById('generated-images');
+                // Update the image display with the new image
+                const generatedImagesContainer = document.getElementById('generated-images');
+                if (generatedImagesContainer) {
+                    // Clear existing images
+                    generatedImagesContainer.innerHTML = '';
                     
-                    imagesContainer.innerHTML = `
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="text-center mb-2">
-                                    <small class="text-muted">Original Image</small>
-                                </div>
-                                <img src="${originalImageUrl}" class="img-fluid rounded" alt="Original Image">
-                            </div>
-                            <div class="col-md-6">
-                                <div class="text-center mb-2">
-                                    <small class="text-success">Newly Generated Image</small>
-                                </div>
-                                <img src="${result.image_url}" class="img-fluid rounded" alt="Generated Image">
-                            </div>
-                        </div>
-                    `;
+                    // Add new image
+                    const newImage = document.createElement('img');
+                    newImage.src = result.image_url;
+                    newImage.alt = 'Regenerated Image';
+                    newImage.className = 'image-preview';
+                    newImage.id = 'main-generated-image';
+                    
+                    generatedImagesContainer.appendChild(newImage);
+                    
+                    // Store the new image URL for future reference
+                    if (!window.generatedImages) {
+                        window.generatedImages = [];
+                    }
+                    window.generatedImages = [result.image_url];
+                }
                     
                     // Show success message
                     const alertDiv = document.createElement('div');
@@ -763,7 +784,7 @@
                         <i class="fas fa-check"></i> Image regenerated successfully!
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     `;
-                    imagesContainer.parentNode.insertBefore(alertDiv, imagesContainer.nextSibling);
+                    generatedImagesContainer.parentNode.insertBefore(alertDiv, generatedImagesContainer.nextSibling);
                 } else {
                     throw new Error(result.detail || 'Failed to regenerate image');
                 }

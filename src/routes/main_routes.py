@@ -5,7 +5,7 @@ import uuid
 from datetime import datetime
 import asyncio
 
-from ..models import ContentRequest, PostRequest
+from ..models import ContentRequest, PostRequest, Platform
 from ..services import APIService
 from ..services.ai_service import AIService
 from ..utils.logger_config import get_logger
@@ -28,7 +28,7 @@ async def home(request: Request):
 async def create_content_api(
     request: Request,
     topic: str = Form(...),
-    platforms: list = Form([]),
+    platforms: str = Form(""),
     tone: str = Form("professional"),
     include_image: bool = Form(False),
     voice_input: str = Form(None),
@@ -42,10 +42,17 @@ async def create_content_api(
         # Generate unique workflow ID
         workflow_id = str(uuid.uuid4())
         
+        # Parse platforms from string to list
+        platform_list = []
+        if platforms:
+            platform_list = [p.strip() for p in platforms.split(",") if p.strip()]
+        if not platform_list:
+            platform_list = ["twitter", "linkedin"]
+        
         # Prepare content request
         content_request = ContentRequest(
             topic=topic,
-            platforms=platforms if platforms else ["twitter", "linkedin"],
+            platforms=platform_list,
             tone=tone,
             include_image=include_image,
             caption_length=caption_length,
@@ -57,7 +64,7 @@ async def create_content_api(
         logger.info(f"Creating content for workflow {workflow_id}", extra={
             "workflow_id": workflow_id,
             "topic": topic,
-            "platforms": platforms,
+            "platforms": platform_list,
             "tone": tone,
         })
         
@@ -87,7 +94,7 @@ async def create_content_api(
             "status": "content_created",
             "created_at": datetime.now(),
             "topic": topic,
-            "platforms": platforms,
+            "platforms": platform_list,
             "tone": tone,
             "content": platform_content,
             "image_url": first_image_url,
@@ -98,15 +105,16 @@ async def create_content_api(
         
         logger.info(f"Content created successfully for workflow {workflow_id}")
         
-        # Store enhanced prompt if available
-        enhanced_prompt = content_data.get("enhanced_prompt", topic)
+        # Generate enhanced prompt using the input parser
+        from ..utils.input_parser import enhance_topic_for_generation
+        enhanced_prompt = enhance_topic_for_generation(topic, tone)
         
         # Redirect to review page with all the data
         return templates.TemplateResponse("review.html", {
             "request": request,
             "workflow_id": workflow_id,
             "topic": topic,
-            "platforms": platforms,
+            "platforms": platform_list,
             "tone": tone,
             "content": platform_content,
             "image_url": first_image_url,
@@ -227,6 +235,16 @@ async def regenerate_image_api(request: Request):
         from ..services.workflow_service import SocialMediaWorkflow
         workflow = SocialMediaWorkflow()
         
+        # Store current workflow data in content manager for context preservation
+        current_content = {
+            "platform_content": workflow_data.get("platform_content", {}),
+            "image_url": workflow_data.get("image_url", original_image_url),
+            "image_ideas": workflow_data.get("image_ideas", []),
+            "context": workflow_data.get("topic", ""),
+            "created_at": workflow_data.get("created_at", datetime.now().isoformat())
+        }
+        workflow.content_manager.store_content(workflow_id, current_content)
+        
         result = await workflow.regenerate_image_with_prompt(
             content_id=workflow_id,
             new_prompt=prompt,
@@ -288,6 +306,16 @@ async def modify_image_api(request: Request):
         from ..services.workflow_service import SocialMediaWorkflow
         workflow = SocialMediaWorkflow()
         
+        # Store current workflow data in content manager for context preservation
+        current_content = {
+            "platform_content": workflow_data.get("platform_content", {}),
+            "image_url": workflow_data.get("image_url", image_url),
+            "image_ideas": workflow_data.get("image_ideas", []),
+            "context": workflow_data.get("topic", ""),
+            "created_at": workflow_data.get("created_at", datetime.now().isoformat())
+        }
+        workflow.content_manager.store_content(workflow_id, current_content)
+        
         result = await workflow.modify_image_with_feedback(
             content_id=workflow_id,
             feedback=feedback,
@@ -316,42 +344,101 @@ async def modify_image_api(request: Request):
 
 @router.post("/publish-content")
 async def publish_content_api(
-    workflow_id: str = Form(...),
-    selected_variants: dict = Form({})
+    request: Request,
+    workflow_id: str = Form(...)
 ):
     """Publish content to social media platforms"""
     try:
         logger.info(f"Publishing content for workflow {workflow_id}")
         
+        # Parse form data manually to handle selected_variants[platform] format
+        form_data = await request.form()
+        selected_variants = {}
+        
+        for key, value in form_data.items():
+            if key.startswith('selected_variants[') and key.endswith(']'):
+                # Extract platform name from selected_variants[platform] format
+                platform = key[len('selected_variants['):-1]
+                selected_variants[platform] = value
+        
+        logger.info(f"Selected variants: {selected_variants}")
+        
         # Check if workflow exists
         if workflow_id not in active_workflows:
             raise HTTPException(status_code=404, detail="Workflow not found")
         
+        # Get workflow data
+        workflow_data = active_workflows[workflow_id]
+        
         # Prepare publish request
+        platforms = list(selected_variants.keys()) if selected_variants else []
+        if not platforms:
+            # Fallback: use platforms from workflow data
+            platforms = workflow_data.get('platforms', [])
+            logger.warning(f"No platforms selected, using workflow platforms: {platforms}")
+        
+        # Convert platform names to Platform enum
+        platform_enums = []
+        for platform in platforms:
+            try:
+                # Convert platform name to enum (handle case variations)
+                platform_enum = Platform(platform.lower())
+                platform_enums.append(platform_enum)
+            except ValueError:
+                logger.warning(f"Unknown platform: {platform}")
+        
+        if not platform_enums:
+            raise HTTPException(status_code=400, detail="No valid platforms selected")
+        
+        # Prepare content data from workflow
+        content_data = {
+            "platform_content": workflow_data.get("content", {}),
+            "image_ideas": workflow_data.get("generated_images", []),
+            "topic": workflow_data.get("topic", ""),
+            "analytics": workflow_data.get("analytics", {})
+        }
+        
         publish_request = PostRequest(
             content_id=workflow_id,
-            platforms=list(selected_variants.keys()) if selected_variants else []
+            platforms=platform_enums
         )
         
         # Initialize API service
         api_service = APIService()
         
         # Publish content
-        result = await api_service.publish_content(publish_request)
+        result = await api_service.post_content(content_data, publish_request.platforms)
         
-        # Update workflow status
-        active_workflows[workflow_id]["status"] = "published"
-        active_workflows[workflow_id]["published_at"] = datetime.now()
-        active_workflows[workflow_id]["publish_results"] = result.get("results", {})
-        
-        logger.info(f"Content published successfully for workflow {workflow_id}")
-        
-        return JSONResponse({
-            "success": True,
-            "workflow_id": workflow_id,
-            "results": result.get("results", {}),
-            "message": "Content published successfully!"
-        })
+        # Check if posting was successful
+        if result.get("success"):
+            # Update workflow status only on success
+            active_workflows[workflow_id]["status"] = "published"
+            active_workflows[workflow_id]["published_at"] = datetime.now()
+            active_workflows[workflow_id]["publish_results"] = result.get("results", {})
+            
+            logger.info(f"Content published successfully for workflow {workflow_id}")
+            
+            return JSONResponse({
+                "success": True,
+                "workflow_id": workflow_id,
+                "results": result.get("results", {}),
+                "message": "Content published successfully!"
+            })
+        else:
+            # Handle posting failure
+            error_msg = result.get("error", "Unknown posting error")
+            logger.error(f"Content publishing failed for workflow {workflow_id}: {error_msg}")
+            
+            # Update workflow status to failed
+            active_workflows[workflow_id]["status"] = "failed"
+            active_workflows[workflow_id]["publish_error"] = error_msg
+            
+            return JSONResponse({
+                "success": False,
+                "workflow_id": workflow_id,
+                "error": error_msg,
+                "message": f"Failed to publish content: {error_msg}"
+            }, status_code=400)
         
     except Exception as e:
         logger.error(f"Error publishing content: {str(e)}", exc_info=True)

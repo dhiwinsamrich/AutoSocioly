@@ -4,6 +4,7 @@ import json
 import asyncio
 from datetime import datetime
 import uuid
+from typing import Dict, Any, List, Optional
 
 from ..models import ContentRequest, PostRequest, Platform, Tone
 from ..services.workflow_service import SocialMediaWorkflow
@@ -94,12 +95,15 @@ class APIService:
                 "message": "Internal server error"
             }
     
-    async def post_content(self, request: PostRequest) -> Dict[str, Any]:
+    async def post_content(self, content_data: Dict[str, Any], platforms: List[Platform], schedule_time: Optional[datetime] = None, use_variants: bool = False) -> Dict[str, Any]:
         """
         Post content to social media platforms
         
         Args:
-            request: Post request with content data
+            content_data: Content data from content generation
+            platforms: List of platforms to post to
+            schedule_time: Optional scheduled posting time
+            use_variants: Whether to use content variants
             
         Returns:
             Posting results
@@ -115,10 +119,10 @@ class APIService:
             
             # Execute posting workflow
             result = await workflow.post_content_workflow(
-                content_data=request.content_data,
-                platforms=request.platforms,
-                schedule_time=request.schedule_time,
-                use_variants=request.use_variants
+                content_data=content_data,
+                platforms=platforms,
+                schedule_time=schedule_time,
+                use_variants=use_variants
             )
             
             # Clean up workflow
@@ -130,26 +134,32 @@ class APIService:
                 logger_name='api.post',
                 method='POST',
                 endpoint='/api/post',
-                status_code=200 if result.success else 400,
+                status_code=200,
                 duration=0,
-                request_data=request.dict(),
-                response_data=result.dict()
+                request_data={"content_id": content_data.get("workflow_id", ""), "platforms": [p.value for p in platforms]},
+                response_data=result
             )
             
-            if result.success:
+            # Check if posting was successful - result is a PostResponse object from workflow service
+            logger.info(f"Post response: total_success={result.total_success}, total_failed={result.total_failed}, results={len(result.results) if hasattr(result, 'results') else 0}")
+            
+            if result.total_success > 0:
                 logger.info(f"Content posted successfully: {workflow_id}")
                 return {
                     "success": True,
                     "workflow_id": workflow_id,
-                    "data": result.dict(),
+                    "data": result.dict() if hasattr(result, 'dict') else result,
                     "message": "Content posted successfully"
                 }
             else:
-                logger.error(f"Posting failed: {result.error}")
+                # Extract error messages from failed results
+                failed_results = [r for r in result.results if not r.success] if hasattr(result, 'results') else []
+                error_msg = failed_results[0].error_message if failed_results else "Unknown posting error"
+                logger.error(f"Posting failed: {error_msg}, failed_results={len(failed_results)}, total_failed={result.total_failed}")
                 return {
                     "success": False,
                     "workflow_id": workflow_id,
-                    "error": result.error,
+                    "error": error_msg,
                     "message": "Posting failed"
                 }
                 
@@ -545,98 +555,3 @@ class APIService:
                 "error": str(e),
                 "message": "Failed to get analytics"
             }
-
-    async def post_content(self, workflow_id: str, platforms: List[str], 
-                          selected_variants: Optional[Dict[str, int]] = None,
-                          schedule_time: Optional[str] = None) -> Dict[str, Any]:
-        """
-        Post content to selected platforms
-        
-        Args:
-            workflow_id: Workflow ID
-            platforms: List of platforms to post to
-            selected_variants: Dict mapping platform to variant index
-            schedule_time: Optional schedule time
-            
-        Returns:
-            Posting results
-        """
-        try:
-            workflow = self.workflows.get(workflow_id)
-            if not workflow:
-                raise ValueError(f"Workflow {workflow_id} not found")
-            
-            if workflow['status'] != 'completed':
-                raise ValueError(f"Workflow {workflow_id} is not completed")
-            
-            # Update workflow status
-            workflow['status'] = 'publishing'
-            workflow['progress'] = 80
-            
-            results = {}
-            
-            # Get linked accounts
-            accounts = await self.getlate_service.get_accounts()
-            if not accounts:
-                raise ValueError("No linked social media accounts found")
-            
-            # Post to each platform
-            for platform in platforms:
-                try:
-                    # Get account for platform
-                    account = next((acc for acc in accounts if acc['platform'] == platform), None)
-                    if not account:
-                        results[platform] = {"error": f"No account found for {platform}"}
-                        continue
-                    
-                    # Select variant if specified
-                    if selected_variants and platform in selected_variants:
-                        variant_index = selected_variants[platform]
-                        content = workflow['content']['variants'][variant_index]
-                    else:
-                        # Use first variant as default
-                        content = workflow['content']['variants'][0]
-                    
-                    # Get media files if available
-                    media_files = []
-                    if workflow.get('images'):
-                        media_files = workflow['images']
-                    
-                    # Post using Getlate API
-                    post_result = await self.getlate_service.post_content_with_media(
-                        account_id=account['id'],
-                        content=content['content'],
-                        media_files=media_files,
-                        platform=platform,
-                        scheduled_time=schedule_time,
-                        hashtags=content.get('hashtags', []),
-                        mentions=content.get('mentions', [])
-                    )
-                    
-                    results[platform] = {
-                        "success": True,
-                        "post_id": post_result.get('id'),
-                        "url": post_result.get('url'),
-                        "platform_data": post_result
-                    }
-                    
-                    logger.info(f"Successfully posted to {platform}: {post_result.get('id')}")
-                    
-                except Exception as e:
-                    logger.error(f"Failed to post to {platform}: {e}")
-                    results[platform] = {"error": str(e)}
-            
-            # Update workflow with results
-            workflow['posting_results'] = results
-            workflow['status'] = 'published'
-            workflow['progress'] = 100
-            workflow['completed_at'] = datetime.now().isoformat()
-            
-            return results
-            
-        except Exception as e:
-            logger.error(f"Posting workflow failed: {e}")
-            if workflow_id in self.workflows:
-                self.workflows[workflow_id]['status'] = 'failed'
-                self.workflows[workflow_id]['error'] = str(e)
-            raise

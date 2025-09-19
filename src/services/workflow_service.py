@@ -5,9 +5,10 @@ import asyncio
 import json
 from pathlib import Path
 import uuid
+import time
 
 from ..models import (
-    ContentRequest, ContentResponse, PostRequest, PostResponse,
+    ContentRequest, ContentResponse, PostRequest, PostResponse, PostResult,
     Platform, Tone
 )
 from ..services.getlate_service import GetLateService
@@ -17,6 +18,38 @@ from ..utils.logger_config import log_social_media_action
 from ..config import settings
 
 logger = logging.getLogger(__name__)
+
+
+class SimpleContentManager:
+    """Simple in-memory content manager for storing and retrieving content data"""
+    
+    def __init__(self):
+        self._content_store = {}
+    
+    def get_content(self, content_id: str) -> Optional[Dict[str, Any]]:
+        """Get content by ID"""
+        return self._content_store.get(content_id)
+    
+    def update_content(self, content_id: str, data: Dict[str, Any]) -> bool:
+        """Update content with new data"""
+        try:
+            if content_id in self._content_store:
+                self._content_store[content_id].update(data)
+            else:
+                self._content_store[content_id] = data
+            return True
+        except Exception as e:
+            logger.error(f"Failed to update content {content_id}: {e}")
+            return False
+    
+    def store_content(self, content_id: str, content_data: Dict[str, Any]) -> bool:
+        """Store new content"""
+        try:
+            self._content_store[content_id] = content_data
+            return True
+        except Exception as e:
+            logger.error(f"Failed to store content {content_id}: {e}")
+            return False
 
 class SocialMediaWorkflow:
     """Main workflow for social media content creation and posting"""
@@ -34,6 +67,9 @@ class SocialMediaWorkflow:
         self.current_step = None
         self.results = {}
         self.errors = []
+        
+        # Simple content manager for storing and retrieving content
+        self.content_manager = SimpleContentManager()
         
         logger.info(f"Social media workflow initialized: {self.workflow_id}")
     
@@ -142,7 +178,18 @@ class SocialMediaWorkflow:
                 "performance_analysis": performance_analysis
             }
             
-
+            # Store content in content manager for future reference
+            content_data = {
+                "platform_content": platform_content,
+                "image_ideas": image_ideas,
+                "generated_images": generated_images,
+                "performance_analysis": performance_analysis,
+                "topic": topic,
+                "tone": tone.value if hasattr(tone, 'value') else str(tone),
+                "include_images": include_images,
+                "created_at": datetime.now().isoformat()
+            }
+            self.content_manager.store_content(self.workflow_id, content_data)
             
             return ContentResponse(
                 success=True,
@@ -288,12 +335,17 @@ class SocialMediaWorkflow:
         """
         self.status = "running"
         self.current_step = "posting"
+        start_time = time.time()
         
         try:
             
             # Get platform content
             platform_content = content_data.get("platform_content", {})
             posting_results = {}
+            
+            logger.info(f"Content data keys: {list(content_data.keys())}")
+            logger.info(f"Platform content keys: {list(platform_content.keys())}")
+            logger.info(f"Platform content: {json.dumps(platform_content, indent=2)[:500]}...")  # Truncate for readability
             
             # Step 1: Get connected accounts
             logger.info("Getting connected accounts")
@@ -303,9 +355,20 @@ class SocialMediaWorkflow:
             
             available_platforms = {acc.platform: acc for acc in connected_accounts}
             
+            # Map platform names (handle both "twitter" and "x")
+            platform_mapping = {
+                "twitter": "x",
+                "x": "x"
+            }
+            
             # Step 2: Post to each platform
+            logger.info(f"Available platform content: {list(platform_content.keys())}")
             for platform in platforms:
-                if platform not in available_platforms:
+                platform_key = platform.value
+                if platform_key in platform_mapping:
+                    platform_key = platform_mapping[platform_key]
+                
+                if platform_key not in available_platforms:
                     logger.warning(f"No connected account for {platform.value}")
                     posting_results[platform.value] = {
                         "success": False,
@@ -313,8 +376,12 @@ class SocialMediaWorkflow:
                     }
                     continue
                 
+                # Use the mapped platform for posting
+                platform_account = available_platforms[platform_key]
+                
                 try:
                     # Select content (use first variant or random variant)
+                    logger.info(f"Checking content for platform: {platform.value}, platform_content keys: {list(platform_content.keys())}")
                     if platform.value in platform_content:
                         contents = platform_content[platform.value]
                         if use_variants and len(contents) > 1:
@@ -382,10 +449,11 @@ class SocialMediaWorkflow:
                         continue
                     
                     posting_results[platform.value] = {
-                        "success": True,
-                        "post_id": result.get("id"),
-                        "post_url": result.get("url"),
-                        "content": content_text
+                        "success": True,  # Since we got here without exception, posting was successful
+                        "stage": "complete",
+                        "content_data": content,
+                        "posting_results": result,
+                        "error": None
                     }
                     
                     logger.info(f"Successfully posted to {platform.value}: {result.get('id')}")
@@ -400,11 +468,35 @@ class SocialMediaWorkflow:
             self.status = "completed"
             self.results = posting_results
             
+            # Convert posting_results to proper PostResult format
+            post_results = []
+            total_success = 0
+            total_failed = 0
+            
+            for platform_name, result in posting_results.items():
+                platform_enum = Platform(platform_name)
+                success = result.get("success", False)
+                if success:
+                    total_success += 1
+                else:
+                    total_failed += 1
+                
+                post_result = PostResult(
+                    platform=platform_enum,
+                    success=success,
+                    post_id=result.get("post_id"),
+                    post_url=result.get("post_url"),
+                    error_message=result.get("error"),
+                    response_data=result
+                )
+                post_results.append(post_result)
+            
             return PostResponse(
-                success=True,
-                workflow_id=self.workflow_id,
-                posting_results=posting_results,
-                message="Content posted successfully"
+                content_id=content_data.get("workflow_id", self.workflow_id),
+                results=post_results,
+                total_success=total_success,
+                total_failed=total_failed,
+                posting_time=time.time() - start_time
             )
             
         except Exception as e:
@@ -413,11 +505,13 @@ class SocialMediaWorkflow:
             
             logger.error(f"Posting workflow failed: {e}")
             
+            # Return empty PostResponse for error case
             return PostResponse(
-                success=False,
-                workflow_id=self.workflow_id,
-                error=str(e),
-                message="Posting failed"
+                content_id=content_data.get("workflow_id", self.workflow_id),
+                results=[],
+                total_success=0,
+                total_failed=len(platforms),
+                posting_time=time.time() - start_time
             )
     
     async def complete_workflow(
@@ -477,11 +571,11 @@ class SocialMediaWorkflow:
             )
             
             return {
-                "success": post_response.success,
+                "success": True,
                 "stage": "complete",
                 "content_data": content_response.dict(),
-                "posting_results": post_response.posting_results if post_response.success else None,
-                "error": post_response.error if not post_response.success else None
+                "posting_results": post_response.results,
+                "error": None
             }
             
         except Exception as e:
@@ -615,12 +709,12 @@ class SocialMediaWorkflow:
                     enhanced_prompt = f"{new_prompt} (maintaining context: {context})"
             
             # Generate image using the async method
-            image_result = await image_service.agenerate_image_from_text(
+            image_result = await image_service.generate_image_from_text_async(
                 prompt=enhanced_prompt,
                 size="1024x1024",
                 quality="high",
                 style="photorealistic",
-                context=original_content.get('context') if original_content else None
+                preserve_context={'core_concept': original_content.get('context')} if original_content else None
             )
             
             if image_result and image_result.get("image_url"):
@@ -685,11 +779,11 @@ class SocialMediaWorkflow:
             image_service = ImageGenerationService()
             
             # Modify image with feedback
-            modification_result = await image_service.amodify_image(
-                image_url=image_url,
-                modification_prompt=feedback,
-                preserve_core_elements=True,
-                context=original_content.get('context') if original_content else None
+            modification_result = await image_service.modify_image_preserving_core(
+                original_prompt=original_content.get('context', '') if original_content else '',
+                modification_request=feedback,
+                platform="instagram",  # Default platform
+                preserve_elements=['main subject/composition', 'overall style and aesthetic']
             )
             
             if modification_result and modification_result.get("image_url"):

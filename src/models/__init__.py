@@ -110,7 +110,7 @@ class GetLateAccount(BaseModel):
     """GetLate account information"""
     id: str = Field(..., description="Account ID")
     platform: Platform = Field(..., description="Platform type")
-    name: str = Field(..., description="Account name")
+    name: Optional[str] = Field(None, description="Account name")
     username: Optional[str] = Field(None, description="Username/handle")
     connected: bool = Field(..., description="Connection status")
     last_used: Optional[datetime] = Field(None, description="Last used timestamp")

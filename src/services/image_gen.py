@@ -850,7 +850,7 @@ class ImageGenerationService:
             """
             
             # Generate modified image with enhanced parameters for precision
-            modified_image_data = self.generate_image_from_text(
+            modified_image_data = await self.generate_image_from_text_async(
                 prompt=precision_prompt,
                 quality="high",
                 style="photorealistic" if platform in ["linkedin", "facebook"] else "artistic",
