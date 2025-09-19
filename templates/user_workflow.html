@@ -167,7 +167,7 @@
                                 </div>
                             </div>
                             
-                            <button class="btn btn-primary btn-lg" onclick="generateContent()">
+                            <button class="btn btn-primary btn-lg" onclick="generateContent(event)">
                                 <span class="loading-spinner me-2">
                                     <i class="fas fa-spinner fa-spin"></i>
                                 </span>
@@ -201,7 +201,7 @@
                             </div>
                             
                             <div class="d-flex gap-2">
-                                <button class="btn btn-success btn-lg" onclick="confirmContent(true)">
+                                <button class="btn btn-success btn-lg" onclick="confirmContent(event, true)">
                                     <i class="fas fa-check me-2"></i>
                                     Approve & Post
                                 </button>
@@ -277,7 +277,7 @@
                             </div>
                             
                             <div class="d-flex gap-2">
-                                <button class="btn btn-warning btn-lg" onclick="modifyContent()">
+                                <button class="btn btn-warning btn-lg" onclick="modifyContent(event)">
                                     <span class="loading-spinner me-2">
                                         <i class="fas fa-spinner fa-spin"></i>
                                     </span>
@@ -338,7 +338,12 @@
             button.disabled = show;
         }
 
-        async function generateContent() {
+        async function generateContent(event) {
+            // Prevent any default form submission behavior
+            if (event) {
+                event.preventDefault();
+            }
+            
             const userInput = document.getElementById('userInput').value.trim();
             if (!userInput) {
                 alert('Please enter your content idea');
@@ -356,7 +361,7 @@
             const tone = document.getElementById('tone').value;
             const includeImage = document.getElementById('includeImage').checked;
 
-            const button = event.target;
+            const button = event ? event.target : document.querySelector('button[onclick="generateContent()"]');
             showLoading(button, true);
 
             try {
@@ -366,7 +371,7 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        user_input: userInput,
+                        topic: userInput,
                         platforms: platforms,
                         tone: tone,
                         include_image: includeImage
@@ -456,10 +461,10 @@
             return icons[platform] || '<i class="fas fa-share-alt me-2"></i>';
         }
 
-        async function confirmContent(confirmed) {
+        async function confirmContent(event, confirmed) {
             if (!currentSession) return;
 
-            const button = event.target;
+            const button = event ? event.target : document.querySelector('button[onclick*="confirmContent"]');
             showLoading(button, true);
 
             try {
@@ -521,7 +526,7 @@
             showStep('modify');
         }
 
-        async function modifyContent() {
+        async function modifyContent(event) {
             if (!currentSession) return;
 
             const textMod = document.getElementById('textModification').value.trim();
@@ -530,7 +535,7 @@
             const regenerateImage = document.getElementById('regenerateImage').checked;
             const regenerateText = document.getElementById('regenerateText').checked;
 
-            const button = event.target;
+            const button = event ? event.target : document.querySelector('button[onclick="modifyContent()"]');
             showLoading(button, true);
 
             try {

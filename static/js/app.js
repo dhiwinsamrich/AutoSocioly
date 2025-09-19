@@ -113,6 +113,18 @@ class SocialMediaApp {
                 body: formData
             });
             
+            // Check if response is HTML (redirect to review page)
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('text/html')) {
+                // Replace current page with the HTML response (review page)
+                const html = await response.text();
+                document.open();
+                document.write(html);
+                document.close();
+                return;
+            }
+            
+            // Handle JSON response (for backward compatibility)
             const result = await response.json();
             
             if (result.success) {

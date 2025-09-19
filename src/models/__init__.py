@@ -62,6 +62,7 @@ class ContentResponse(BaseModel):
     workflow_id: str = Field(..., description="Workflow ID")
     platform_content: Dict[str, List[Dict[str, Any]]] = Field(..., description="Generated content by platform")
     image_ideas: List[Dict[str, Any]] = Field(default=[], description="Generated image ideas")
+    generated_images: List[str] = Field(default=[], description="Generated image URLs/paths")
     performance_analysis: Dict[str, List[Dict[str, Any]]] = Field(default={}, description="Content performance analysis")
     message: str = Field(..., description="Response message")
     error: Optional[str] = Field(None, description="Error message if failed")

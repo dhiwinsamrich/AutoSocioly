@@ -3,6 +3,7 @@ import logging
 from datetime import datetime
 import os
 import json
+import re
 from pathlib import Path
 
 import google.generativeai as genai
@@ -29,6 +30,49 @@ class AIService:
         
         logger.info("AI service initialized with Gemini API")
     
+    def _extract_json_from_response(self, response_text: str) -> Optional[Dict]:
+        """
+        Extract JSON from response text, handling various formats
+        """
+        try:
+            # First, try direct JSON parsing
+            return json.loads(response_text.strip())
+        except json.JSONDecodeError:
+            pass
+        
+        # Try to find JSON within code blocks
+        json_match = re.search(r'```(?:json)?\s*(\{.*?\})\s*```', response_text, re.DOTALL)
+        if json_match:
+            try:
+                return json.loads(json_match.group(1))
+            except json.JSONDecodeError:
+                pass
+        
+        # Try to find JSON without code blocks
+        json_match = re.search(r'(\{.*?\})', response_text, re.DOTALL)
+        if json_match:
+            try:
+                return json.loads(json_match.group(1))
+            except json.JSONDecodeError:
+                pass
+        
+        return None
+    
+    def _get_response_text(self, response) -> str:
+        """
+        Extract text from Gemini response, handling different response formats
+        """
+        try:
+            if hasattr(response, 'parts') and response.parts:
+                return response.parts[0].text
+            elif hasattr(response, 'text'):
+                return response.text
+            else:
+                return str(response)
+        except Exception as e:
+            logger.error(f"Failed to extract response text: {e}")
+            return ""
+    
     def generate_social_media_content(
         self, 
         topic: str, 
@@ -40,17 +84,6 @@ class AIService:
     ) -> Dict[str, Any]:
         """
         Generate social media content for a specific platform
-        
-        Args:
-            topic: Content topic
-            platform: Target platform (facebook, instagram, twitter, linkedin, etc.)
-            tone: Content tone (professional, casual, funny, etc.)
-            max_length: Maximum character length
-            include_hashtags: Whether to include hashtags
-            context: Optional context information
-            
-        Returns:
-            Generated content with metadata
         """
         try:
             logger.info(f"Generating {platform} content for topic: {topic}")
@@ -80,33 +113,30 @@ class AIService:
             - Make it engaging and shareable
             {"- Context: " + context if context else ""}
             
-            Return the response in this JSON format:
+            IMPORTANT: Return ONLY valid JSON in this exact format:
             {{
                 "content": "The generated post content",
                 "hashtags": ["list", "of", "hashtags"],
                 "call_to_action": "engaging call to action",
-                "engagement_score": "estimated engagement level (high/medium/low)"
+                "engagement_score": "high"
             }}
+            
+            Do not include any text before or after the JSON. Only return the JSON object.
             """
             
             response = self.client.generate_content(prompt)
+            response_text = self._get_response_text(response)
             
-            try:
-                # Parse JSON response
-                content_data = json.loads(response.text)
-            except json.JSONDecodeError:
-                # Fallback if JSON parsing fails
-                content_data = {
-                    "content": response.text.strip(),
-                    "hashtags": [],
-                    "call_to_action": "",
-                    "engagement_score": "medium"
-                }
+            # Try to extract JSON from response
+            content_data = self._extract_json_from_response(response_text)
             
-            # Validate content length
-            if len(content_data["content"]) > max_length:
-                logger.warning(f"Generated content exceeds max length ({len(content_data['content'])} > {max_length})")
-                content_data["content"] = content_data["content"][:max_length-3] + "..."
+            if content_data is None:
+                # Enhanced fallback - try to parse the response manually
+                logger.warning(f"JSON parsing failed, attempting manual parsing for {platform}")
+                content_data = self._create_fallback_content(response_text, topic, platform, tone, include_hashtags)
+            
+            # Validate and clean the content
+            content_data = self._validate_and_clean_content(content_data, max_length, include_hashtags)
             
             logger.info(f"Generated content for {platform}: {len(content_data['content'])} characters")
             return content_data
@@ -115,127 +145,114 @@ class AIService:
             logger.error(f"Failed to generate content: {e}")
             raise Exception(f"Content generation failed: {str(e)}")
     
-    def generate_multiple_variants(
-        self,
-        topic: str,
-        platform: str,
-        count: int = 3,
-        tone: str = "professional",
-        max_length: int = 280
-    ) -> List[Dict[str, Any]]:
+    def _create_fallback_content(self, response_text: str, topic: str, platform: str, tone: str, include_hashtags: bool) -> Dict[str, Any]:
         """
-        Generate multiple content variants for A/B testing
+        Create fallback content when JSON parsing fails
+        """
+        # Clean the response text
+        content = response_text.strip()
         
-        Args:
-            topic: Content topic
-            platform: Target platform
-            count: Number of variants to generate
-            tone: Content tone
-            max_length: Maximum character length
-            
-        Returns:
-            List of content variants
-        """
-        try:
-            logger.info(f"Generating {count} variants for {platform} about {topic}")
-            
-            prompt = f"""
-            Generate {count} different {tone} social media posts for {platform} about: {topic}
-            
-            Each post should be unique in approach and style.
-            Maximum {max_length} characters each.
-            
-            Return the response in this JSON format:
-            {{
-                "variants": [
-                    {{
-                        "content": "Post content 1",
-                        "hashtags": ["hashtag1", "hashtag2"],
-                        "approach": "description of the approach used",
-                        "target_audience": "intended audience"
-                    }},
-                    {{
-                        "content": "Post content 2",
-                        "hashtags": ["hashtag1", "hashtag2"],
-                        "approach": "description of the approach used",
-                        "target_audience": "intended audience"
-                    }}
-                ]
-            }}
-            """
-            
-            response = self.client.generate_content(prompt)
-            
-            try:
-                variants_data = json.loads(response.text)
-                variants = variants_data.get("variants", [])
-                
-                # Validate and clean variants
-                cleaned_variants = []
-                for variant in variants:
-                    if len(variant["content"]) <= max_length:
-                        cleaned_variants.append(variant)
-                    else:
-                        variant["content"] = variant["content"][:max_length-3] + "..."
-                        cleaned_variants.append(variant)
-                
-                logger.info(f"Generated {len(cleaned_variants)} variants")
-                return cleaned_variants
-                
-            except json.JSONDecodeError:
-                # Fallback if JSON parsing fails
-                logger.warning("Failed to parse variants JSON, using fallback")
-                return [{"content": response.text.strip(), "hashtags": [], "approach": "single post", "target_audience": "general"}]
-                
-        except Exception as e:
-            logger.error(f"Failed to generate variants: {e}")
-            raise Exception(f"Variants generation failed: {str(e)}")
+        # Extract hashtags if present
+        hashtags = []
+        if include_hashtags:
+            hashtag_pattern = r'#(\w+)'
+            hashtags = re.findall(hashtag_pattern, content)
+            # Remove hashtags from main content
+            content = re.sub(r'#\w+\s*', '', content).strip()
+        
+        # Generate some basic hashtags if none found and needed
+        if include_hashtags and not hashtags:
+            hashtags = self._generate_basic_hashtags(topic, platform)
+        
+        return {
+            "content": content,
+            "hashtags": hashtags[:10],  # Limit to 10 hashtags
+            "call_to_action": self._generate_basic_cta(platform),
+            "engagement_score": "medium"
+        }
     
-    def generate_image_description(self, image_path: str) -> str:
+    def _generate_basic_hashtags(self, topic: str, platform: str) -> List[str]:
         """
-        Generate description for an image
+        Generate basic hashtags when AI response doesn't include them
+        """
+        # Basic hashtag generation based on topic keywords
+        words = topic.lower().split()
+        hashtags = []
         
-        Args:
-            image_path: Path to the image file
-            
-        Returns:
-            Image description
+        # Add topic-based hashtags
+        for word in words:
+            if len(word) > 3 and word.isalpha():
+                hashtags.append(word)
+        
+        # Add platform-appropriate hashtags
+        platform_hashtags = {
+            "twitter": ["trending", "viral", "follow"],
+            "instagram": ["instagood", "photooftheday", "love"],
+            "linkedin": ["business", "professional", "career"],
+            "facebook": ["community", "share", "connect"],
+            "reddit": ["discussion", "community"],
+            "pinterest": ["inspiration", "ideas", "discover"]
+        }
+        
+        hashtags.extend(platform_hashtags.get(platform, ["content", "social"]))
+        
+        return hashtags[:8]  # Return max 8 hashtags
+    
+    def _generate_basic_cta(self, platform: str) -> str:
         """
-        try:
-            logger.info(f"Generating description for image: {image_path}")
-            
-            image = Image.open(image_path)
-            
-            prompt = """
-            Analyze this image and provide a detailed description that would be suitable for:
-            1. Social media alt text
-            2. Image caption
-            3. SEO purposes
-            
-            Include key visual elements, colors, mood, and any text visible in the image.
-            Make the description engaging and informative.
-            """
-            
-            response = self.vision_model.generate_content([prompt, image])
-            description = response.text.strip()
-            
-            logger.info(f"Generated image description: {description[:100]}...")
-            return description
-            
-        except Exception as e:
-            logger.error(f"Failed to generate image description: {e}")
-            raise Exception(f"Image description generation failed: {str(e)}")
+        Generate basic call-to-action based on platform
+        """
+        ctas = {
+            "twitter": "What do you think? Share your thoughts!",
+            "instagram": "Double tap if you agree! 💖",
+            "linkedin": "What's your experience with this?",
+            "facebook": "Let us know in the comments!",
+            "reddit": "What are your thoughts on this?",
+            "pinterest": "Save this for later!"
+        }
+        
+        return ctas.get(platform, "Let us know what you think!")
+    
+    def _validate_and_clean_content(self, content_data: Dict[str, Any], max_length: int, include_hashtags: bool) -> Dict[str, Any]:
+        """
+        Validate and clean the content data
+        """
+        # Ensure required fields exist
+        if "content" not in content_data:
+            content_data["content"] = "Content generation error. Please try again."
+        
+        if "hashtags" not in content_data:
+            content_data["hashtags"] = []
+        
+        if "call_to_action" not in content_data:
+            content_data["call_to_action"] = "Engage with this content!"
+        
+        if "engagement_score" not in content_data:
+            content_data["engagement_score"] = "medium"
+        
+        # Validate content length
+        if len(content_data["content"]) > max_length:
+            logger.warning(f"Generated content exceeds max length ({len(content_data['content'])} > {max_length})")
+            content_data["content"] = content_data["content"][:max_length-3] + "..."
+        
+        # Clean hashtags
+        if isinstance(content_data["hashtags"], list):
+            content_data["hashtags"] = [tag.strip().replace('#', '') for tag in content_data["hashtags"] if tag.strip()]
+        else:
+            content_data["hashtags"] = []
+        
+        # Remove hashtags if not requested
+        if not include_hashtags:
+            content_data["hashtags"] = []
+        
+        # Add character count
+        content_data["character_count"] = len(content_data["content"])
+        
+        return content_data
     
     def generate_image_ideas(self, topic: str, count: int = 5, image_context: Optional[str] = None) -> List[Dict[str, Any]]:
         """
         Generate image ideas for a topic
-        
-        Args:
-            topic: Content topic
-            count: Number of image ideas
-            
-        Returns:
-            List of image ideas with descriptions
         """
         try:
             logger.info(f"Generating {count} image ideas for topic: {topic}")
@@ -252,140 +269,88 @@ class AIService:
             
             {f"Additional context: {image_context}" if image_context else ""}
             
-            Return in this JSON format:
+            IMPORTANT: Return ONLY valid JSON in this exact format:
             {{
                 "ideas": [
                     {{
                         "title": "Image idea title",
                         "description": "Detailed visual description",
-                        "colors": ["primary colors"],
-                        "style": "photographic/illustration/minimal/etc",
+                        "colors": ["primary", "colors"],
+                        "style": "photographic",
                         "text_overlay": "suggested text if any",
                         "mood": "overall mood/atmosphere"
                     }}
                 ]
             }}
+            
+            Do not include any text before or after the JSON.
             """
             
             response = self.client.generate_content(prompt)
+            response_text = self._get_response_text(response)
             
-            try:
-                ideas_data = json.loads(response.text)
-                ideas = ideas_data.get("ideas", [])
+            # Try to extract JSON from response
+            ideas_data = self._extract_json_from_response(response_text)
+            
+            if ideas_data and "ideas" in ideas_data:
+                ideas = ideas_data["ideas"]
                 logger.info(f"Generated {len(ideas)} image ideas")
                 return ideas
-                
-            except json.JSONDecodeError:
-                logger.warning("Failed to parse image ideas JSON, using fallback")
-                return [{"title": "Creative visualization", "description": response.text.strip(), "colors": ["various"], "style": "mixed", "text_overlay": "", "mood": "engaging"}]
+            else:
+                # Fallback
+                logger.warning("Failed to parse image ideas JSON, using enhanced fallback")
+                return self._create_fallback_image_ideas(response_text, topic, count)
                 
         except Exception as e:
             logger.error(f"Failed to generate image ideas: {e}")
-            raise Exception(f"Image ideas generation failed: {str(e)}")
+            return self._create_fallback_image_ideas("", topic, count)
     
-    def optimize_content_for_platform(self, content: str, platform: str) -> str:
+    def _create_fallback_image_ideas(self, response_text: str, topic: str, count: int) -> List[Dict[str, Any]]:
         """
-        Optimize existing content for a specific platform
+        Create fallback image ideas when JSON parsing fails
+        """
+        ideas = []
         
-        Args:
-            content: Original content
-            platform: Target platform
-            
-        Returns:
-            Optimized content
-        """
-        try:
-            logger.info(f"Optimizing content for {platform}")
-            
-            platform_limits = {
-                "twitter": 280,
-                "facebook": 2000,
-                "instagram": 2200,
-                "linkedin": 3000,
-                "reddit": 40000,
-                "pinterest": 500
-            }
-            
-            max_length = platform_limits.get(platform, 2000)
-            
-            prompt = f"""
-            Optimize this content for {platform}:
-            
-            Original content:
-            {content}
-            
-            Platform-specific requirements:
-            - Maximum {max_length} characters
-            - Use appropriate tone and style for {platform}
-            - Include relevant hashtags if appropriate
-            - Make it more engaging for the platform's audience
-            - Add appropriate calls-to-action
-            
-            Return only the optimized content.
-            """
-            
-            response = self.client.generate_content(prompt)
-            optimized_content = response.text.strip()
-            
-            # Ensure length limit
-            if len(optimized_content) > max_length:
-                optimized_content = optimized_content[:max_length-3] + "..."
-            
-            logger.info(f"Optimized content for {platform}: {len(optimized_content)} characters")
-            return optimized_content
-            
-        except Exception as e:
-            logger.error(f"Failed to optimize content: {e}")
-            raise Exception(f"Content optimization failed: {str(e)}")
-    
-    def extract_keywords(self, text: str, count: int = 10) -> List[str]:
-        """
-        Extract relevant keywords from text
+        # Split response into lines and try to extract ideas
+        lines = response_text.split('\n')
+        current_idea = {}
         
-        Args:
-            text: Input text
-            count: Number of keywords to extract
-            
-        Returns:
-            List of keywords
-        """
-        try:
-            logger.info(f"Extracting {count} keywords from text")
-            
-            prompt = f"""
-            Extract {count} relevant keywords from this text:
-            
-            {text}
-            
-            Focus on:
-            - Main topics and themes
-            - Industry-specific terms
-            - Action words
-            - Hashtag-worthy keywords
-            
-            Return only the keywords as a comma-separated list, nothing else.
-            """
-            
-            response = self.client.generate_content(prompt)
-            keywords = [kw.strip() for kw in response.text.strip().split(',') if kw.strip()]
-            
-            logger.info(f"Extracted {len(keywords)} keywords")
-            return keywords[:count]
-            
-        except Exception as e:
-            logger.error(f"Failed to extract keywords: {e}")
-            raise Exception(f"Keyword extraction failed: {str(e)}")
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+                
+            # Try to identify different parts of an idea
+            if any(keyword in line.lower() for keyword in ['idea', 'concept', 'title']):
+                if current_idea:
+                    ideas.append(current_idea)
+                    current_idea = {}
+                current_idea["title"] = line
+                current_idea["description"] = response_text[:200] + "..."
+                current_idea["colors"] = ["vibrant", "engaging"]
+                current_idea["style"] = "mixed"
+                current_idea["text_overlay"] = ""
+                current_idea["mood"] = "engaging"
+        
+        if current_idea:
+            ideas.append(current_idea)
+        
+        # If we still don't have enough ideas, generate basic ones
+        while len(ideas) < count:
+            ideas.append({
+                "title": f"Creative visualization {len(ideas) + 1}",
+                "description": f"A creative visual representation of {topic}",
+                "colors": ["vibrant", "professional"],
+                "style": "modern",
+                "text_overlay": topic,
+                "mood": "engaging"
+            })
+        
+        return ideas[:count]
     
     def analyze_content_performance(self, content: str, platform: str) -> Dict[str, Any]:
         """
         Analyze content for predicted performance
-        
-        Args:
-            content: Content to analyze
-            platform: Target platform
-            
-        Returns:
-            Performance analysis
         """
         try:
             logger.info(f"Analyzing content performance for {platform}")
@@ -395,37 +360,138 @@ class AIService:
             
             Content: {content}
             
-            Provide analysis in this JSON format:
+            IMPORTANT: Return ONLY valid JSON in this exact format:
             {{
-                "engagement_score": "high/medium/low",
+                "engagement_score": "high",
                 "strengths": ["list of content strengths"],
                 "weaknesses": ["list of content weaknesses"],
                 "improvements": ["suggested improvements"],
                 "best_posting_time": "suggested posting time",
                 "target_audience": "primary audience description",
-                "viral_potential": "high/medium/low"
+                "viral_potential": "high"
             }}
+            
+            Do not include any text before or after the JSON.
             """
             
             response = self.client.generate_content(prompt)
+            response_text = self._get_response_text(response)
             
-            try:
-                analysis = json.loads(response.text)
+            # Try to extract JSON from response
+            analysis = self._extract_json_from_response(response_text)
+            
+            if analysis:
                 logger.info(f"Content analysis completed: {analysis.get('engagement_score', 'unknown')} engagement")
                 return analysis
-                
-            except json.JSONDecodeError:
-                logger.warning("Failed to parse performance analysis JSON")
-                return {
-                    "engagement_score": "medium",
-                    "strengths": ["content provided"],
-                    "weaknesses": ["analysis unavailable"],
-                    "improvements": ["manual review recommended"],
-                    "best_posting_time": "varies",
-                    "target_audience": "general",
-                    "viral_potential": "medium"
-                }
+            else:
+                # Enhanced fallback
+                logger.warning("Failed to parse performance analysis JSON, using enhanced fallback")
+                return self._create_fallback_analysis(content, platform)
                 
         except Exception as e:
             logger.error(f"Failed to analyze content performance: {e}")
-            raise Exception(f"Content performance analysis failed: {str(e)}")
+            return self._create_fallback_analysis(content, platform)
+    
+    def _create_fallback_analysis(self, content: str, platform: str) -> Dict[str, Any]:
+        """
+        Create fallback analysis when JSON parsing fails
+        """
+        # Basic content analysis
+        word_count = len(content.split())
+        has_question = '?' in content
+        has_hashtags = '#' in content
+        has_exclamation = '!' in content
+        
+        # Determine engagement score based on content features
+        engagement_score = "medium"
+        if has_question and has_exclamation and word_count > 10:
+            engagement_score = "high"
+        elif word_count < 5:
+            engagement_score = "low"
+        
+        # Platform-specific analysis
+        platform_analysis = {
+            "twitter": {
+                "best_posting_time": "9-10 AM or 7-9 PM",
+                "target_audience": "General Twitter users, trending topic followers"
+            },
+            "instagram": {
+                "best_posting_time": "11 AM - 1 PM or 7-9 PM",
+                "target_audience": "Visual content consumers, younger demographics"
+            },
+            "linkedin": {
+                "best_posting_time": "8-10 AM or 5-6 PM on weekdays",
+                "target_audience": "Business professionals, industry experts"
+            },
+            "facebook": {
+                "best_posting_time": "1-3 PM or 7-9 PM",
+                "target_audience": "Diverse age groups, community members"
+            }
+        }
+        
+        platform_info = platform_analysis.get(platform, {
+            "best_posting_time": "varies by platform",
+            "target_audience": "general social media users"
+        })
+        
+        return {
+            "engagement_score": engagement_score,
+            "strengths": self._analyze_content_strengths(content, has_question, has_hashtags, has_exclamation),
+            "weaknesses": self._analyze_content_weaknesses(content, word_count),
+            "improvements": self._suggest_improvements(content, platform),
+            "best_posting_time": platform_info["best_posting_time"],
+            "target_audience": platform_info["target_audience"],
+            "viral_potential": engagement_score
+        }
+    
+    def _analyze_content_strengths(self, content: str, has_question: bool, has_hashtags: bool, has_exclamation: bool) -> List[str]:
+        """Analyze content strengths"""
+        strengths = []
+        
+        if has_question:
+            strengths.append("Includes engaging questions")
+        if has_hashtags:
+            strengths.append("Uses relevant hashtags")
+        if has_exclamation:
+            strengths.append("Has energetic tone")
+        if len(content) > 50:
+            strengths.append("Provides detailed information")
+        
+        if not strengths:
+            strengths.append("Clear and direct message")
+            
+        return strengths
+    
+    def _analyze_content_weaknesses(self, content: str, word_count: int) -> List[str]:
+        """Analyze content weaknesses"""
+        weaknesses = []
+        
+        if word_count < 5:
+            weaknesses.append("Very short content")
+        if not any(char in content for char in '!?'):
+            weaknesses.append("Could be more engaging")
+        if '#' not in content:
+            weaknesses.append("Missing hashtags for discovery")
+        
+        if not weaknesses:
+            weaknesses.append("Could benefit from more specific call-to-action")
+            
+        return weaknesses
+    
+    def _suggest_improvements(self, content: str, platform: str) -> List[str]:
+        """Suggest content improvements"""
+        improvements = []
+        
+        if '?' not in content:
+            improvements.append("Add a question to encourage engagement")
+        if '#' not in content:
+            improvements.append("Include relevant hashtags")
+        if platform == "instagram" and len(content) < 100:
+            improvements.append("Consider adding more descriptive content")
+        if platform == "twitter" and len(content) > 240:
+            improvements.append("Shorten content for better readability")
+            
+        if not improvements:
+            improvements.append("Content looks good as is")
+            
+        return improvements

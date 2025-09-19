@@ -317,7 +317,7 @@ class UserWorkflowService:
                 # Generate image ideas first
                 image_ideas = self.image_gen.generate_image_ideas(
                     topic=topic,
-                    count=3
+                    count=1
                 )
                 
                 # Generate actual image using first idea

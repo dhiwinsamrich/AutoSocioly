@@ -25,6 +25,7 @@ async def home(request: Request):
 
 @router.post("/create-content")
 async def create_content_api(
+    request: Request,
     topic: str = Form(...),
     platforms: list = Form([]),
     tone: str = Form("professional"),
@@ -69,11 +70,14 @@ async def create_content_api(
         content_data = result.get("data", {})
         platform_content = content_data.get("platform_content", {})
         image_ideas = content_data.get("image_ideas", [])
+        generated_images = content_data.get("generated_images", [])
         performance_analysis = content_data.get("performance_analysis", {})
         
-        # Extract first image URL from image ideas
+        # Use the first generated image URL if available, otherwise fall back to image ideas
         first_image_url = None
-        if image_ideas:
+        if generated_images:
+            first_image_url = generated_images[0]  # Use the first actual generated image
+        elif image_ideas:
             first_image_url = image_ideas[0].get("description", "") if isinstance(image_ideas[0], dict) else str(image_ideas[0])
         
         # Store workflow info
@@ -91,13 +95,21 @@ async def create_content_api(
         
         logger.info(f"Content created successfully for workflow {workflow_id}")
         
-        return JSONResponse({
-            "success": True,
+        # Store enhanced prompt if available
+        enhanced_prompt = content_data.get("enhanced_prompt", topic)
+        
+        # Redirect to review page with all the data
+        return templates.TemplateResponse("review.html", {
+            "request": request,
             "workflow_id": workflow_id,
+            "topic": topic,
+            "platforms": platforms,
+            "tone": tone,
             "content": platform_content,
             "image_url": first_image_url,
-            "analytics": performance_analysis,
-            "message": "Content created successfully!"
+            "generated_images": generated_images,
+            "enhanced_prompt": enhanced_prompt,
+            "analytics": performance_analysis
         })
         
     except Exception as e:
@@ -184,6 +196,46 @@ async def get_workflow_status(workflow_id: str):
             "error": str(e),
             "message": "Failed to get workflow status"
         }, status_code=500)
+
+@router.get("/test-review")
+async def test_review_page(request: Request):
+    """Test the review page with sample data"""
+    sample_data = {
+        "request": request,
+        "workflow_id": "test-workflow-123",
+        "topic": "Test coffee shop promotion",
+        "platforms": ["twitter", "instagram", "facebook"],
+        "tone": "professional",
+        "content": {
+            "twitter": {
+                "caption": "☕ Start your day right! Our new artisanal coffee blend is here to energize your mornings. Made with 100% organic beans, it's the perfect pick-me-up! #CoffeeLovers #MorningBoost",
+                "hashtags": ["CoffeeLovers", "MorningBoost", "ArtisanalCoffee", "OrganicCoffee", "CoffeeTime"],
+                "engagement_score": "high",
+                "character_count": 180
+            },
+            "instagram": {
+                "caption": "✨ NEW: Our signature artisanal coffee blend is finally here! ☕\n\nCrafted with love from 100% organic beans, this rich and smooth blend will transform your morning routine. Perfect for those who appreciate quality and sustainability.\n\n📍 Visit us today and experience the difference!\n\n#CoffeeLovers #ArtisanalCoffee #OrganicCoffee #MorningRoutine #CoffeeAddict #SustainableCoffee",
+                "hashtags": ["CoffeeLovers", "ArtisanalCoffee", "OrganicCoffee", "MorningRoutine", "CoffeeAddict", "SustainableCoffee", "CoffeeTime", "MorningVibes"],
+                "engagement_score": "high",
+                "character_count": 420
+            },
+            "facebook": {
+                "caption": "🌟 EXCITING NEWS! 🌟\n\nWe're thrilled to introduce our brand new artisanal coffee blend! After months of careful selection and testing, we've created something truly special for our coffee-loving community.\n\nWhat makes it special?\n✅ 100% organic beans sourced ethically\n✅ Hand-roasted in small batches for optimal flavor\n✅ Rich, smooth taste that coffee connoisseurs will love\n✅ Sustainable packaging that's good for the planet\n\nWhether you're a coffee enthusiast or just looking for your daily caffeine fix, this blend is perfect for you. Come visit us today and taste the difference quality makes!\n\n#CoffeeLovers #ArtisanalCoffee #OrganicCoffee #NewProduct #CoffeeShop",
+                "hashtags": ["CoffeeLovers", "ArtisanalCoffee", "OrganicCoffee", "NewProduct", "CoffeeShop", "SustainableCoffee", "QualityCoffee"],
+                "engagement_score": "medium",
+                "character_count": 680
+            }
+        },
+        "image_url": "/static/uploads/sample-coffee.jpg",
+        "enhanced_prompt": "Create engaging social media content for a premium coffee shop's new artisanal blend launch. Focus on the organic, hand-roasted aspects while appealing to both casual coffee drinkers and enthusiasts. Include sensory descriptions, sustainability messaging, and clear calls-to-action.",
+        "analytics": {
+            "predicted_engagement": "High",
+            "estimated_reach": "15K-25K users",
+            "optimal_posting_time": "7-9 AM",
+            "content_score": "8.5/10"
+        }
+    }
+    return templates.TemplateResponse("review.html", sample_data)
 
 @router.get("/accounts")
 async def get_accounts():

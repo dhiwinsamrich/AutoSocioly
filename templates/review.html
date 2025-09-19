@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Review - AutoSocioly</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <style>
+        .review-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .image-preview {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .hashtag-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            margin: 0.25rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .platform-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #667eea;
+        }
+        .enhanced-prompt {
+            background: #e3f2fd;
+            border-radius: 10px;
+            padding: 1.5rem;
+            border-left: 4px solid #2196f3;
+        }
+        .action-buttons {
+            position: sticky;
+            bottom: 20px;
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-robot me-2"></i>AutoSocioly
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">
+                            <i class="fas fa-home me-1"></i>Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">
+                            <i class="fas fa-eye me-1"></i>Review
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/workflow">
+                            <i class="fas fa-cogs me-1"></i>Workflow
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="text-center mb-4">
+                    <h1 class="display-4">
+                        <i class="fas fa-magic text-primary me-3"></i>
+                        Content Review
+                    </h1>
+                    <p class="lead text-muted">Review your AI-generated social media content</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Generated Image Section -->
+        <div class="review-card">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h3><i class="fas fa-image text-primary me-2"></i>Generated Images</h3>
+                    <p class="text-muted">AI-generated visual content for your social media posts</p>
+                    {% if generated_images and generated_images|length > 0 %}
+                        {% if generated_images|length == 1 %}
+                            <img src="{{ generated_images[0] }}" alt="Generated Image" class="image-preview">
+                        {% else %}
+                            <div class="row">
+                                {% for image_url in generated_images %}
+                                    <div class="col-md-6 mb-3">
+                                        <img src="{{ image_url }}" alt="Generated Image {{ loop.index }}" class="image-preview">
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% elif image_url %}
+                        <img src="{{ image_url }}" alt="Generated Image" class="image-preview">
+                    {% else %}
+                        <div class="text-center py-5 bg-light rounded">
+                            <i class="fas fa-image fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No image generated</p>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h6 class="card-title"><i class="fas fa-info-circle me-1"></i>Image Details</h6>
+                            <p class="card-text small text-muted">
+                                {% if generated_images and generated_images|length > 0 %}
+                                    {{ generated_images|length }} image(s) generated using AI based on your content topic and platform requirements.
+                                {% else %}
+                                    This image was generated using AI based on your content topic and platform requirements.
+                                {% endif %}
+                            </p>
+                            {% if image_context %}
+                                <p class="card-text small">
+                                    <strong>Context:</strong> {{ image_context }}
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Generated Content Section -->
+        <div class="review-card">
+            <h3><i class="fas fa-file-alt text-primary me-2"></i>Generated Content</h3>
+            <p class="text-muted">Platform-specific captions and content</p>
+            
+            {% if content %}
+                {% for platform, platform_data in content.items() %}
+                    <div class="platform-card">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fab fa-{{ platform|lower }} fa-2x text-primary me-3"></i>
+                            <div>
+                                <h5 class="mb-0">{{ platform|title }}</h5>
+                                <small class="text-muted">Platform-specific content</small>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <h6><i class="fas fa-comment-dots me-1"></i>Caption:</h6>
+                            <div class="bg-white p-3 rounded border">
+                                {{ platform_data.caption|safe }}
+                            </div>
+                        </div>
+                        
+                        {% if platform_data.hashtags %}
+                            <div class="mb-3">
+                                <h6><i class="fas fa-hashtag me-1"></i>Hashtags:</h6>
+                                <div>
+                                    {% for hashtag in platform_data.hashtags %}
+                                        <span class="hashtag-badge">#{{ hashtag }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        {% if platform_data.call_to_action %}
+                            <div class="mb-3">
+                                <h6><i class="fas fa-bullhorn me-1"></i>Call to Action:</h6>
+                                <div class="alert alert-info">
+                                    {{ platform_data.call_to_action }}
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <small class="text-muted">Engagement</small>
+                                <div class="fw-bold text-{{ 'success' if platform_data.engagement_score == 'high' else 'warning' if platform_data.engagement_score == 'medium' else 'danger' }}">
+                                    {{ platform_data.engagement_score|title }}
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <small class="text-muted">Characters</small>
+                                <div class="fw-bold">{{ platform_data.character_count }}</div>
+                            </div>
+                            <div class="col-4">
+                                <small class="text-muted">Tone</small>
+                                <div class="fw-bold">{{ tone|title }}</div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">No content generated</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Enhanced Prompt Section -->
+        <div class="review-card">
+            <h3><i class="fas fa-lightbulb text-warning me-2"></i>Enhanced Prompt</h3>
+            <p class="text-muted">AI-enhanced prompt used for content generation</p>
+            
+            <div class="enhanced-prompt">
+                {% if enhanced_prompt %}
+                    <div class="mb-3">
+                        <strong><i class="fas fa-magic me-1"></i>Original Topic:</strong>
+                        <p class="mt-2">{{ topic }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <strong><i class="fas fa-arrow-right me-1"></i>Enhanced Prompt:</strong>
+                        <p class="mt-2">{{ enhanced_prompt }}</p>
+                    </div>
+                {% else %}
+                    <div class="text-center py-3">
+                        <i class="fas fa-lightbulb fa-2x text-muted mb-2"></i>
+                        <p class="text-muted">Enhanced prompt will appear here</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Analytics Section -->
+        {% if analytics %}
+            <div class="review-card">
+                <h3><i class="fas fa-chart-bar text-success me-2"></i>Content Analytics</h3>
+                <p class="text-muted">Performance predictions and insights</p>
+                
+                <div class="row">
+                    {% for metric, value in analytics.items() %}
+                        <div class="col-md-4 mb-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <i class="fas fa-chart-line fa-2x text-primary mb-2"></i>
+                                    <h5 class="card-title">{{ metric|title }}</h5>
+                                    <p class="card-text">{{ value }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="container">
+        <div class="action-buttons">
+            <div class="row">
+                <div class="col-md-4">
+                    <button class="btn btn-outline-secondary w-100" onclick="window.history.back()">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Creation
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-warning w-100" onclick="regenerateContent(event)">
+                        <i class="fas fa-redo me-2"></i>Regenerate
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-success w-100" onclick="publishContent(event)">
+                        <i class="fas fa-paper-plane me-2"></i>Publish Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light mt-5 py-4">
+        <div class="container text-center">
+            <p>&copy; 2024 AutoSocioly. Powered by AI.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Store workflow data
+        const workflowData = {
+            workflow_id: '{{ workflow_id }}',
+            topic: '{{ topic }}',
+            platforms: {{ platforms|tojson }},
+            tone: '{{ tone }}',
+            content: {{ content|tojson }},
+            image_url: '{{ image_url }}'
+        };
+
+        function regenerateContent(event) {
+            // Show loading state
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Regenerating...';
+            btn.disabled = true;
+
+            // Redirect back to creation page with current data
+            const formData = new FormData();
+            formData.append('topic', workflowData.topic);
+            workflowData.platforms.forEach(platform => {
+                formData.append('platforms', platform);
+            });
+            formData.append('tone', workflowData.tone);
+            formData.append('include_image', 'true');
+
+            // Submit form to regenerate
+            fetch('/create-content', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    // Reload page with new content
+                    window.location.reload();
+                } else {
+                    alert('Error regenerating content: ' + result.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error regenerating content');
+            })
+            .finally(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+        }
+
+        function publishContent(event) {
+            // Show loading state
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Publishing...';
+            btn.disabled = true;
+
+            // Prepare publish data
+            const formData = new FormData();
+            formData.append('workflow_id', workflowData.workflow_id);
+
+            // Publish content
+            fetch('/publish-content', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    // Show success message
+                    alert('Content published successfully!');
+                    // Optionally redirect to success page or dashboard
+                } else {
+                    alert('Error publishing content: ' + result.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error publishing content');
+            })
+            .finally(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+        }
+
+        // Add copy functionality for captions
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add copy buttons to captions
+            const captions = document.querySelectorAll('.bg-white.p-3.rounded.border');
+            captions.forEach(caption => {
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'btn btn-sm btn-outline-secondary float-end';
+                copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+                copyBtn.onclick = () => {
+                    navigator.clipboard.writeText(caption.textContent.trim());
+                    copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+                    }, 2000);
+                };
+                caption.parentElement.appendChild(copyBtn);
+            });
+        });
+    </script>
+</body>
+</html>

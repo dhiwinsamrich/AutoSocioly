@@ -12,6 +12,7 @@ from ..models import (
 )
 from ..services.getlate_service import GetLateService
 from ..services.ai_service import AIService
+from ..services.image_gen import ImageGenerationService
 from ..utils.logger_config import log_social_media_action
 from ..config import settings
 
@@ -27,6 +28,7 @@ class SocialMediaWorkflow:
             base_url=settings.GETLATE_BASE_URL
         )
         self.ai_service = AIService()
+        self.image_gen_service = ImageGenerationService()
         self.workflow_id = str(uuid.uuid4())
         self.status = "idle"
         self.current_step = None
@@ -88,15 +90,39 @@ class SocialMediaWorkflow:
             
             # Step 2: Generate images if requested
             image_ideas = []
+            generated_images = []
             if include_images:
-                logger.info("Generating image ideas")
+                logger.info("Generating image ideas and actual images")
                 self.current_step = "image_generation"
                 
+                # First generate image ideas
                 image_ideas = await asyncio.get_event_loop().run_in_executor(
                     None,
                     self.ai_service.generate_image_ideas,
                     topic, 3, image_context
                 )
+                
+                # Then generate actual images based on the ideas
+                logger.info("Generating actual images from ideas")
+                for i, idea in enumerate(image_ideas):
+                    try:
+                        image_description = idea.get("description", "")
+                        if image_description:
+                            # Generate image using the description
+                            image_data = await asyncio.get_event_loop().run_in_executor(
+                                None,
+                                self.image_gen_service.generate_image_from_text,
+                                image_description,
+                                f"{topic}_{i}"
+                            )
+                            if image_data and image_data.get("image_url"):
+                                generated_images.append(image_data["image_url"])
+                                logger.info(f"Generated image {i+1} for topic: {topic}")
+                            else:
+                                logger.warning(f"Failed to generate image {i+1}")
+                    except Exception as e:
+                        logger.error(f"Error generating image {i+1}: {e}")
+                        # Continue with other images even if one fails
             
             # Step 3: Analyze content performance
             self.current_step = "content_analysis"
@@ -116,6 +142,7 @@ class SocialMediaWorkflow:
             self.results = {
                 "platform_content": platform_content,
                 "image_ideas": image_ideas,
+                "generated_images": generated_images,
                 "performance_analysis": performance_analysis
             }
             
@@ -126,6 +153,7 @@ class SocialMediaWorkflow:
                 workflow_id=self.workflow_id,
                 platform_content=platform_content,
                 image_ideas=image_ideas,
+                generated_images=generated_images,
                 performance_analysis=performance_analysis,
                 message="Content generated successfully"
             )
