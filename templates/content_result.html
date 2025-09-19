@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Created - GetLate Social Media</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .content-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .platform-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+        .platform-icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+            color: #667eea;
+        }
+        .content-text {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            margin: 10px 0;
+            font-style: italic;
+        }
+        .hashtags {
+            color: #667eea;
+            font-weight: bold;
+        }
+        .btn-action {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            color: white;
+        }
+        .success-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .success-icon {
+            font-size: 3rem;
+            color: #28a745;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="content-container">
+        <div class="success-header">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>Content Created Successfully!</h2>
+            <p class="text-muted">Your social media content is ready for review</p>
+        </div>
+
+        {% if content_data %}
+        <div class="row">
+            {% for platform, content in content_data.items() %}
+            <div class="col-md-6">
+                <div class="platform-card">
+                    <h5>
+                        <span class="platform-icon">
+                            {% if platform == 'facebook' %}
+                                <i class="fab fa-facebook"></i>
+                            {% elif platform == 'instagram' %}
+                                <i class="fab fa-instagram"></i>
+                            {% elif platform == 'twitter' or platform == 'x' %}
+                                <i class="fab fa-twitter"></i>
+                            {% elif platform == 'linkedin' %}
+                                <i class="fab fa-linkedin"></i>
+                            {% elif platform == 'reddit' %}
+                                <i class="fab fa-reddit"></i>
+                            {% elif platform == 'pinterest' %}
+                                <i class="fab fa-pinterest"></i>
+                            {% else %}
+                                <i class="fas fa-share-alt"></i>
+                            {% endif %}
+                        </span>
+                        {{ platform.title() }}
+                    </h5>
+                    <div class="content-text">
+                        {{ content.content }}
+                    </div>
+                    {% if content.hashtags %}
+                    <div class="hashtags">
+                        {% for hashtag in content.hashtags %}
+                            #{{ hashtag }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% if content.call_to_action %}
+                    <div class="mt-2">
+                        <strong>Call to Action:</strong> {{ content.call_to_action }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="text-center mt-4">
+            <a href="/" class="btn-action">
+                <i class="fas fa-home"></i> Create More Content
+            </a>
+            <a href="/analytics" class="btn-action">
+                <i class="fas fa-chart-bar"></i> View Analytics
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

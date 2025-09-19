@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Workflow - GetLate Social Media</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .workflow-step {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+        .workflow-step.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .content-preview {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .hashtag-badge {
+            background: #007bff;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            margin: 2px;
+            display: inline-block;
+        }
+        .platform-card {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            transition: all 0.3s ease;
+        }
+        .platform-card:hover {
+            border-color: #007bff;
+            box-shadow: 0 4px 8px rgba(0,123,255,0.1);
+        }
+        .image-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .loading-spinner {
+            display: none;
+        }
+        .loading-spinner.active {
+            display: inline-block;
+        }
+        .modification-input {
+            background: #fff3cd;
+            border-color: #ffc107;
+        }
+        .success-animation {
+            animation: successPulse 0.6s ease-in-out;
+        }
+        @keyframes successPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-robot me-2"></i>
+                GetLate Social Media Automation
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">
+                    <i class="fas fa-home me-1"></i>
+                    Back to Main
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card shadow-lg">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0">
+                            <i class="fas fa-user-check me-2"></i>
+                            User Workflow - Content Creation & Approval
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        
+                        <!-- Step 1: User Input -->
+                        <div id="step-input" class="workflow-step active">
+                            <h4 class="text-primary mb-4">
+                                <i class="fas fa-edit me-2"></i>
+                                Step 1: What would you like to post?
+                            </h4>
+                            
+                            <div class="mb-3">
+                                <label for="userInput" class="form-label">
+                                    <strong>Describe your content idea:</strong>
+                                </label>
+                                <textarea 
+                                    class="form-control" 
+                                    id="userInput" 
+                                    rows="4" 
+                                    placeholder="Example: I want to share some tips about productivity and time management for entrepreneurs..."
+                                ></textarea>
+                                <div class="form-text">
+                                    Be specific about your topic, target audience, and any key points you want to include.
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="platforms" class="form-label">
+                                        <strong>Select Platforms:</strong>
+                                    </label>
+                                    <div id="platformSelection">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="platform-twitter" value="twitter" checked>
+                                            <label class="form-check-label" for="platform-twitter">
+                                                <i class="fab fa-twitter text-info me-1"></i>Twitter
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="platform-instagram" value="instagram" checked>
+                                            <label class="form-check-label" for="platform-instagram">
+                                                <i class="fab fa-instagram text-danger me-1"></i>Instagram
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="platform-linkedin" value="linkedin">
+                                            <label class="form-check-label" for="platform-linkedin">
+                                                <i class="fab fa-linkedin text-primary me-1"></i>LinkedIn
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="tone" class="form-label">
+                                        <strong>Content Tone:</strong>
+                                    </label>
+                                    <select class="form-select" id="tone">
+                                        <option value="professional">Professional</option>
+                                        <option value="casual">Casual</option>
+                                        <option value="funny">Funny</option>
+                                        <option value="inspirational">Inspirational</option>
+                                        <option value="educational">Educational</option>
+                                    </select>
+                                    
+                                    <div class="form-check mt-3">
+                                        <input class="form-check-input" type="checkbox" id="includeImage" checked>
+                                        <label class="form-check-label" for="includeImage">
+                                            Include AI-generated image
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button class="btn btn-primary btn-lg" onclick="generateContent()">
+                                <span class="loading-spinner me-2">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                </span>
+                                <i class="fas fa-magic me-2"></i>
+                                Generate Content
+                            </button>
+                        </div>
+
+                        <!-- Step 2: Content Preview -->
+                        <div id="step-preview" class="workflow-step">
+                            <h4 class="text-primary mb-4">
+                                <i class="fas fa-eye me-2"></i>
+                                Step 2: Review Your Generated Content
+                            </h4>
+                            
+                            <div id="analysisSection" class="mb-4" style="display: none;">
+                                <div class="alert alert-info">
+                                    <h6><i class="fas fa-chart-line me-2"></i>Content Analysis</h6>
+                                    <div id="analysisContent"></div>
+                                </div>
+                            </div>
+                            
+                            <div id="platformContent"></div>
+                            
+                            <div id="imageSection" class="mb-4" style="display: none;">
+                                <h5 class="text-secondary">
+                                    <i class="fas fa-image me-2"></i>
+                                    Generated Image
+                                </h5>
+                                <div id="imagePreview" class="text-center"></div>
+                            </div>
+                            
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-success btn-lg" onclick="confirmContent(true)">
+                                    <i class="fas fa-check me-2"></i>
+                                    Approve & Post
+                                </button>
+                                <button class="btn btn-warning btn-lg" onclick="showModificationForm()">
+                                    <i class="fas fa-edit me-2"></i>
+                                    Request Changes
+                                </button>
+                                <button class="btn btn-secondary" onclick="goBackToInput()">
+                                    <i class="fas fa-arrow-left me-2"></i>
+                                    Back to Input
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Modification Form -->
+                        <div id="step-modify" class="workflow-step">
+                            <h4 class="text-warning mb-4">
+                                <i class="fas fa-tools me-2"></i>
+                                Step 3: Request Changes
+                            </h4>
+                            
+                            <div class="alert alert-warning">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Describe what changes you'd like to make to the content.
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="textModification" class="form-label">
+                                    <strong>Text Changes:</strong>
+                                </label>
+                                <textarea 
+                                    class="form-control modification-input" 
+                                    id="textModification" 
+                                    rows="3" 
+                                    placeholder="Example: Make it more casual and add a personal story..."
+                                ></textarea>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="hashtagModification" class="form-label">
+                                    <strong>Hashtag Changes:</strong>
+                                </label>
+                                <textarea 
+                                    class="form-control modification-input" 
+                                    id="hashtagModification" 
+                                    rows="2" 
+                                    placeholder="Example: Focus more on productivity and entrepreneurship..."
+                                ></textarea>
+                            </div>
+                            
+                            <div class="mb-3" id="imageModificationSection">
+                                <label for="imageModification" class="form-label">
+                                    <strong>Image Changes:</strong>
+                                </label>
+                                <textarea 
+                                    class="form-control modification-input" 
+                                    id="imageModification" 
+                                    rows="2" 
+                                    placeholder="Example: Make it more colorful and add some charts..."
+                                ></textarea>
+                                <div class="form-check mt-2">
+                                    <input class="form-check-input" type="checkbox" id="regenerateImage">
+                                    <label class="form-check-label" for="regenerateImage">
+                                        Generate completely new image
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="regenerateText">
+                                    <label class="form-check-label" for="regenerateText">
+                                        Regenerate all text content
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-warning btn-lg" onclick="modifyContent()">
+                                    <span class="loading-spinner me-2">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                    </span>
+                                    <i class="fas fa-sync me-2"></i>
+                                    Apply Changes
+                                </button>
+                                <button class="btn btn-secondary" onclick="goBackToPreview()">
+                                    <i class="fas fa-arrow-left me-2"></i>
+                                    Back to Preview
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Success -->
+                        <div id="step-success" class="workflow-step">
+                            <div class="text-center">
+                                <div class="mb-4">
+                                    <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
+                                </div>
+                                <h4 class="text-success mb-3">Content Posted Successfully!</h4>
+                                <p class="text-muted mb-4">
+                                    Your content has been posted to the selected social media platforms.
+                                </p>
+                                
+                                <div id="postingResults" class="mb-4"></div>
+                                
+                                <button class="btn btn-primary btn-lg" onclick="resetWorkflow()">
+                                    <i class="fas fa-plus me-2"></i>
+                                    Create New Content
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentSession = null;
+        let currentStep = 'input';
+
+        function showStep(stepName) {
+            document.querySelectorAll('.workflow-step').forEach(step => {
+                step.classList.remove('active');
+            });
+            document.getElementById(`step-${stepName}`).classList.add('active');
+            currentStep = stepName;
+        }
+
+        function showLoading(button, show = true) {
+            const spinner = button.querySelector('.loading-spinner');
+            if (spinner) {
+                spinner.style.display = show ? 'inline-block' : 'none';
+            }
+            button.disabled = show;
+        }
+
+        async function generateContent() {
+            const userInput = document.getElementById('userInput').value.trim();
+            if (!userInput) {
+                alert('Please enter your content idea');
+                return;
+            }
+
+            const platforms = Array.from(document.querySelectorAll('#platformSelection input:checked'))
+                .map(cb => cb.value);
+            
+            if (platforms.length === 0) {
+                alert('Please select at least one platform');
+                return;
+            }
+
+            const tone = document.getElementById('tone').value;
+            const includeImage = document.getElementById('includeImage').checked;
+
+            const button = event.target;
+            showLoading(button, true);
+
+            try {
+                const response = await fetch('/api/user-workflow/create-content', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_input: userInput,
+                        platforms: platforms,
+                        tone: tone,
+                        include_image: includeImage
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    currentSession = result;
+                    displayContentPreview(result);
+                    showStep('preview');
+                } else {
+                    throw new Error(result.message || 'Failed to generate content');
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error generating content: ' + error.message);
+            } finally {
+                showLoading(button, false);
+            }
+        }
+
+        function displayContentPreview(data) {
+            // Display analysis if available
+            if (data.analysis) {
+                document.getElementById('analysisSection').style.display = 'block';
+                document.getElementById('analysisContent').innerHTML = `
+                    <p><strong>Topic:</strong> ${data.analysis.topic}</p>
+                    <p><strong>Audience:</strong> ${data.analysis.audience}</p>
+                    <p><strong>Tone:</strong> ${data.analysis.tone}</p>
+                    <p><strong>Hashtags:</strong> ${data.analysis.hashtags_count}</p>
+                `;
+            }
+
+            // Display platform content
+            const platformContent = data.content.platform_content;
+            let platformHtml = '';
+            
+            for (const [platform, content] of Object.entries(platformContent)) {
+                const platformName = platform.charAt(0).toUpperCase() + platform.slice(1);
+                const platformIcon = getPlatformIcon(platform);
+                
+                platformHtml += `
+                    <div class="platform-card">
+                        <h6 class="text-primary">
+                            ${platformIcon} ${platformName}
+                        </h6>
+                        <div class="content-preview">
+                            <p><strong>Caption:</strong></p>
+                            <p>${content.caption}</p>
+                            <p><strong>Hashtags:</strong></p>
+                            <div>
+                                ${content.hashtags.map(tag => `<span class="hashtag-badge">#${tag}</span>`).join('')}
+                            </div>
+                            <p class="text-muted mt-2 mb-0">
+                                <small>Character count: ${content.character_count} | Engagement: ${content.engagement_score}</small>
+                            </p>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('platformContent').innerHTML = platformHtml;
+
+            // Display image if available
+            if (data.content.public_images && data.content.public_images.length > 0) {
+                document.getElementById('imageSection').style.display = 'block';
+                const image = data.content.public_images[0];
+                document.getElementById('imagePreview').innerHTML = `
+                    <img src="${image.public_url}" alt="Generated Image" class="image-preview">
+                    <p class="text-muted mt-2">
+                        <small>AI-generated image for your content</small>
+                    </p>
+                `;
+            }
+        }
+
+        function getPlatformIcon(platform) {
+            const icons = {
+                'twitter': '<i class="fab fa-twitter text-info me-2"></i>',
+                'instagram': '<i class="fab fa-instagram text-danger me-2"></i>',
+                'linkedin': '<i class="fab fa-linkedin text-primary me-2"></i>',
+                'facebook': '<i class="fab fa-facebook text-primary me-2"></i>'
+            };
+            return icons[platform] || '<i class="fas fa-share-alt me-2"></i>';
+        }
+
+        async function confirmContent(confirmed) {
+            if (!currentSession) return;
+
+            const button = event.target;
+            showLoading(button, true);
+
+            try {
+                const response = await fetch('/api/user-workflow/confirm-content', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        session_id: currentSession.session_id,
+                        confirmed: confirmed
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    if (confirmed) {
+                        // Show success
+                        displayPostingResults(result.results);
+                        showStep('success');
+                    } else {
+                        // Show modification form
+                        showStep('modify');
+                    }
+                } else {
+                    throw new Error(result.message || 'Failed to process confirmation');
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error processing confirmation: ' + error.message);
+            } finally {
+                showLoading(button, false);
+            }
+        }
+
+        function displayPostingResults(results) {
+            let resultsHtml = '<h6>Posting Results:</h6>';
+            
+            for (const [platform, result] of Object.entries(results)) {
+                const statusIcon = result.success ? 
+                    '<i class="fas fa-check-circle text-success me-2"></i>' : 
+                    '<i class="fas fa-times-circle text-danger me-2"></i>';
+                
+                resultsHtml += `
+                    <div class="alert ${result.success ? 'alert-success' : 'alert-danger'}">
+                        ${statusIcon}<strong>${platform.charAt(0).toUpperCase() + platform.slice(1)}:</strong> 
+                        ${result.message}
+                        ${result.post_url ? `<br><small>Post URL: <a href="${result.post_url}" target="_blank">${result.post_url}</a></small>` : ''}
+                    </div>
+                `;
+            }
+            
+            document.getElementById('postingResults').innerHTML = resultsHtml;
+        }
+
+        function showModificationForm() {
+            showStep('modify');
+        }
+
+        async function modifyContent() {
+            if (!currentSession) return;
+
+            const textMod = document.getElementById('textModification').value.trim();
+            const hashtagMod = document.getElementById('hashtagModification').value.trim();
+            const imageMod = document.getElementById('imageModification').value.trim();
+            const regenerateImage = document.getElementById('regenerateImage').checked;
+            const regenerateText = document.getElementById('regenerateText').checked;
+
+            const button = event.target;
+            showLoading(button, true);
+
+            try {
+                const response = await fetch('/api/user-workflow/modify-content', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        session_id: currentSession.session_id,
+                        confirmed: false,
+                        text_modification: textMod || null,
+                        hashtag_modification: hashtagMod || null,
+                        image_modification: imageMod || null,
+                        regenerate_image: regenerateImage,
+                        regenerate_text: regenerateText
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    currentSession = result;
+                    displayContentPreview(result);
+                    showStep('preview');
+                    
+                    // Clear modification inputs
+                    document.getElementById('textModification').value = '';
+                    document.getElementById('hashtagModification').value = '';
+                    document.getElementById('imageModification').value = '';
+                    document.getElementById('regenerateImage').checked = false;
+                    document.getElementById('regenerateText').checked = false;
+                } else {
+                    throw new Error(result.message || 'Failed to modify content');
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error modifying content: ' + error.message);
+            } finally {
+                showLoading(button, false);
+            }
+        }
+
+        function goBackToInput() {
+            showStep('input');
+        }
+
+        function goBackToPreview() {
+            showStep('preview');
+        }
+
+        function resetWorkflow() {
+            currentSession = null;
+            document.getElementById('userInput').value = '';
+            showStep('input');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            showStep('input');
+        });
+    </script>
+</body>
+</html>

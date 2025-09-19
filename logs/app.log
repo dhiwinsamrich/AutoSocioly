@@ -1,0 +1,202 @@
+2025-09-18 23:37:36 - app - INFO - lifespan:56 - Shutting down GetLate Social Media Automation...
+2025-09-18 23:37:47 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-18 23:37:49 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-18 23:37:49 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-18 23:37:49 - app - INFO - lifespan:35 - Starting GetLate Social Media Automation...
+2025-09-18 23:37:49 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-18 23:37:49 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-18 23:37:49 - ai_service - INFO - __init__:30 - AI service initialized with Gemini API
+2025-09-18 23:37:49 - src.services.workflow_service - INFO - __init__:36 - Social media workflow initialized: b9f81ba3-9834-4802-981e-c17152675183
+2025-09-18 23:37:49 - app - INFO - lifespan:47 - Services initialized successfully
+2025-09-18 23:38:38 - app - INFO - lifespan:56 - Shutting down GetLate Social Media Automation...
+2025-09-18 23:38:40 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-18 23:38:40 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-18 23:38:40 - app - INFO - lifespan:35 - Starting GetLate Social Media Automation...
+2025-09-18 23:38:40 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-18 23:38:40 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-18 23:38:40 - ai_service - INFO - __init__:30 - AI service initialized with Gemini API
+2025-09-18 23:38:40 - src.services.workflow_service - INFO - __init__:36 - Social media workflow initialized: d2806dbb-5a93-4d1d-b266-da729add72e0
+2025-09-18 23:38:40 - app - INFO - lifespan:47 - Services initialized successfully
+2025-09-18 23:40:09 - app - INFO - lifespan:56 - Shutting down GetLate Social Media Automation...
+2025-09-18 23:40:12 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-18 23:40:12 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-18 23:40:12 - app - INFO - lifespan:35 - Starting GetLate Social Media Automation...
+2025-09-18 23:40:12 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-18 23:40:12 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-18 23:40:12 - ai_service - INFO - __init__:30 - AI service initialized with Gemini API
+2025-09-18 23:40:12 - src.services.workflow_service - INFO - __init__:36 - Social media workflow initialized: d94889c9-5368-44a7-81fa-7ff4b753c26b
+2025-09-18 23:40:12 - app - INFO - lifespan:47 - Services initialized successfully
+2025-09-18 23:40:23 - src.routes.main_routes - INFO - home:23 - Rendering home page
+2025-09-18 23:49:26 - app - INFO - lifespan:56 - Shutting down GetLate Social Media Automation...
+2025-09-18 23:49:29 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-18 23:49:29 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-18 23:49:29 - app - INFO - lifespan:35 - Starting GetLate Social Media Automation...
+2025-09-18 23:49:29 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-18 23:49:29 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-18 23:49:29 - ai_service - INFO - __init__:30 - AI service initialized with Gemini API
+2025-09-18 23:49:29 - src.services.workflow_service - INFO - __init__:36 - Social media workflow initialized: 0da3f18c-9a24-4aa3-9dfb-7cf1be23599e
+2025-09-18 23:49:29 - app - INFO - lifespan:47 - Services initialized successfully
+2025-09-18 23:49:56 - app - INFO - lifespan:56 - Shutting down GetLate Social Media Automation...
+2025-09-18 23:49:58 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-18 23:49:59 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-18 23:49:59 - app - INFO - lifespan:35 - Starting GetLate Social Media Automation...
+2025-09-18 23:49:59 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-18 23:49:59 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-18 23:49:59 - ai_service - INFO - __init__:30 - AI service initialized with Gemini API
+2025-09-18 23:49:59 - src.services.workflow_service - INFO - __init__:36 - Social media workflow initialized: de7f6c43-1272-4e85-ad48-7cfd6392cea8
+2025-09-18 23:49:59 - app - INFO - lifespan:47 - Services initialized successfully
+2025-09-18 23:50:33 - app - INFO - lifespan:56 - Shutting down GetLate Social Media Automation...
+2025-09-18 23:50:36 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-18 23:50:36 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-18 23:50:36 - app - INFO - lifespan:35 - Starting GetLate Social Media Automation...
+2025-09-18 23:50:36 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-18 23:50:36 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-18 23:50:36 - ai_service - INFO - __init__:30 - AI service initialized with Gemini API
+2025-09-18 23:50:36 - src.services.workflow_service - INFO - __init__:36 - Social media workflow initialized: 27cbfc6b-4f5c-4010-b2a8-70143d808067
+2025-09-18 23:50:36 - app - INFO - lifespan:47 - Services initialized successfully
+2025-09-18 23:51:23 - app - INFO - lifespan:56 - Shutting down GetLate Social Media Automation...
+2025-09-18 23:51:26 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-18 23:51:26 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-18 23:51:26 - app - INFO - lifespan:35 - Starting GetLate Social Media Automation...
+2025-09-18 23:51:26 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-18 23:51:26 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-18 23:51:26 - ai_service - INFO - __init__:30 - AI service initialized with Gemini API
+2025-09-18 23:51:26 - src.services.workflow_service - INFO - __init__:36 - Social media workflow initialized: e1a441e0-d43a-4743-9bdf-d5d0e31b8bf3
+2025-09-18 23:51:26 - app - INFO - lifespan:47 - Services initialized successfully
+2025-09-18 23:52:02 - app - INFO - lifespan:56 - Shutting down GetLate Social Media Automation...
+2025-09-18 23:52:05 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-18 23:52:06 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-18 23:52:06 - app - INFO - lifespan:35 - Starting GetLate Social Media Automation...
+2025-09-18 23:52:06 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-18 23:52:06 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-18 23:52:06 - ai_service - INFO - __init__:30 - AI service initialized with Gemini API
+2025-09-18 23:52:06 - src.services.workflow_service - INFO - __init__:36 - Social media workflow initialized: dd012778-4698-4c68-b76a-4b5f21f537d9
+2025-09-18 23:52:06 - app - INFO - lifespan:47 - Services initialized successfully
+2025-09-18 23:52:48 - app - INFO - lifespan:56 - Shutting down GetLate Social Media Automation...
+2025-09-18 23:52:51 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-18 23:52:51 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-18 23:52:51 - app - INFO - lifespan:35 - Starting GetLate Social Media Automation...
+2025-09-18 23:52:51 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-18 23:52:51 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-18 23:52:51 - ai_service - INFO - __init__:30 - AI service initialized with Gemini API
+2025-09-18 23:52:51 - src.services.workflow_service - INFO - __init__:36 - Social media workflow initialized: 5c916324-e2e9-4d8e-8e3f-e38e830401b6
+2025-09-18 23:52:51 - app - INFO - lifespan:47 - Services initialized successfully
+2025-09-18 23:53:47 - app - INFO - lifespan:56 - Shutting down GetLate Social Media Automation...
+2025-09-18 23:53:50 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-18 23:53:50 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-18 23:53:50 - app - INFO - lifespan:35 - Starting GetLate Social Media Automation...
+2025-09-18 23:53:50 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-18 23:53:50 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-18 23:53:50 - ai_service - INFO - __init__:30 - AI service initialized with Gemini API
+2025-09-18 23:53:50 - src.services.workflow_service - INFO - __init__:36 - Social media workflow initialized: 204d32be-5c8c-4b0e-8cac-3693fdda936d
+2025-09-18 23:53:50 - app - INFO - lifespan:47 - Services initialized successfully
+2025-09-18 23:54:51 - app - INFO - lifespan:56 - Shutting down GetLate Social Media Automation...
+2025-09-18 23:54:54 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-18 23:54:54 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-18 23:54:54 - app - INFO - lifespan:35 - Starting GetLate Social Media Automation...
+2025-09-18 23:54:54 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-18 23:54:54 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-18 23:54:54 - ai_service - INFO - __init__:30 - AI service initialized with Gemini API
+2025-09-18 23:54:54 - src.services.workflow_service - INFO - __init__:36 - Social media workflow initialized: 68ee4f8e-f648-47f3-bde1-7b10b4f4bee4
+2025-09-18 23:54:54 - app - INFO - lifespan:47 - Services initialized successfully
+2025-09-18 23:56:03 - app - INFO - lifespan:56 - Shutting down GetLate Social Media Automation...
+2025-09-18 23:56:06 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-18 23:56:06 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-18 23:56:06 - app - INFO - lifespan:35 - Starting GetLate Social Media Automation...
+2025-09-18 23:56:06 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-18 23:56:06 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-18 23:56:06 - ai_service - INFO - __init__:30 - AI service initialized with Gemini API
+2025-09-18 23:56:06 - src.services.workflow_service - INFO - __init__:36 - Social media workflow initialized: 34fe5fc2-0932-4b1b-b79a-b7a92d1b1bc0
+2025-09-18 23:56:06 - app - INFO - lifespan:47 - Services initialized successfully
+2025-09-18 23:57:01 - app - INFO - lifespan:56 - Shutting down GetLate Social Media Automation...
+2025-09-18 23:57:03 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-18 23:57:03 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-18 23:57:03 - app - INFO - lifespan:35 - Starting GetLate Social Media Automation...
+2025-09-18 23:57:03 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-18 23:57:03 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-18 23:57:03 - ai_service - INFO - __init__:30 - AI service initialized with Gemini API
+2025-09-18 23:57:03 - src.services.workflow_service - INFO - __init__:36 - Social media workflow initialized: c2d2cf69-2775-45a1-8dc2-cfd1c5d18517
+2025-09-18 23:57:03 - app - INFO - lifespan:47 - Services initialized successfully
+2025-09-19 00:01:59 - app - INFO - lifespan:56 - Shutting down GetLate Social Media Automation...
+2025-09-19 00:02:03 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-19 00:02:03 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-19 00:02:03 - app - INFO - lifespan:35 - Starting GetLate Social Media Automation...
+2025-09-19 00:02:03 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-19 00:02:03 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-19 00:02:03 - ai_service - INFO - __init__:30 - AI service initialized with Gemini API
+2025-09-19 00:02:03 - src.services.workflow_service - INFO - __init__:36 - Social media workflow initialized: 5f564bc5-c3d5-478a-a211-b7731659caef
+2025-09-19 00:02:03 - app - INFO - lifespan:47 - Services initialized successfully
+2025-09-19 00:04:29 - app - INFO - lifespan:56 - Shutting down GetLate Social Media Automation...
+2025-09-19 00:04:32 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-19 00:04:32 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-19 00:04:32 - app - INFO - lifespan:35 - Starting GetLate Social Media Automation...
+2025-09-19 00:04:32 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-19 00:04:32 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-19 00:04:32 - ai_service - INFO - __init__:30 - AI service initialized with Gemini API
+2025-09-19 00:04:32 - src.services.workflow_service - INFO - __init__:36 - Social media workflow initialized: 024cad58-5038-4a0f-b400-01ea3c354bc3
+2025-09-19 00:04:32 - app - INFO - lifespan:47 - Services initialized successfully
+2025-09-19 00:05:52 - app - INFO - lifespan:56 - Shutting down GetLate Social Media Automation...
+2025-09-19 00:05:55 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-19 00:05:55 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-19 00:05:55 - app - INFO - lifespan:35 - Starting GetLate Social Media Automation...
+2025-09-19 00:05:55 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-19 00:05:55 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-19 00:05:55 - ai_service - INFO - __init__:30 - AI service initialized with Gemini API
+2025-09-19 00:05:55 - src.services.workflow_service - INFO - __init__:36 - Social media workflow initialized: 856a9d85-f9fc-4148-a7ec-274b5f0e43a3
+2025-09-19 00:05:55 - app - INFO - lifespan:47 - Services initialized successfully
+2025-09-19 00:07:23 - app - INFO - lifespan:56 - Shutting down GetLate Social Media Automation...
+2025-09-19 00:07:26 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-19 00:07:26 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-19 00:07:26 - app - INFO - lifespan:35 - Starting GetLate Social Media Automation...
+2025-09-19 00:07:26 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-19 00:07:26 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-19 00:07:26 - ai_service - INFO - __init__:30 - AI service initialized with Gemini API
+2025-09-19 00:07:26 - src.services.workflow_service - INFO - __init__:36 - Social media workflow initialized: 08c58262-fe68-4442-9f88-f6509b1588d3
+2025-09-19 00:07:26 - app - INFO - lifespan:47 - Services initialized successfully
+2025-09-19 00:13:35 - app - INFO - lifespan:56 - Shutting down GetLate Social Media Automation...
+2025-09-19 00:13:38 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-19 00:13:38 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-19 00:13:38 - app - INFO - lifespan:35 - Starting GetLate Social Media Automation...
+2025-09-19 00:13:38 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-19 00:13:38 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-19 00:13:38 - ai_service - INFO - __init__:30 - AI service initialized with Gemini API
+2025-09-19 00:13:38 - src.services.workflow_service - INFO - __init__:36 - Social media workflow initialized: 17cebcea-837d-4c41-8c2d-ad194e68d800
+2025-09-19 00:13:38 - app - INFO - lifespan:47 - Services initialized successfully
+2025-09-19 00:15:36 - app - INFO - lifespan:56 - Shutting down GetLate Social Media Automation...
+2025-09-19 00:15:39 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-19 00:15:39 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-19 00:15:39 - app - INFO - lifespan:35 - Starting GetLate Social Media Automation...
+2025-09-19 00:15:39 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-19 00:15:39 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-19 00:15:39 - ai_service - INFO - __init__:30 - AI service initialized with Gemini API
+2025-09-19 00:15:39 - src.services.workflow_service - INFO - __init__:36 - Social media workflow initialized: a8129287-e44e-4ebd-85fc-ffae0915b784
+2025-09-19 00:15:39 - app - INFO - lifespan:47 - Services initialized successfully
+2025-09-19 00:16:33 - app - INFO - lifespan:56 - Shutting down GetLate Social Media Automation...
+2025-09-19 00:16:36 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-19 00:16:36 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-19 00:16:36 - app - INFO - lifespan:35 - Starting GetLate Social Media Automation...
+2025-09-19 00:16:36 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-19 00:16:36 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-19 00:16:36 - ai_service - INFO - __init__:30 - AI service initialized with Gemini API
+2025-09-19 00:16:36 - src.services.workflow_service - INFO - __init__:36 - Social media workflow initialized: 0a46b099-425c-4044-97e8-5e051d0c5d93
+2025-09-19 00:16:36 - app - INFO - lifespan:47 - Services initialized successfully
+2025-09-19 00:17:08 - app - INFO - lifespan:56 - Shutting down GetLate Social Media Automation...
+2025-09-19 00:25:58 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-19 00:25:58 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-19 00:25:58 - app - INFO - lifespan:36 - Starting GetLate Social Media Automation...
+2025-09-19 00:25:58 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-19 00:25:58 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-19 00:25:58 - ai_service - INFO - __init__:30 - AI service initialized with Gemini API
+2025-09-19 00:25:58 - src.services.workflow_service - INFO - __init__:36 - Social media workflow initialized: eb0815ab-2070-48a4-a40f-7f0458a8202d
+2025-09-19 00:25:58 - app - INFO - lifespan:48 - Services initialized successfully
+2025-09-19 00:26:04 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-19 00:26:06 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-19 00:26:06 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-19 00:26:06 - app - INFO - lifespan:36 - Starting GetLate Social Media Automation...
+2025-09-19 00:26:06 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-19 00:26:06 - src.services.getlate_service - INFO - __init__:42 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-19 00:26:06 - ai_service - INFO - __init__:30 - AI service initialized with Gemini API
+2025-09-19 00:26:06 - src.services.workflow_service - INFO - __init__:36 - Social media workflow initialized: 34ca74bc-90f1-493a-8bb0-a1f471416d8c
+2025-09-19 00:26:06 - app - INFO - lifespan:48 - Services initialized successfully
+2025-09-19 00:26:28 - src.routes.main_routes - INFO - home:23 - Rendering home page
+2025-09-19 00:30:09 - src.routes.main_routes - INFO - home:23 - Rendering home page

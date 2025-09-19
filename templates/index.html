@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GetLate Social Media Automation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-rocket"></i> GetLate Social Media
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/workflow">
+                            <i class="fas fa-user-check"></i> User Workflow
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="analyticsBtn">
+                            <i class="fas fa-chart-bar"></i> Analytics
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="accountsBtn">
+                            <i class="fas fa-users"></i> Accounts
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card shadow-lg">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0">
+                            <i class="fas fa-magic"></i> AI-Powered Social Media Content Creator
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- Content Creation Form -->
+                        <form id="contentForm">
+                            <div class="mb-3">
+                                <label for="topic" class="form-label">
+                                    <i class="fas fa-lightbulb"></i> Topic or Theme
+                                </label>
+                                <textarea 
+                                    class="form-control" 
+                                    id="topic" 
+                                    rows="3" 
+                                    placeholder="Enter your topic, theme, or idea for social media content..."
+                                    required
+                                ></textarea>
+                                <div class="form-text">
+                                    Describe what you want to post about. Our AI will generate engaging content.
+                                </div>
+                            </div>
+
+                            <!-- Voice Input Button -->
+                            <div class="mb-3">
+                                <button type="button" class="btn btn-outline-secondary" id="voiceInputBtn">
+                                    <i class="fas fa-microphone"></i> Use Voice Input
+                                </button>
+                                <small class="text-muted ms-2">Click and speak your topic</small>
+                                <input type="hidden" id="voiceInput" name="voice_input">
+                            </div>
+
+                            <!-- Platform Selection -->
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-share-alt"></i> Select Platforms
+                                </label>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="twitter" name="platforms" value="twitter" checked>
+                                            <label class="form-check-label" for="twitter">
+                                                <i class="fab fa-twitter text-info"></i> Twitter
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="linkedin" name="platforms" value="linkedin" checked>
+                                            <label class="form-check-label" for="linkedin">
+                                                <i class="fab fa-linkedin text-primary"></i> LinkedIn
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="facebook" name="platforms" value="facebook">
+                                            <label class="form-check-label" for="facebook">
+                                                <i class="fab fa-facebook text-primary"></i> Facebook
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="instagram" name="platforms" value="instagram">
+                                            <label class="form-check-label" for="instagram">
+                                                <i class="fab fa-instagram text-danger"></i> Instagram
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tone Selection -->
+                            <div class="mb-3">
+                                <label for="tone" class="form-label">
+                                    <i class="fas fa-palette"></i> Content Tone
+                                </label>
+                                <select class="form-select" id="tone" name="tone">
+                                    <option value="professional">Professional</option>
+                                    <option value="casual">Casual</option>
+                                    <option value="humorous">Humorous</option>
+                                    <option value="inspirational">Inspirational</option>
+                                    <option value="educational">Educational</option>
+                                </select>
+                            </div>
+
+                            <!-- Image Generation -->
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="includeImage" name="include_image">
+                                    <label class="form-check-label" for="includeImage">
+                                        <i class="fas fa-image"></i> Include AI-Generated Image
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn btn-primary btn-lg w-100" id="createBtn">
+                                <i class="fas fa-magic"></i> Create Content
+                            </button>
+                        </form>
+
+                        <!-- Loading Spinner -->
+                        <div id="loadingSpinner" class="text-center mt-4" style="display: none;">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2">AI is creating your content...</p>
+                        </div>
+
+                        <!-- Results Section -->
+                        <div id="resultsSection" class="mt-4" style="display: none;">
+                            <div class="alert alert-success">
+                                <i class="fas fa-check-circle"></i> Content created successfully!
+                            </div>
+                            
+                            <!-- Content Preview -->
+                            <div id="contentPreview" class="mb-3"></div>
+                            
+                            <!-- Generated Image -->
+                            <div id="imagePreview" class="mb-3" style="display: none;">
+                                <h5><i class="fas fa-image"></i> Generated Image</h5>
+                                <img id="generatedImage" class="img-fluid rounded" alt="Generated Image">
+                            </div>
+                            
+                            <!-- Analytics -->
+                            <div id="analyticsPreview" class="mb-3" style="display: none;">
+                                <h5><i class="fas fa-chart-bar"></i> Content Analytics</h5>
+                                <div id="analyticsContent"></div>
+                            </div>
+                            
+                            <!-- Publish Button -->
+                            <button type="button" class="btn btn-success btn-lg w-100" id="publishBtn">
+                                <i class="fas fa-paper-plane"></i> Publish to Social Media
+                            </button>
+                        </div>
+
+                        <!-- Publishing Status -->
+                        <div id="publishingStatus" class="mt-4" style="display: none;">
+                            <div class="alert alert-info">
+                                <div class="spinner-border spinner-border-sm me-2" role="status">
+                                    <span class="visually-hidden">Publishing...</span>
+                                </div>
+                                Publishing your content...
+                            </div>
+                        </div>
+
+                        <!-- Publish Results -->
+                        <div id="publishResults" class="mt-4" style="display: none;">
+                            <div class="alert alert-success">
+                                <i class="fas fa-check-circle"></i> Content published successfully!
+                            </div>
+                            <div id="publishDetails"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analytics Modal -->
+    <div class="modal fade" id="analyticsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-chart-bar"></i> System Analytics
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="analyticsModalBody">
+                    <div class="text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Accounts Modal -->
+    <div class="modal fade" id="accountsModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-users"></i> Connected Accounts
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="accountsModalBody">
+                    <div class="text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
