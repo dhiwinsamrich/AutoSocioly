@@ -1,8 +1,13 @@
-2025-09-20 00:21:04 - src.services.getlate_service - ERROR - create_post:375 - Failed to create post: Method not allowed: HTTP method not supported for this endpoint
-2025-09-20 00:21:04 - src.services.workflow_service - ERROR - post_content_workflow:443 - Failed to post to linkedin: Method not allowed: HTTP method not supported for this endpoint
-2025-09-20 00:21:04 - api_service - ERROR - post_content:158 - Posting failed: Method not allowed: HTTP method not supported for this endpoint
-2025-09-20 00:21:04 - src.routes.main_routes - ERROR - publish_content_api:430 - Content publishing failed for workflow 0a5db1f7-1c1d-4f92-96e2-d512abbdc47a: Method not allowed: HTTP method not supported for this endpoint
-2025-09-20 00:22:40 - src.services.getlate_service - ERROR - create_post:375 - Failed to create post: Method not allowed: HTTP method not supported for this endpoint
-2025-09-20 00:22:40 - src.services.workflow_service - ERROR - post_content_workflow:443 - Failed to post to instagram: Method not allowed: HTTP method not supported for this endpoint
-2025-09-20 00:22:40 - api_service - ERROR - post_content:158 - Posting failed: Method not allowed: HTTP method not supported for this endpoint
-2025-09-20 00:22:40 - src.routes.main_routes - ERROR - publish_content_api:430 - Content publishing failed for workflow 28c57972-4dda-43bf-9270-ff3af827adf0: Method not allowed: HTTP method not supported for this endpoint
+2025-09-20 11:52:38 - src.services.getlate_service - ERROR - create_post:394 - Failed to create post: Bad request: Invalid request
+2025-09-20 11:52:38 - src.services.workflow_service - ERROR - post_content_workflow:482 - Failed to post to instagram: Bad request: Invalid request
+2025-09-20 11:52:38 - api_service - ERROR - post_content:158 - Posting failed: Bad request: Invalid request, failed_results=1, total_failed=1
+2025-09-20 11:52:38 - src.routes.main_routes - ERROR - publish_content_api:481 - Content publishing failed for workflow be1f7644-7aa4-47aa-8fca-c33cded3a085: Bad request: Invalid request
+2025-09-20 12:22:10 - test - ERROR - test_complete_workflow:208 - Complete workflow test failed
+2025-09-20 12:24:38 - test - ERROR - test_complete_workflow:185 - Platform test failed
+2025-09-20 12:24:38 - test - ERROR - test_complete_workflow:185 - Platform test failed
+2025-09-20 12:24:38 - test - ERROR - test_complete_workflow:185 - Platform test failed
+2025-09-20 12:24:38 - test - ERROR - test_complete_workflow:185 - Platform test failed
+2025-09-20 12:24:38 - test - ERROR - test_complete_workflow:185 - Platform test failed
+2025-09-20 12:24:38 - test - ERROR - test_complete_workflow:185 - Platform test failed
+2025-09-20 12:24:38 - test - ERROR - test_complete_workflow:202 - Complete workflow test failed
+2025-09-20 12:26:59 - image_gen - ERROR - generate_image_ideas:698 - Failed to generate image ideas: The `response.text` quick accessor only works for simple (single-`Part`) text responses. This response contains multiple `Parts`. Use the `result.parts` accessor or the full `result.candidates[index].content.parts` lookup instead

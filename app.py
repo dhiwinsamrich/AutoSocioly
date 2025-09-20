@@ -15,6 +15,7 @@ from src.routes.main_routes import router as main_router
 from src.routes.user_workflow_routes import router as user_workflow_router
 from src.services.getlate_service import GetLateService
 from src.services.workflow_service import SocialMediaWorkflow
+from src.services.redis_service import redis_service
 
 # Load environment variables
 load_dotenv()
@@ -36,6 +37,9 @@ async def lifespan(app: FastAPI):
     logger.info("Starting GetLate Social Media Automation...")
     
     try:
+        # Initialize Redis service
+        await redis_service.connect()
+        
         # Initialize GetLate service
         getlate_service = GetLateService(
             api_key=settings.GETLATE_API_KEY,
@@ -55,6 +59,13 @@ async def lifespan(app: FastAPI):
     
     # Shutdown
     logger.info("Shutting down GetLate Social Media Automation...")
+    
+    try:
+        # Disconnect Redis service
+        await redis_service.disconnect()
+        logger.info("Redis service disconnected")
+    except Exception as e:
+        logger.error(f"Error during shutdown: {e}")
 
 # Create FastAPI app
 app = FastAPI(

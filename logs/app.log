@@ -1,89 +1,989 @@
-2025-09-20 00:20:30 - src.routes.main_routes - INFO - create_content_api:64 - Creating content for workflow 0a5db1f7-1c1d-4f92-96e2-d512abbdc47a
-2025-09-20 00:20:30 - api_service - INFO - __init__:21 - API service initialized
-2025-09-20 00:20:30 - api_service - INFO - create_content:36 - Starting content creation workflow: 2996bf60-5e47-4dec-b635-d8d1e93207b6
-2025-09-20 00:20:30 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
-2025-09-20 00:20:30 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
-2025-09-20 00:20:30 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
-2025-09-20 00:20:30 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 6a318a1a-c4c9-4d89-8261-cd12ac2a0604
-2025-09-20 00:20:30 - src.services.workflow_service - INFO - create_content_workflow:108 - Generating content for linkedin
-2025-09-20 00:20:30 - ai_service - INFO - generate_social_media_content:89 - Generating linkedin content for topic: AI in healthcare
-2025-09-20 00:20:32 - ai_service - INFO - generate_social_media_content:141 - Generated content for linkedin: 214 characters
-2025-09-20 00:20:32 - src.services.workflow_service - INFO - create_content_workflow:108 - Generating content for x
-2025-09-20 00:20:32 - ai_service - INFO - generate_social_media_content:89 - Generating x content for topic: AI in healthcare
-2025-09-20 00:20:33 - ai_service - INFO - generate_social_media_content:141 - Generated content for x: 167 characters
-2025-09-20 00:20:33 - src.services.workflow_service - INFO - create_content_workflow:131 - Generating image ideas and actual images
-2025-09-20 00:20:41 - ai_service - INFO - generate_image_ideas:309 - Generated 1 image ideas for topic: AI in healthcare
-2025-09-20 00:20:41 - src.services.workflow_service - INFO - create_content_workflow:140 - Generating actual images from ideas
-2025-09-20 00:20:41 - image_gen - INFO - generate_image_from_text_async:66 - Async generating image from text prompt: A close-up, high-definition shot featuring a human... (retry 0)
-2025-09-20 00:20:49 - image_gen - INFO - generate_image_from_text_async:171 - Image saved to static\uploads\generated_20250920_002049_167.png
-2025-09-20 00:20:49 - image_gen - INFO - generate_image_from_text_async:199 - Image generated successfully - Style: photorealistic, Quality: high, Size: 1024x1024
-2025-09-20 00:20:49 - src.services.workflow_service - INFO - create_content_workflow:152 - Generated image 1 for topic: AI in healthcare
-2025-09-20 00:20:49 - ai_service - INFO - analyze_content_performance:391 - Analyzing content performance for linkedin
-2025-09-20 00:20:51 - ai_service - INFO - analyze_content_performance:419 - Content analysis completed: high engagement
-2025-09-20 00:20:51 - ai_service - INFO - analyze_content_performance:391 - Analyzing content performance for x
-2025-09-20 00:20:54 - ai_service - INFO - analyze_content_performance:419 - Content analysis completed: high engagement
-2025-09-20 00:20:54 - api_service - INFO - create_content:68 - Content created successfully: 2996bf60-5e47-4dec-b635-d8d1e93207b6
-2025-09-20 00:20:54 - src.routes.main_routes - INFO - create_content_api:106 - Content created successfully for workflow 0a5db1f7-1c1d-4f92-96e2-d512abbdc47a
-2025-09-20 00:21:03 - src.routes.main_routes - INFO - publish_content_api:352 - Publishing content for workflow 0a5db1f7-1c1d-4f92-96e2-d512abbdc47a
-2025-09-20 00:21:03 - src.routes.main_routes - INFO - publish_content_api:364 - Selected variants: {'linkedin': 'true', 'x': 'true'}
-2025-09-20 00:21:03 - api_service - INFO - __init__:21 - API service initialized
-2025-09-20 00:21:03 - api_service - INFO - post_content:114 - Starting posting workflow: aeeea970-18b7-4235-bf51-4f23884125c9
-2025-09-20 00:21:03 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
-2025-09-20 00:21:03 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
-2025-09-20 00:21:03 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
-2025-09-20 00:21:03 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 0713aeb1-b397-4529-bc4f-b4c04aeba514
-2025-09-20 00:21:03 - src.services.workflow_service - INFO - post_content_workflow:347 - Getting connected accounts
-2025-09-20 00:21:03 - src.services.getlate_service - INFO - get_accounts:243 - Calling GetLate API to get accounts
-2025-09-20 00:21:04 - getlate.api - INFO - log_api_call:185 - API GET /v1/accounts - Status: 200 - Duration: 1254.54ms
-2025-09-20 00:21:04 - src.services.getlate_service - INFO - get_accounts:245 - GetLate API response: {'accounts': [{'byokCredentials': {'isActive': False}, '_id': '68cc44b3666e6297f4476ba4', 'platform': 'facebook', 'profileId': {'_id': '68cb98c76bac81c253f768e2', 'userId': '68ca93a130e2ec0b8a01b910', 'name': 'Dhiwin Samrich', 'description': 'test1', 'isDefault': True, 'color': '#db1a1a', 'createdAt': '2025-09-18T05:29:43.556Z', 'updatedAt': '2025-09-18T05:29:43.556Z', '__v': 0}, '__v': 0, 'accessToken': 'EAAKH3un67AcBPdtuBjE76Q95kFqPHXMprkJNI6SBQ9vZBiwTg8mtH73z0FXmZCKonPOxxm4QghIZBXjXJ1RnROtdmWpkrIvyGfhDpWGZCmLF78E5tzGMwJwk1MSwbLzjrzY0al9E0YhpaKaX65HexuwpCkaiL1nfUESMClBZBKzR31LLvYW6N0zJZBmnWSL9NhUZCFNFpbroeZATZC5e7ahMPZAGOkL4nqWB7UA4pmZCSrQiZC0nj17zHybEwuJEQ22D', 'createdAt': '2025-09-18T17:43:15.239Z', 'displayName': 'Testing Ayrshare', 'isActive': True, 'metadata': {'availablePages': [{'id': '710826352123523', 'name': 'Testing Ayrshare'}], 'selectedPageId': '710826352123523', 'selectedPageName': 'Testing Ayrshare', 'selectedPageUsername': None, 'hasPageUsername': False, 'pageAccessToken': None, 'userProfile': {'id': '122097185421034322', 'username': 'Joe Rachel', 'displayName': 'Joe Rachel', 'profilePicture': 'https://scontent-iad3-1.xx.fbcdn.net/v/t1.30497-1/84628273_176159830277856_972693363922829312_n.jpg?stp=c379.0.1290.1290a_cp0_dst-jpg_s50x50_tt6&_nc_cat=1&ccb=1-7&_nc_sid=7565cd&_nc_ohc=2Ax0r0WBZ5YQ7kNvwH91omp&_nc_oc=Adku26_jsfLzqUIg-LZXWIIfNDGvyuTc8L4D1aOtQ-aMD9zdsV2gvWQ0NEOtpRI-pb8&_nc_zt=24&_nc_ht=scontent-iad3-1.xx&edm=AP4hL3IEAAAA&oh=00_AfaLg5bsBvmXIbNVPSyaZD9DapZu7k5UbzVafwY7B0W4Gg&oe=68F3CB99'}, 'connectedAt': '2025-09-18T17:43:15.239Z'}, 'permissions': ['pages_manage_posts', 'pages_read_engagement', 'pages_show_list'], 'platformUserId': '122097185421034322:page:710826352123523', 'profilePicture': 'https://scontent-iad3-1.xx.fbcdn.net/v/t1.30497-1/84628273_176159830277856_972693363922829312_n.jpg?stp=c379.0.1290.1290a_cp0_dst-jpg_s50x50_tt6&_nc_cat=1&ccb=1-7&_nc_sid=7565cd&_nc_ohc=2Ax0r0WBZ5YQ7kNvwH91omp&_nc_oc=Adku26_jsfLzqUIg-LZXWIIfNDGvyuTc8L4D1aOtQ-aMD9zdsV2gvWQ0NEOtpRI-pb8&_nc_zt=24&_nc_ht=scontent-iad3-1.xx&edm=AP4hL3IEAAAA&oh=00_AfaLg5bsBvmXIbNVPSyaZD9DapZu7k5UbzVafwY7B0W4Gg&oe=68F3CB99', 'updatedAt': '2025-09-18T17:43:15.239Z', 'userId': '68ca93a130e2ec0b8a01b910', 'username': 'Testing Ayrshare'}, {'byokCredentials': {'isActive': False}, '_id': '68cb98d9666e6297f4476b63', 'platform': 'instagram', 'profileId': {'_id': '68cb98c76bac81c253f768e2', 'userId': '68ca93a130e2ec0b8a01b910', 'name': 'Dhiwin Samrich', 'description': 'test1', 'isDefault': True, 'color': '#db1a1a', 'createdAt': '2025-09-18T05:29:43.556Z', 'updatedAt': '2025-09-18T05:29:43.556Z', '__v': 0}, '__v': 0, 'accessToken': 'IGAATtmljoKQRBZAE5FMHBMVGhacmp1RVVOVFJTOHhNT0Jpdy1lS09iUF91WFVfSWF4STNDNDlYZAHpfWjFuSklkeWxSNGdCakg5RTFPaWNLcndCRi1lR2xZASXpYd1NMRGlOZAWxZANFluTWpPanVQNnllT25n', 'createdAt': '2025-09-18T05:30:01.324Z', 'displayName': 'Joe Joe', 'isActive': True, 'metadata': {'access_token': 'IGAATtmljoKQRBZAE5FMHBMVGhacmp1RVVOVFJTOHhNT0Jpdy1lS09iUF91WFVfSWF4STNDNDlYZAHpfWjFuSklkeWxSNGdCakg5RTFPaWNLcndCRi1lR2xZASXpYd1NMRGlOZAWxZANFluTWpPanVQNnllT25n', 'refresh_token': 'IGAATtmljoKQRBZAE5FMHBMVGhacmp1RVVOVFJTOHhNT0Jpdy1lS09iUF91WFVfSWF4STNDNDlYZAHpfWjFuSklkeWxSNGdCakg5RTFPaWNLcndCRi1lR2xZASXpYd1NMRGlOZAWxZANFluTWpPanVQNnllT25n', 'user_id': 24783123111349972, 'expires_in': 5184000, 'profileData': {'id': '24783123111349972', 'username': 'joe2837joe', 'displayName': 'Joe Joe', 'profilePicture': None, 'followersCount': 0, 'mediaCount': 14}, 'connectedAt': '2025-09-18T05:30:01.323Z'}, 'permissions': [], 'platformUserId': '24783123111349972', 'refreshToken': 'IGAATtmljoKQRBZAE5FMHBMVGhacmp1RVVOVFJTOHhNT0Jpdy1lS09iUF91WFVfSWF4STNDNDlYZAHpfWjFuSklkeWxSNGdCakg5RTFPaWNLcndCRi1lR2xZASXpYd1NMRGlOZAWxZANFluTWpPanVQNnllT25n', 'tokenExpiresAt': '2025-11-17T05:30:01.323Z', 'updatedAt': '2025-09-18T05:30:01.324Z', 'userId': '68ca93a130e2ec0b8a01b910', 'username': 'joe2837joe'}, {'byokCredentials': {'isActive': False}, '_id': '68cc437d666e6297f4476ba3', 'profileId': {'_id': '68cb98c76bac81c253f768e2', 'userId': '68ca93a130e2ec0b8a01b910', 'name': 'Dhiwin Samrich', 'description': 'test1', 'isDefault': True, 'color': '#db1a1a', 'createdAt': '2025-09-18T05:29:43.556Z', 'updatedAt': '2025-09-18T05:29:43.556Z', '__v': 0}, 'platform': 'linkedin', '__v': 0, 'accessToken': 'AQUga893MJTnLHJTmu6806P2bDTHF5sAIwTfROfUBtNGi0CCnMkmnADlM3-5w8NEFpbgE7YgzT1PdCesQB8UihWR7Iawi5PU3xwXSQ4C4H89cHd9PMMjKdaeVJHJrNSCi3Dj2--566sukqgrVdTQlFPaifLejETQB4M1vmM0iwXPbnflzvwXLVHreEf4mwOXVzdG7s8qNOrQ30nkf8MH8NeMD6ntP-zOQHmrZ81f-79onxhMmvJTtnrQsMVzs6YeOUXCEmvjR6LAM2UR9YI0tkjdPCxD04_G5lIO6SxiQqpTzHYY4MXQk9gS66kuwKmrap3mWvLci6JmsAoidSQFdOmJqG6c4A', 'createdAt': '2025-09-18T17:38:05.702Z', 'displayName': 'Joe Rachel', 'isActive': True, 'metadata': {'access_token': 'AQUga893MJTnLHJTmu6806P2bDTHF5sAIwTfROfUBtNGi0CCnMkmnADlM3-5w8NEFpbgE7YgzT1PdCesQB8UihWR7Iawi5PU3xwXSQ4C4H89cHd9PMMjKdaeVJHJrNSCi3Dj2--566sukqgrVdTQlFPaifLejETQB4M1vmM0iwXPbnflzvwXLVHreEf4mwOXVzdG7s8qNOrQ30nkf8MH8NeMD6ntP-zOQHmrZ81f-79onxhMmvJTtnrQsMVzs6YeOUXCEmvjR6LAM2UR9YI0tkjdPCxD04_G5lIO6SxiQqpTzHYY4MXQk9gS66kuwKmrap3mWvLci6JmsAoidSQFdOmJqG6c4A', 'expires_in': 5183999, 'refresh_token': 'AQVM2hQssEt92lIEp6bYPX_fYN5-xO2laspPa5_gWwuVoGtEfWIQTYhH03UEKMaVybSa-T_tCzbDw3y8tQa76Ehu_aNURRoC-DbOPWtK1Bc1UUwabLvn_B8OUG9a9N9i1aQP3q5bcC2LomKd1CfHSePa-k2tkCi4GZNA1KGGdZjF18R4TTOqcwh2k-8LSJQZRcHRBe_5XTGnDB6K8HyFBX924yRClU2nW-n14wm9CrBttYS4qVDiYVez3c82fwveGtfZ28sUY3-BLm7kXA04Vs2clijocJEVYrRCMbuONf9ytVxX5PhYBi-naK5QWwU7z7-z6vVEaFvyilTPzhUXcGu0LLmc3w', 'refresh_token_expires_in': 31535999, 'scope': 'email,openid,profile,w_member_social,w_organization_social', 'token_type': 'Bearer', 'id_token': 'eyJ6aXAiOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImQ5Mjk2NjhhLWJhYjEtNGM2OS05NTk4LTQzNzMxNDk3MjNmZiIsImFsZyI6IlJTMjU2In0.eyJpc3MiOiJodHRwczovL3d3dy5saW5rZWRpbi5jb20vb2F1dGgiLCJhdWQiOiI3N2RyNmJsNDU1ZGl3bSIsImlhdCI6MTc1ODIxNzA4NSwiZXhwIjoxNzU4MjIwNjg1LCJzdWIiOiJsQzYwRXB3WXptIiwibmFtZSI6IkpvZSBSYWNoZWwiLCJnaXZlbl9uYW1lIjoiSm9lIiwiZmFtaWx5X25hbWUiOiJSYWNoZWwiLCJlbWFpbCI6InQ3NzQ2Mzk4QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjoidHJ1ZSIsImxvY2FsZSI6ImVuX1VTIn0.Jbp-vwyAqLwZPRIFjYDX5gmY7VTlxb5GesHF5cFVzOlF__ArMcoyRfyPkPjTVMGmIoUMh9sOEMK4eMHrrEDlUd7QyGGvbpN2ZIcixpbYZyGez6Og5Xp6p5jY777cCM3JQbNx50Q7jyvETGHEjlhCuaurIoIu9ozBY8mItwjGYSYRHvuf7CwU396KulxIn_LtPRRJBf4TtDcvjzEigHdpYTGp_JhnbdzY6sWBnQ7__xmnL_3f1MYBDCD8ePO7AClplUgw-xzqpzUbYI4LGEsk6ky4feDm68WTC7ZtAZSfVL21aMOGCfJ0DCsBIrBOgA5jj-ZA1XbWMgWnnBzBnPWXWtJoLOPLAKPlt08bjKdj4ZoOdATuMS6J5GJLq-Grx53uTtD_F-CcoS00M8gtrSJKrIgn150GTiuTCzqiB4QU4ukgiTTb81P0jmd4CucusdQ1pximfWrBp8JNPz0ahVU3tquUQavQelcsQjwspvA-9o053u0RzTWnPFK_auOdpnPY48vMxVtrRELEOzxBZrxKdVVh1XKiujy14iQGQcPDzAVPkpfcCkd1R8DRSFxK7N3uFsJK-slmzp65wih_Wza2Kq4Uj46EhdJNq64p8iuyYQA26jTKrWaOQYIMDTcgteJpBq9Vo1J0mDBznXOq8ejz3XdT81_toHnvK99oKOP34Wo', 'profileData': {'id': 'lC60EpwYzm', 'username': 'Joe Rachel', 'displayName': 'Joe Rachel', 'profilePicture': None, 'email': 't7746398@gmail.com'}, 'connectedAt': '2025-09-18T17:38:05.702Z', 'userProfile': {'id': 'lC60EpwYzm', 'username': 'Joe Rachel', 'displayName': 'Joe Rachel', 'profilePicture': None, 'email': 't7746398@gmail.com'}, 'accountType': 'personal'}, 'permissions': ['email,openid,profile,w_member_social,w_organization_social'], 'platformUserId': 'lC60EpwYzm', 'refreshToken': 'AQVM2hQssEt92lIEp6bYPX_fYN5-xO2laspPa5_gWwuVoGtEfWIQTYhH03UEKMaVybSa-T_tCzbDw3y8tQa76Ehu_aNURRoC-DbOPWtK1Bc1UUwabLvn_B8OUG9a9N9i1aQP3q5bcC2LomKd1CfHSePa-k2tkCi4GZNA1KGGdZjF18R4TTOqcwh2k-8LSJQZRcHRBe_5XTGnDB6K8HyFBX924yRClU2nW-n14wm9CrBttYS4qVDiYVez3c82fwveGtfZ28sUY3-BLm7kXA04Vs2clijocJEVYrRCMbuONf9ytVxX5PhYBi-naK5QWwU7z7-z6vVEaFvyilTPzhUXcGu0LLmc3w', 'tokenExpiresAt': '2025-11-17T17:38:04.702Z', 'updatedAt': '2025-09-18T17:38:05.702Z', 'userId': '68ca93a130e2ec0b8a01b910', 'username': 'Joe Rachel'}, {'byokCredentials': {'isActive': False}, '_id': '68cc432a666e6297f4476ba2', 'platform': 'twitter', 'profileId': {'_id': '68cb98c76bac81c253f768e2', 'userId': '68ca93a130e2ec0b8a01b910', 'name': 'Dhiwin Samrich', 'description': 'test1', 'isDefault': True, 'color': '#db1a1a', 'createdAt': '2025-09-18T05:29:43.556Z', 'updatedAt': '2025-09-18T05:29:43.556Z', '__v': 0}, '__v': 0, 'accessToken': 'cUprMDJNLWdqYVI1RWNkdWo1S3BsOWg2aTRuQU5VZHc4QklaSldmSVVaVGRwOjE3NTgyMTcwMDE3NjE6MToxOmF0OjE', 'createdAt': '2025-09-18T17:36:41.964Z', 'displayName': 'test1', 'isActive': True, 'metadata': {'token_type': 'bearer', 'expires_in': 7200, 'access_token': 'cUprMDJNLWdqYVI1RWNkdWo1S3BsOWg2aTRuQU5VZHc4QklaSldmSVVaVGRwOjE3NTgyMTcwMDE3NjE6MToxOmF0OjE', 'scope': 'offline.access tweet.write media.write users.read tweet.read', 'refresh_token': 'ZmxXVTRXVnRDMUxKb1FkVGM3OFFzZE15cldycTRKUzhQNkVpYjFwVjBJSVJDOjE3NTgyMTcwMDE3NjE6MTowOnJ0OjE', 'profileData': {'id': '1967446893728026624', 'username': 'test112298', 'displayName': 'test1', 'profilePicture': 'https://pbs.twimg.com/profile_images/1967447330749329409/76_9XqyV_normal.png'}, 'connectedAt': '2025-09-18T17:36:41.963Z'}, 'permissions': ['offline.access', 'tweet.write', 'media.write', 'users.read', 'tweet.read'], 'platformUserId': '1967446893728026624', 'profilePicture': 'https://pbs.twimg.com/profile_images/1967447330749329409/76_9XqyV_normal.png', 'refreshToken': 'ZmxXVTRXVnRDMUxKb1FkVGM3OFFzZE15cldycTRKUzhQNkVpYjFwVjBJSVJDOjE3NTgyMTcwMDE3NjE6MTowOnJ0OjE', 'tokenExpiresAt': '2025-09-18T19:36:41.963Z', 'updatedAt': '2025-09-18T17:36:41.964Z', 'userId': '68ca93a130e2ec0b8a01b910', 'username': 'test112298'}]}
-2025-09-20 00:21:04 - src.services.getlate_service - INFO - get_accounts:298 - Successfully retrieved 4 connected accounts
-2025-09-20 00:21:04 - src.services.workflow_service - INFO - post_content_workflow:381 - Posting to linkedin
-2025-09-20 00:21:04 - getlate.api - INFO - log_api_call:185 - API POST /posts - Status: 405 - Duration: 29.75ms
-2025-09-20 00:21:04 - src.services.getlate_service - ERROR - create_post:375 - Failed to create post: Method not allowed: HTTP method not supported for this endpoint
-2025-09-20 00:21:04 - src.services.workflow_service - ERROR - post_content_workflow:443 - Failed to post to linkedin: Method not allowed: HTTP method not supported for this endpoint
-2025-09-20 00:21:04 - src.services.workflow_service - WARNING - post_content_workflow:357 - No connected account for x
-2025-09-20 00:21:04 - api_service - ERROR - post_content:158 - Posting failed: Method not allowed: HTTP method not supported for this endpoint
-2025-09-20 00:21:04 - src.routes.main_routes - ERROR - publish_content_api:430 - Content publishing failed for workflow 0a5db1f7-1c1d-4f92-96e2-d512abbdc47a: Method not allowed: HTTP method not supported for this endpoint
-2025-09-20 00:21:41 - src.routes.main_routes - INFO - home:24 - Rendering home page
-2025-09-20 00:21:57 - src.routes.main_routes - INFO - create_content_api:64 - Creating content for workflow 28c57972-4dda-43bf-9270-ff3af827adf0
-2025-09-20 00:21:57 - api_service - INFO - __init__:21 - API service initialized
-2025-09-20 00:21:57 - api_service - INFO - create_content:36 - Starting content creation workflow: 08c25263-e514-4714-92c0-071a3476dd81
-2025-09-20 00:21:57 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
-2025-09-20 00:21:57 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
-2025-09-20 00:21:57 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
-2025-09-20 00:21:57 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: b486d6f3-3f5c-4d17-a873-12a7fdb09e17
-2025-09-20 00:21:57 - src.services.workflow_service - INFO - create_content_workflow:108 - Generating content for instagram
-2025-09-20 00:21:57 - ai_service - INFO - generate_social_media_content:89 - Generating instagram content for topic: AGI vs AI
-2025-09-20 00:21:59 - ai_service - INFO - generate_social_media_content:141 - Generated content for instagram: 183 characters
-2025-09-20 00:21:59 - src.services.workflow_service - INFO - create_content_workflow:131 - Generating image ideas and actual images
-2025-09-20 00:22:08 - ai_service - INFO - generate_image_ideas:309 - Generated 1 image ideas for topic: AGI vs AI
-2025-09-20 00:22:08 - src.services.workflow_service - INFO - create_content_workflow:140 - Generating actual images from ideas
-2025-09-20 00:22:08 - image_gen - INFO - generate_image_from_text_async:66 - Async generating image from text prompt: The image features a split visual, subtly transiti... (retry 0)
-2025-09-20 00:22:16 - image_gen - INFO - generate_image_from_text_async:171 - Image saved to static\uploads\generated_20250920_002216_4129.png
-2025-09-20 00:22:16 - image_gen - INFO - generate_image_from_text_async:199 - Image generated successfully - Style: photorealistic, Quality: high, Size: 1024x1024
-2025-09-20 00:22:16 - src.services.workflow_service - INFO - create_content_workflow:152 - Generated image 1 for topic: AGI vs AI
-2025-09-20 00:22:16 - ai_service - INFO - analyze_content_performance:391 - Analyzing content performance for instagram
-2025-09-20 00:22:19 - ai_service - INFO - analyze_content_performance:419 - Content analysis completed: high engagement
-2025-09-20 00:22:19 - api_service - INFO - create_content:68 - Content created successfully: 08c25263-e514-4714-92c0-071a3476dd81
-2025-09-20 00:22:19 - src.routes.main_routes - INFO - create_content_api:106 - Content created successfully for workflow 28c57972-4dda-43bf-9270-ff3af827adf0
-2025-09-20 00:22:38 - src.routes.main_routes - INFO - publish_content_api:352 - Publishing content for workflow 28c57972-4dda-43bf-9270-ff3af827adf0
-2025-09-20 00:22:38 - src.routes.main_routes - INFO - publish_content_api:364 - Selected variants: {'instagram': 'true'}
-2025-09-20 00:22:38 - api_service - INFO - __init__:21 - API service initialized
-2025-09-20 00:22:38 - api_service - INFO - post_content:114 - Starting posting workflow: 89758d26-31ed-487d-888e-ff94cf6e9589
-2025-09-20 00:22:38 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
-2025-09-20 00:22:38 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
-2025-09-20 00:22:38 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
-2025-09-20 00:22:38 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 08ef076b-8240-4e04-a16d-560458be2db6
-2025-09-20 00:22:38 - src.services.workflow_service - INFO - post_content_workflow:347 - Getting connected accounts
-2025-09-20 00:22:38 - src.services.getlate_service - INFO - get_accounts:243 - Calling GetLate API to get accounts
-2025-09-20 00:22:39 - getlate.api - INFO - log_api_call:185 - API GET /v1/accounts - Status: 200 - Duration: 1270.08ms
-2025-09-20 00:22:39 - src.services.getlate_service - INFO - get_accounts:245 - GetLate API response: {'accounts': [{'byokCredentials': {'isActive': False}, '_id': '68cc44b3666e6297f4476ba4', 'platform': 'facebook', 'profileId': {'_id': '68cb98c76bac81c253f768e2', 'userId': '68ca93a130e2ec0b8a01b910', 'name': 'Dhiwin Samrich', 'description': 'test1', 'isDefault': True, 'color': '#db1a1a', 'createdAt': '2025-09-18T05:29:43.556Z', 'updatedAt': '2025-09-18T05:29:43.556Z', '__v': 0}, '__v': 0, 'accessToken': 'EAAKH3un67AcBPdtuBjE76Q95kFqPHXMprkJNI6SBQ9vZBiwTg8mtH73z0FXmZCKonPOxxm4QghIZBXjXJ1RnROtdmWpkrIvyGfhDpWGZCmLF78E5tzGMwJwk1MSwbLzjrzY0al9E0YhpaKaX65HexuwpCkaiL1nfUESMClBZBKzR31LLvYW6N0zJZBmnWSL9NhUZCFNFpbroeZATZC5e7ahMPZAGOkL4nqWB7UA4pmZCSrQiZC0nj17zHybEwuJEQ22D', 'createdAt': '2025-09-18T17:43:15.239Z', 'displayName': 'Testing Ayrshare', 'isActive': True, 'metadata': {'availablePages': [{'id': '710826352123523', 'name': 'Testing Ayrshare'}], 'selectedPageId': '710826352123523', 'selectedPageName': 'Testing Ayrshare', 'selectedPageUsername': None, 'hasPageUsername': False, 'pageAccessToken': None, 'userProfile': {'id': '122097185421034322', 'username': 'Joe Rachel', 'displayName': 'Joe Rachel', 'profilePicture': 'https://scontent-iad3-1.xx.fbcdn.net/v/t1.30497-1/84628273_176159830277856_972693363922829312_n.jpg?stp=c379.0.1290.1290a_cp0_dst-jpg_s50x50_tt6&_nc_cat=1&ccb=1-7&_nc_sid=7565cd&_nc_ohc=2Ax0r0WBZ5YQ7kNvwH91omp&_nc_oc=Adku26_jsfLzqUIg-LZXWIIfNDGvyuTc8L4D1aOtQ-aMD9zdsV2gvWQ0NEOtpRI-pb8&_nc_zt=24&_nc_ht=scontent-iad3-1.xx&edm=AP4hL3IEAAAA&oh=00_AfaLg5bsBvmXIbNVPSyaZD9DapZu7k5UbzVafwY7B0W4Gg&oe=68F3CB99'}, 'connectedAt': '2025-09-18T17:43:15.239Z'}, 'permissions': ['pages_manage_posts', 'pages_read_engagement', 'pages_show_list'], 'platformUserId': '122097185421034322:page:710826352123523', 'profilePicture': 'https://scontent-iad3-1.xx.fbcdn.net/v/t1.30497-1/84628273_176159830277856_972693363922829312_n.jpg?stp=c379.0.1290.1290a_cp0_dst-jpg_s50x50_tt6&_nc_cat=1&ccb=1-7&_nc_sid=7565cd&_nc_ohc=2Ax0r0WBZ5YQ7kNvwH91omp&_nc_oc=Adku26_jsfLzqUIg-LZXWIIfNDGvyuTc8L4D1aOtQ-aMD9zdsV2gvWQ0NEOtpRI-pb8&_nc_zt=24&_nc_ht=scontent-iad3-1.xx&edm=AP4hL3IEAAAA&oh=00_AfaLg5bsBvmXIbNVPSyaZD9DapZu7k5UbzVafwY7B0W4Gg&oe=68F3CB99', 'updatedAt': '2025-09-18T17:43:15.239Z', 'userId': '68ca93a130e2ec0b8a01b910', 'username': 'Testing Ayrshare'}, {'byokCredentials': {'isActive': False}, '_id': '68cb98d9666e6297f4476b63', 'platform': 'instagram', 'profileId': {'_id': '68cb98c76bac81c253f768e2', 'userId': '68ca93a130e2ec0b8a01b910', 'name': 'Dhiwin Samrich', 'description': 'test1', 'isDefault': True, 'color': '#db1a1a', 'createdAt': '2025-09-18T05:29:43.556Z', 'updatedAt': '2025-09-18T05:29:43.556Z', '__v': 0}, '__v': 0, 'accessToken': 'IGAATtmljoKQRBZAE5FMHBMVGhacmp1RVVOVFJTOHhNT0Jpdy1lS09iUF91WFVfSWF4STNDNDlYZAHpfWjFuSklkeWxSNGdCakg5RTFPaWNLcndCRi1lR2xZASXpYd1NMRGlOZAWxZANFluTWpPanVQNnllT25n', 'createdAt': '2025-09-18T05:30:01.324Z', 'displayName': 'Joe Joe', 'isActive': True, 'metadata': {'access_token': 'IGAATtmljoKQRBZAE5FMHBMVGhacmp1RVVOVFJTOHhNT0Jpdy1lS09iUF91WFVfSWF4STNDNDlYZAHpfWjFuSklkeWxSNGdCakg5RTFPaWNLcndCRi1lR2xZASXpYd1NMRGlOZAWxZANFluTWpPanVQNnllT25n', 'refresh_token': 'IGAATtmljoKQRBZAE5FMHBMVGhacmp1RVVOVFJTOHhNT0Jpdy1lS09iUF91WFVfSWF4STNDNDlYZAHpfWjFuSklkeWxSNGdCakg5RTFPaWNLcndCRi1lR2xZASXpYd1NMRGlOZAWxZANFluTWpPanVQNnllT25n', 'user_id': 24783123111349972, 'expires_in': 5184000, 'profileData': {'id': '24783123111349972', 'username': 'joe2837joe', 'displayName': 'Joe Joe', 'profilePicture': None, 'followersCount': 0, 'mediaCount': 14}, 'connectedAt': '2025-09-18T05:30:01.323Z'}, 'permissions': [], 'platformUserId': '24783123111349972', 'refreshToken': 'IGAATtmljoKQRBZAE5FMHBMVGhacmp1RVVOVFJTOHhNT0Jpdy1lS09iUF91WFVfSWF4STNDNDlYZAHpfWjFuSklkeWxSNGdCakg5RTFPaWNLcndCRi1lR2xZASXpYd1NMRGlOZAWxZANFluTWpPanVQNnllT25n', 'tokenExpiresAt': '2025-11-17T05:30:01.323Z', 'updatedAt': '2025-09-18T05:30:01.324Z', 'userId': '68ca93a130e2ec0b8a01b910', 'username': 'joe2837joe'}, {'byokCredentials': {'isActive': False}, '_id': '68cc437d666e6297f4476ba3', 'profileId': {'_id': '68cb98c76bac81c253f768e2', 'userId': '68ca93a130e2ec0b8a01b910', 'name': 'Dhiwin Samrich', 'description': 'test1', 'isDefault': True, 'color': '#db1a1a', 'createdAt': '2025-09-18T05:29:43.556Z', 'updatedAt': '2025-09-18T05:29:43.556Z', '__v': 0}, 'platform': 'linkedin', '__v': 0, 'accessToken': 'AQUga893MJTnLHJTmu6806P2bDTHF5sAIwTfROfUBtNGi0CCnMkmnADlM3-5w8NEFpbgE7YgzT1PdCesQB8UihWR7Iawi5PU3xwXSQ4C4H89cHd9PMMjKdaeVJHJrNSCi3Dj2--566sukqgrVdTQlFPaifLejETQB4M1vmM0iwXPbnflzvwXLVHreEf4mwOXVzdG7s8qNOrQ30nkf8MH8NeMD6ntP-zOQHmrZ81f-79onxhMmvJTtnrQsMVzs6YeOUXCEmvjR6LAM2UR9YI0tkjdPCxD04_G5lIO6SxiQqpTzHYY4MXQk9gS66kuwKmrap3mWvLci6JmsAoidSQFdOmJqG6c4A', 'createdAt': '2025-09-18T17:38:05.702Z', 'displayName': 'Joe Rachel', 'isActive': True, 'metadata': {'access_token': 'AQUga893MJTnLHJTmu6806P2bDTHF5sAIwTfROfUBtNGi0CCnMkmnADlM3-5w8NEFpbgE7YgzT1PdCesQB8UihWR7Iawi5PU3xwXSQ4C4H89cHd9PMMjKdaeVJHJrNSCi3Dj2--566sukqgrVdTQlFPaifLejETQB4M1vmM0iwXPbnflzvwXLVHreEf4mwOXVzdG7s8qNOrQ30nkf8MH8NeMD6ntP-zOQHmrZ81f-79onxhMmvJTtnrQsMVzs6YeOUXCEmvjR6LAM2UR9YI0tkjdPCxD04_G5lIO6SxiQqpTzHYY4MXQk9gS66kuwKmrap3mWvLci6JmsAoidSQFdOmJqG6c4A', 'expires_in': 5183999, 'refresh_token': 'AQVM2hQssEt92lIEp6bYPX_fYN5-xO2laspPa5_gWwuVoGtEfWIQTYhH03UEKMaVybSa-T_tCzbDw3y8tQa76Ehu_aNURRoC-DbOPWtK1Bc1UUwabLvn_B8OUG9a9N9i1aQP3q5bcC2LomKd1CfHSePa-k2tkCi4GZNA1KGGdZjF18R4TTOqcwh2k-8LSJQZRcHRBe_5XTGnDB6K8HyFBX924yRClU2nW-n14wm9CrBttYS4qVDiYVez3c82fwveGtfZ28sUY3-BLm7kXA04Vs2clijocJEVYrRCMbuONf9ytVxX5PhYBi-naK5QWwU7z7-z6vVEaFvyilTPzhUXcGu0LLmc3w', 'refresh_token_expires_in': 31535999, 'scope': 'email,openid,profile,w_member_social,w_organization_social', 'token_type': 'Bearer', 'id_token': 'eyJ6aXAiOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImQ5Mjk2NjhhLWJhYjEtNGM2OS05NTk4LTQzNzMxNDk3MjNmZiIsImFsZyI6IlJTMjU2In0.eyJpc3MiOiJodHRwczovL3d3dy5saW5rZWRpbi5jb20vb2F1dGgiLCJhdWQiOiI3N2RyNmJsNDU1ZGl3bSIsImlhdCI6MTc1ODIxNzA4NSwiZXhwIjoxNzU4MjIwNjg1LCJzdWIiOiJsQzYwRXB3WXptIiwibmFtZSI6IkpvZSBSYWNoZWwiLCJnaXZlbl9uYW1lIjoiSm9lIiwiZmFtaWx5X25hbWUiOiJSYWNoZWwiLCJlbWFpbCI6InQ3NzQ2Mzk4QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjoidHJ1ZSIsImxvY2FsZSI6ImVuX1VTIn0.Jbp-vwyAqLwZPRIFjYDX5gmY7VTlxb5GesHF5cFVzOlF__ArMcoyRfyPkPjTVMGmIoUMh9sOEMK4eMHrrEDlUd7QyGGvbpN2ZIcixpbYZyGez6Og5Xp6p5jY777cCM3JQbNx50Q7jyvETGHEjlhCuaurIoIu9ozBY8mItwjGYSYRHvuf7CwU396KulxIn_LtPRRJBf4TtDcvjzEigHdpYTGp_JhnbdzY6sWBnQ7__xmnL_3f1MYBDCD8ePO7AClplUgw-xzqpzUbYI4LGEsk6ky4feDm68WTC7ZtAZSfVL21aMOGCfJ0DCsBIrBOgA5jj-ZA1XbWMgWnnBzBnPWXWtJoLOPLAKPlt08bjKdj4ZoOdATuMS6J5GJLq-Grx53uTtD_F-CcoS00M8gtrSJKrIgn150GTiuTCzqiB4QU4ukgiTTb81P0jmd4CucusdQ1pximfWrBp8JNPz0ahVU3tquUQavQelcsQjwspvA-9o053u0RzTWnPFK_auOdpnPY48vMxVtrRELEOzxBZrxKdVVh1XKiujy14iQGQcPDzAVPkpfcCkd1R8DRSFxK7N3uFsJK-slmzp65wih_Wza2Kq4Uj46EhdJNq64p8iuyYQA26jTKrWaOQYIMDTcgteJpBq9Vo1J0mDBznXOq8ejz3XdT81_toHnvK99oKOP34Wo', 'profileData': {'id': 'lC60EpwYzm', 'username': 'Joe Rachel', 'displayName': 'Joe Rachel', 'profilePicture': None, 'email': 't7746398@gmail.com'}, 'connectedAt': '2025-09-18T17:38:05.702Z', 'userProfile': {'id': 'lC60EpwYzm', 'username': 'Joe Rachel', 'displayName': 'Joe Rachel', 'profilePicture': None, 'email': 't7746398@gmail.com'}, 'accountType': 'personal'}, 'permissions': ['email,openid,profile,w_member_social,w_organization_social'], 'platformUserId': 'lC60EpwYzm', 'refreshToken': 'AQVM2hQssEt92lIEp6bYPX_fYN5-xO2laspPa5_gWwuVoGtEfWIQTYhH03UEKMaVybSa-T_tCzbDw3y8tQa76Ehu_aNURRoC-DbOPWtK1Bc1UUwabLvn_B8OUG9a9N9i1aQP3q5bcC2LomKd1CfHSePa-k2tkCi4GZNA1KGGdZjF18R4TTOqcwh2k-8LSJQZRcHRBe_5XTGnDB6K8HyFBX924yRClU2nW-n14wm9CrBttYS4qVDiYVez3c82fwveGtfZ28sUY3-BLm7kXA04Vs2clijocJEVYrRCMbuONf9ytVxX5PhYBi-naK5QWwU7z7-z6vVEaFvyilTPzhUXcGu0LLmc3w', 'tokenExpiresAt': '2025-11-17T17:38:04.702Z', 'updatedAt': '2025-09-18T17:38:05.702Z', 'userId': '68ca93a130e2ec0b8a01b910', 'username': 'Joe Rachel'}, {'byokCredentials': {'isActive': False}, '_id': '68cc432a666e6297f4476ba2', 'platform': 'twitter', 'profileId': {'_id': '68cb98c76bac81c253f768e2', 'userId': '68ca93a130e2ec0b8a01b910', 'name': 'Dhiwin Samrich', 'description': 'test1', 'isDefault': True, 'color': '#db1a1a', 'createdAt': '2025-09-18T05:29:43.556Z', 'updatedAt': '2025-09-18T05:29:43.556Z', '__v': 0}, '__v': 0, 'accessToken': 'cUprMDJNLWdqYVI1RWNkdWo1S3BsOWg2aTRuQU5VZHc4QklaSldmSVVaVGRwOjE3NTgyMTcwMDE3NjE6MToxOmF0OjE', 'createdAt': '2025-09-18T17:36:41.964Z', 'displayName': 'test1', 'isActive': True, 'metadata': {'token_type': 'bearer', 'expires_in': 7200, 'access_token': 'cUprMDJNLWdqYVI1RWNkdWo1S3BsOWg2aTRuQU5VZHc4QklaSldmSVVaVGRwOjE3NTgyMTcwMDE3NjE6MToxOmF0OjE', 'scope': 'offline.access tweet.write media.write users.read tweet.read', 'refresh_token': 'ZmxXVTRXVnRDMUxKb1FkVGM3OFFzZE15cldycTRKUzhQNkVpYjFwVjBJSVJDOjE3NTgyMTcwMDE3NjE6MTowOnJ0OjE', 'profileData': {'id': '1967446893728026624', 'username': 'test112298', 'displayName': 'test1', 'profilePicture': 'https://pbs.twimg.com/profile_images/1967447330749329409/76_9XqyV_normal.png'}, 'connectedAt': '2025-09-18T17:36:41.963Z'}, 'permissions': ['offline.access', 'tweet.write', 'media.write', 'users.read', 'tweet.read'], 'platformUserId': '1967446893728026624', 'profilePicture': 'https://pbs.twimg.com/profile_images/1967447330749329409/76_9XqyV_normal.png', 'refreshToken': 'ZmxXVTRXVnRDMUxKb1FkVGM3OFFzZE15cldycTRKUzhQNkVpYjFwVjBJSVJDOjE3NTgyMTcwMDE3NjE6MTowOnJ0OjE', 'tokenExpiresAt': '2025-09-18T19:36:41.963Z', 'updatedAt': '2025-09-18T17:36:41.964Z', 'userId': '68ca93a130e2ec0b8a01b910', 'username': 'test112298'}]}
-2025-09-20 00:22:39 - src.services.getlate_service - INFO - get_accounts:298 - Successfully retrieved 4 connected accounts
-2025-09-20 00:22:39 - src.services.workflow_service - INFO - post_content_workflow:381 - Posting to instagram
-2025-09-20 00:22:40 - getlate.api - INFO - log_api_call:185 - API POST /posts - Status: 405 - Duration: 28.85ms
-2025-09-20 00:22:40 - src.services.getlate_service - ERROR - create_post:375 - Failed to create post: Method not allowed: HTTP method not supported for this endpoint
-2025-09-20 00:22:40 - src.services.workflow_service - ERROR - post_content_workflow:443 - Failed to post to instagram: Method not allowed: HTTP method not supported for this endpoint
-2025-09-20 00:22:40 - api_service - ERROR - post_content:158 - Posting failed: Method not allowed: HTTP method not supported for this endpoint
-2025-09-20 00:22:40 - src.routes.main_routes - ERROR - publish_content_api:430 - Content publishing failed for workflow 28c57972-4dda-43bf-9270-ff3af827adf0: Method not allowed: HTTP method not supported for this endpoint
-2025-09-20 00:23:07 - app - INFO - lifespan:57 - Shutting down GetLate Social Media Automation...
-2025-09-20 00:23:07 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 11:03:50 - app - INFO - lifespan:57 - Shutting down GetLate Social Media Automation...
+2025-09-20 11:03:50 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 11:03:52 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:03:53 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:03:53 - app - INFO - lifespan:36 - Starting GetLate Social Media Automation...
+2025-09-20 11:03:53 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:03:53 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:03:53 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 11:03:53 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 11:03:53 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 1a58b193-d48a-4bee-8554-b58e901f2c13
+2025-09-20 11:03:53 - app - INFO - lifespan:48 - Services initialized successfully
+2025-09-20 11:03:55 - app - INFO - lifespan:57 - Shutting down GetLate Social Media Automation...
+2025-09-20 11:03:55 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 11:03:58 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:03:58 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:03:58 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 11:03:58 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:03:58 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:03:58 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 11:03:58 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 11:03:58 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: f517dd23-d040-428b-a7a4-23db9f392a5c
+2025-09-20 11:03:58 - app - INFO - lifespan:49 - Services initialized successfully
+2025-09-20 11:04:05 - app - INFO - lifespan:58 - Shutting down GetLate Social Media Automation...
+2025-09-20 11:04:05 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 11:04:07 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:04:07 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:04:07 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 11:04:07 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 11:04:07 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:04:07 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:04:07 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 11:04:07 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 11:04:07 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: a4cfa375-ccad-48ca-944e-033077e47be3
+2025-09-20 11:04:07 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 11:04:10 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 11:04:10 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 11:04:13 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:04:13 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:04:13 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 11:04:13 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 11:04:13 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:04:13 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:04:13 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 11:04:13 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 11:04:13 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: d5b910c7-54a3-44d0-b87a-fc9e28d74562
+2025-09-20 11:04:13 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 11:09:25 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 11:09:25 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 11:09:26 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 11:09:30 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:09:30 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:09:30 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 11:09:30 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 11:09:30 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:09:30 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:09:30 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 11:09:30 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 11:09:30 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 073ebe68-0493-4e9d-b2e3-6c24ca2ec0f4
+2025-09-20 11:09:30 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 11:10:33 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 11:10:33 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 11:10:33 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 11:10:35 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:10:35 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 11:10:37 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:10:37 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:10:37 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 11:10:37 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 11:10:37 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:10:37 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:10:37 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 11:10:37 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 11:10:37 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 238dffcd-dbb2-4a6a-aa9a-b89fc5762e5f
+2025-09-20 11:10:37 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 11:10:37 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 11:10:43 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:10:43 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:10:43 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 11:10:43 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 11:10:43 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:10:43 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:10:43 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 11:10:43 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 11:10:43 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: b703ed8b-a833-4d5e-accb-4f89fcb6428c
+2025-09-20 11:10:43 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 11:10:43 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 11:10:45 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:10:45 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:10:45 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 11:10:45 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 11:10:45 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:10:45 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:10:45 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 11:10:45 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 11:10:45 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 87a602a9-657e-4a34-b104-667901ef9584
+2025-09-20 11:10:45 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 11:10:46 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 11:10:46 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 11:10:46 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 11:10:54 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:10:54 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:10:54 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 11:10:54 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 11:10:54 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:10:54 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:10:54 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 11:10:54 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 11:10:54 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 5dd2f0a1-f749-4978-aaee-75c0ce2d5d2d
+2025-09-20 11:10:54 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 11:10:54 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 11:10:54 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 11:10:54 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 11:10:56 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:10:56 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:10:56 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 11:10:56 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 11:10:56 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:10:56 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:10:56 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 11:10:56 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 11:10:56 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 0bbde53e-d4d0-4eed-bcaa-0ff0048836c2
+2025-09-20 11:10:56 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 11:10:57 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 11:10:57 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 11:10:57 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 11:10:59 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:10:59 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:10:59 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 11:10:59 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 11:10:59 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:10:59 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:10:59 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 11:10:59 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 11:10:59 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 11c61ac6-4a37-49cc-be73-1877e7389c38
+2025-09-20 11:10:59 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 11:10:59 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 11:11:03 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:11:03 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:11:03 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 11:11:03 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 11:11:03 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:11:03 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:11:03 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 11:11:03 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 11:11:03 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: c4759eba-ec72-4ff3-a9bb-468aedcc769b
+2025-09-20 11:11:03 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 11:11:03 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 11:11:03 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 11:11:03 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 11:11:06 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:11:06 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:11:06 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 11:11:06 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 11:11:06 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:11:06 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:11:06 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 11:11:06 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 11:11:06 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 0f371f8f-1871-471c-8745-0ff6e7034cba
+2025-09-20 11:11:06 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 11:11:07 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 11:11:09 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:11:09 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:11:09 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 11:11:09 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 11:11:09 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:11:09 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:11:09 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 11:11:09 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 11:11:09 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 92994708-57ee-4c82-b36c-39472ea4895a
+2025-09-20 11:11:09 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 11:11:09 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 11:11:12 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:11:12 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:11:12 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 11:11:12 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 11:11:12 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:11:12 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:11:12 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 11:11:12 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 11:11:12 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 8f33def8-1e58-4002-b500-5f052b2aa5fc
+2025-09-20 11:11:12 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 11:11:12 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 11:11:14 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:11:14 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:11:14 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 11:11:14 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 11:11:14 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:11:14 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:11:14 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 11:11:14 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 11:11:14 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: d246a8f9-9927-4e55-a4de-59ff19825784
+2025-09-20 11:11:14 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 11:11:14 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 11:11:16 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:11:16 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:11:16 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 11:11:16 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 11:11:16 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:11:16 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:11:16 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 11:11:16 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 11:11:16 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: bccf0cea-0fb7-4005-9297-f4e89b6582c1
+2025-09-20 11:11:16 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 11:11:17 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 11:11:17 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 11:11:17 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 11:11:19 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:11:19 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:11:19 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 11:11:19 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 11:11:19 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:11:19 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:11:19 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 11:11:19 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 11:11:19 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 2d2f1414-52e6-49d5-a52e-d578f8566dd4
+2025-09-20 11:11:19 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 11:11:19 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 11:11:19 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 11:11:20 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 11:11:22 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:11:22 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 11:11:24 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:11:24 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:11:24 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 11:11:24 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 11:11:24 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:11:24 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:11:24 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 11:11:24 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 11:11:24 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: d15144e5-6431-40c3-a19e-f12c51d6cc20
+2025-09-20 11:11:24 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 11:11:28 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 11:11:28 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 11:11:28 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 11:11:30 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:11:30 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:11:30 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 11:11:30 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 11:11:30 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:11:30 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:11:30 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 11:11:30 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 11:11:30 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: af1b2db2-aed2-461c-91db-d5d516ced047
+2025-09-20 11:11:30 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 11:11:45 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 11:11:45 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 11:11:45 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 11:11:47 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:11:47 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 11:11:49 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:11:49 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:11:49 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 11:11:49 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 11:11:49 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:11:49 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:11:49 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 11:11:49 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 11:11:49 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 15290226-2499-425d-997d-0daa32703814
+2025-09-20 11:11:49 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 11:11:55 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:11:57 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:11:57 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 11:11:57 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 11:11:57 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 11:11:57 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:11:57 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:11:57 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 11:11:57 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 11:11:57 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 83ac1853-89ed-467f-89a7-d9342c1dfcb3
+2025-09-20 11:11:57 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 11:51:02 - src.routes.main_routes - INFO - home:24 - Rendering home page
+2025-09-20 11:51:32 - src.routes.main_routes - INFO - create_content_api:110 - Creating content for workflow be1f7644-7aa4-47aa-8fca-c33cded3a085
+2025-09-20 11:51:32 - api_service - INFO - __init__:21 - API service initialized
+2025-09-20 11:51:32 - api_service - INFO - create_content:36 - Starting content creation workflow: f307ca25-ffd7-4d71-a0fd-dfeaff46adbc
+2025-09-20 11:51:32 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:51:32 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 11:51:32 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 11:51:32 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: a87a6b2c-e47d-4633-8551-aaefe8fe23f2
+2025-09-20 11:51:32 - src.services.workflow_service - INFO - create_content_workflow:108 - Generating content for instagram
+2025-09-20 11:51:32 - ai_service - INFO - generate_social_media_content:89 - Generating instagram content for topic: Create a Instagram post on the topic : AGI and the new Cyber threats
+2025-09-20 11:51:34 - ai_service - INFO - generate_social_media_content:141 - Generated content for instagram: 153 characters
+2025-09-20 11:51:34 - src.services.workflow_service - INFO - create_content_workflow:131 - Generating image ideas and actual images
+2025-09-20 11:51:40 - ai_service - INFO - generate_image_ideas:309 - Generated 1 image ideas for topic: Create a Instagram post on the topic : AGI and the new Cyber threats
+2025-09-20 11:51:40 - src.services.workflow_service - INFO - create_content_workflow:140 - Generating actual images from ideas
+2025-09-20 11:51:40 - image_gen - INFO - generate_image_from_text_async:66 - Async generating image from text prompt: A central, glowing, intricate neural network struc... (retry 0)
+2025-09-20 11:51:49 - image_gen - INFO - generate_image_from_text_async:171 - Image saved to static\uploads\generated_20250920_115149_2354.png
+2025-09-20 11:51:49 - image_gen - INFO - generate_image_from_text_async:199 - Image generated successfully - Style: photorealistic, Quality: high, Size: 1024x1024
+2025-09-20 11:51:49 - src.services.workflow_service - INFO - create_content_workflow:152 - Generated image 1 for topic: Create a Instagram post on the topic : AGI and the new Cyber threats
+2025-09-20 11:51:49 - ai_service - INFO - analyze_content_performance:391 - Analyzing content performance for instagram
+2025-09-20 11:51:51 - ai_service - INFO - analyze_content_performance:419 - Content analysis completed: high engagement
+2025-09-20 11:51:51 - api_service - INFO - create_content:68 - Content created successfully: f307ca25-ffd7-4d71-a0fd-dfeaff46adbc
+2025-09-20 11:51:51 - src.routes.main_routes - INFO - create_content_api:152 - Content created successfully for workflow be1f7644-7aa4-47aa-8fca-c33cded3a085
+2025-09-20 11:51:57 - src.routes.main_routes - INFO - review_page:30 - Rendering review page via GET request
+2025-09-20 11:52:35 - src.routes.main_routes - INFO - publish_content_api:403 - Publishing content for workflow be1f7644-7aa4-47aa-8fca-c33cded3a085
+2025-09-20 11:52:35 - src.routes.main_routes - INFO - publish_content_api:415 - Selected variants: {'instagram': 'true'}
+2025-09-20 11:52:35 - api_service - INFO - __init__:21 - API service initialized
+2025-09-20 11:52:35 - api_service - INFO - post_content:114 - Starting posting workflow: 7d3f2a5f-b5bd-4373-ac69-990913c8b5cf
+2025-09-20 11:52:35 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 11:52:35 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 11:52:35 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 11:52:35 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 0be782f7-40be-473a-9aa1-38b9262a0e12
+2025-09-20 11:52:35 - src.services.workflow_service - INFO - post_content_workflow:346 - Content data keys: ['platform_content', 'image_ideas', 'topic', 'analytics']
+2025-09-20 11:52:35 - src.services.workflow_service - INFO - post_content_workflow:347 - Platform content keys: ['instagram']
+2025-09-20 11:52:35 - src.services.workflow_service - INFO - post_content_workflow:348 - Platform content: {
+  "instagram": [
+    {
+      "content": "AGI's rise brings unprecedented cyber threats. Are we prepared for the sophisticated attacks it could unleash? Stay informed, stay secure. #CyberSecurity",
+      "hashtags": [
+        "AGI",
+        "CyberThreats",
+        "AI",
+        "FutureTech",
+        "InfoSec",
+        "TechNews"
+      ],
+      "call_to_action": "What are your thoughts on AGI's impact on cybersecurity? Share below!",
+      "engagement_score": "high",
+      "character_count": 153...
+2025-09-20 11:52:35 - src.services.workflow_service - INFO - post_content_workflow:351 - Getting connected accounts
+2025-09-20 11:52:35 - src.services.getlate_service - INFO - get_accounts:244 - Calling GetLate API to get accounts
+2025-09-20 11:52:36 - getlate.api - INFO - log_api_call:185 - API GET /v1/accounts - Status: 200 - Duration: 1277.19ms
+2025-09-20 11:52:36 - src.services.getlate_service - INFO - get_accounts:246 - GetLate API response: {'accounts': [{'byokCredentials': {'isActive': False}, '_id': '68cc44b3666e6297f4476ba4', 'platform': 'facebook', 'profileId': {'_id': '68cb98c76bac81c253f768e2', 'userId': '68ca93a130e2ec0b8a01b910', 'name': 'Dhiwin Samrich', 'description': 'test1', 'isDefault': True, 'color': '#db1a1a', 'createdAt': '2025-09-18T05:29:43.556Z', 'updatedAt': '2025-09-18T05:29:43.556Z', '__v': 0}, '__v': 0, 'accessToken': 'EAAKH3un67AcBPdtuBjE76Q95kFqPHXMprkJNI6SBQ9vZBiwTg8mtH73z0FXmZCKonPOxxm4QghIZBXjXJ1RnROtdmWpkrIvyGfhDpWGZCmLF78E5tzGMwJwk1MSwbLzjrzY0al9E0YhpaKaX65HexuwpCkaiL1nfUESMClBZBKzR31LLvYW6N0zJZBmnWSL9NhUZCFNFpbroeZATZC5e7ahMPZAGOkL4nqWB7UA4pmZCSrQiZC0nj17zHybEwuJEQ22D', 'createdAt': '2025-09-18T17:43:15.239Z', 'displayName': 'Testing Ayrshare', 'isActive': True, 'metadata': {'availablePages': [{'id': '710826352123523', 'name': 'Testing Ayrshare'}], 'selectedPageId': '710826352123523', 'selectedPageName': 'Testing Ayrshare', 'selectedPageUsername': None, 'hasPageUsername': False, 'pageAccessToken': None, 'userProfile': {'id': '122097185421034322', 'username': 'Joe Rachel', 'displayName': 'Joe Rachel', 'profilePicture': 'https://scontent-iad3-1.xx.fbcdn.net/v/t1.30497-1/84628273_176159830277856_972693363922829312_n.jpg?stp=c379.0.1290.1290a_cp0_dst-jpg_s50x50_tt6&_nc_cat=1&ccb=1-7&_nc_sid=7565cd&_nc_ohc=2Ax0r0WBZ5YQ7kNvwH91omp&_nc_oc=Adku26_jsfLzqUIg-LZXWIIfNDGvyuTc8L4D1aOtQ-aMD9zdsV2gvWQ0NEOtpRI-pb8&_nc_zt=24&_nc_ht=scontent-iad3-1.xx&edm=AP4hL3IEAAAA&oh=00_AfaLg5bsBvmXIbNVPSyaZD9DapZu7k5UbzVafwY7B0W4Gg&oe=68F3CB99'}, 'connectedAt': '2025-09-18T17:43:15.239Z'}, 'permissions': ['pages_manage_posts', 'pages_read_engagement', 'pages_show_list'], 'platformUserId': '122097185421034322:page:710826352123523', 'profilePicture': 'https://scontent-iad3-1.xx.fbcdn.net/v/t1.30497-1/84628273_176159830277856_972693363922829312_n.jpg?stp=c379.0.1290.1290a_cp0_dst-jpg_s50x50_tt6&_nc_cat=1&ccb=1-7&_nc_sid=7565cd&_nc_ohc=2Ax0r0WBZ5YQ7kNvwH91omp&_nc_oc=Adku26_jsfLzqUIg-LZXWIIfNDGvyuTc8L4D1aOtQ-aMD9zdsV2gvWQ0NEOtpRI-pb8&_nc_zt=24&_nc_ht=scontent-iad3-1.xx&edm=AP4hL3IEAAAA&oh=00_AfaLg5bsBvmXIbNVPSyaZD9DapZu7k5UbzVafwY7B0W4Gg&oe=68F3CB99', 'updatedAt': '2025-09-18T17:43:15.239Z', 'userId': '68ca93a130e2ec0b8a01b910', 'username': 'Testing Ayrshare'}, {'byokCredentials': {'isActive': False}, '_id': '68cb98d9666e6297f4476b63', 'platform': 'instagram', 'profileId': {'_id': '68cb98c76bac81c253f768e2', 'userId': '68ca93a130e2ec0b8a01b910', 'name': 'Dhiwin Samrich', 'description': 'test1', 'isDefault': True, 'color': '#db1a1a', 'createdAt': '2025-09-18T05:29:43.556Z', 'updatedAt': '2025-09-18T05:29:43.556Z', '__v': 0}, '__v': 0, 'accessToken': 'IGAATtmljoKQRBZAE5FMHBMVGhacmp1RVVOVFJTOHhNT0Jpdy1lS09iUF91WFVfSWF4STNDNDlYZAHpfWjFuSklkeWxSNGdCakg5RTFPaWNLcndCRi1lR2xZASXpYd1NMRGlOZAWxZANFluTWpPanVQNnllT25n', 'createdAt': '2025-09-18T05:30:01.324Z', 'displayName': 'Joe Joe', 'isActive': True, 'metadata': {'access_token': 'IGAATtmljoKQRBZAE5FMHBMVGhacmp1RVVOVFJTOHhNT0Jpdy1lS09iUF91WFVfSWF4STNDNDlYZAHpfWjFuSklkeWxSNGdCakg5RTFPaWNLcndCRi1lR2xZASXpYd1NMRGlOZAWxZANFluTWpPanVQNnllT25n', 'refresh_token': 'IGAATtmljoKQRBZAE5FMHBMVGhacmp1RVVOVFJTOHhNT0Jpdy1lS09iUF91WFVfSWF4STNDNDlYZAHpfWjFuSklkeWxSNGdCakg5RTFPaWNLcndCRi1lR2xZASXpYd1NMRGlOZAWxZANFluTWpPanVQNnllT25n', 'user_id': 24783123111349972, 'expires_in': 5184000, 'profileData': {'id': '24783123111349972', 'username': 'joe2837joe', 'displayName': 'Joe Joe', 'profilePicture': None, 'followersCount': 0, 'mediaCount': 14}, 'connectedAt': '2025-09-18T05:30:01.323Z'}, 'permissions': [], 'platformUserId': '24783123111349972', 'refreshToken': 'IGAATtmljoKQRBZAE5FMHBMVGhacmp1RVVOVFJTOHhNT0Jpdy1lS09iUF91WFVfSWF4STNDNDlYZAHpfWjFuSklkeWxSNGdCakg5RTFPaWNLcndCRi1lR2xZASXpYd1NMRGlOZAWxZANFluTWpPanVQNnllT25n', 'tokenExpiresAt': '2025-11-17T05:30:01.323Z', 'updatedAt': '2025-09-18T05:30:01.324Z', 'userId': '68ca93a130e2ec0b8a01b910', 'username': 'joe2837joe'}, {'byokCredentials': {'isActive': False}, '_id': '68cc437d666e6297f4476ba3', 'profileId': {'_id': '68cb98c76bac81c253f768e2', 'userId': '68ca93a130e2ec0b8a01b910', 'name': 'Dhiwin Samrich', 'description': 'test1', 'isDefault': True, 'color': '#db1a1a', 'createdAt': '2025-09-18T05:29:43.556Z', 'updatedAt': '2025-09-18T05:29:43.556Z', '__v': 0}, 'platform': 'linkedin', '__v': 0, 'accessToken': 'AQUga893MJTnLHJTmu6806P2bDTHF5sAIwTfROfUBtNGi0CCnMkmnADlM3-5w8NEFpbgE7YgzT1PdCesQB8UihWR7Iawi5PU3xwXSQ4C4H89cHd9PMMjKdaeVJHJrNSCi3Dj2--566sukqgrVdTQlFPaifLejETQB4M1vmM0iwXPbnflzvwXLVHreEf4mwOXVzdG7s8qNOrQ30nkf8MH8NeMD6ntP-zOQHmrZ81f-79onxhMmvJTtnrQsMVzs6YeOUXCEmvjR6LAM2UR9YI0tkjdPCxD04_G5lIO6SxiQqpTzHYY4MXQk9gS66kuwKmrap3mWvLci6JmsAoidSQFdOmJqG6c4A', 'createdAt': '2025-09-18T17:38:05.702Z', 'displayName': 'Joe Rachel', 'isActive': True, 'metadata': {'access_token': 'AQUga893MJTnLHJTmu6806P2bDTHF5sAIwTfROfUBtNGi0CCnMkmnADlM3-5w8NEFpbgE7YgzT1PdCesQB8UihWR7Iawi5PU3xwXSQ4C4H89cHd9PMMjKdaeVJHJrNSCi3Dj2--566sukqgrVdTQlFPaifLejETQB4M1vmM0iwXPbnflzvwXLVHreEf4mwOXVzdG7s8qNOrQ30nkf8MH8NeMD6ntP-zOQHmrZ81f-79onxhMmvJTtnrQsMVzs6YeOUXCEmvjR6LAM2UR9YI0tkjdPCxD04_G5lIO6SxiQqpTzHYY4MXQk9gS66kuwKmrap3mWvLci6JmsAoidSQFdOmJqG6c4A', 'expires_in': 5183999, 'refresh_token': 'AQVM2hQssEt92lIEp6bYPX_fYN5-xO2laspPa5_gWwuVoGtEfWIQTYhH03UEKMaVybSa-T_tCzbDw3y8tQa76Ehu_aNURRoC-DbOPWtK1Bc1UUwabLvn_B8OUG9a9N9i1aQP3q5bcC2LomKd1CfHSePa-k2tkCi4GZNA1KGGdZjF18R4TTOqcwh2k-8LSJQZRcHRBe_5XTGnDB6K8HyFBX924yRClU2nW-n14wm9CrBttYS4qVDiYVez3c82fwveGtfZ28sUY3-BLm7kXA04Vs2clijocJEVYrRCMbuONf9ytVxX5PhYBi-naK5QWwU7z7-z6vVEaFvyilTPzhUXcGu0LLmc3w', 'refresh_token_expires_in': 31535999, 'scope': 'email,openid,profile,w_member_social,w_organization_social', 'token_type': 'Bearer', 'id_token': 'eyJ6aXAiOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImQ5Mjk2NjhhLWJhYjEtNGM2OS05NTk4LTQzNzMxNDk3MjNmZiIsImFsZyI6IlJTMjU2In0.eyJpc3MiOiJodHRwczovL3d3dy5saW5rZWRpbi5jb20vb2F1dGgiLCJhdWQiOiI3N2RyNmJsNDU1ZGl3bSIsImlhdCI6MTc1ODIxNzA4NSwiZXhwIjoxNzU4MjIwNjg1LCJzdWIiOiJsQzYwRXB3WXptIiwibmFtZSI6IkpvZSBSYWNoZWwiLCJnaXZlbl9uYW1lIjoiSm9lIiwiZmFtaWx5X25hbWUiOiJSYWNoZWwiLCJlbWFpbCI6InQ3NzQ2Mzk4QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjoidHJ1ZSIsImxvY2FsZSI6ImVuX1VTIn0.Jbp-vwyAqLwZPRIFjYDX5gmY7VTlxb5GesHF5cFVzOlF__ArMcoyRfyPkPjTVMGmIoUMh9sOEMK4eMHrrEDlUd7QyGGvbpN2ZIcixpbYZyGez6Og5Xp6p5jY777cCM3JQbNx50Q7jyvETGHEjlhCuaurIoIu9ozBY8mItwjGYSYRHvuf7CwU396KulxIn_LtPRRJBf4TtDcvjzEigHdpYTGp_JhnbdzY6sWBnQ7__xmnL_3f1MYBDCD8ePO7AClplUgw-xzqpzUbYI4LGEsk6ky4feDm68WTC7ZtAZSfVL21aMOGCfJ0DCsBIrBOgA5jj-ZA1XbWMgWnnBzBnPWXWtJoLOPLAKPlt08bjKdj4ZoOdATuMS6J5GJLq-Grx53uTtD_F-CcoS00M8gtrSJKrIgn150GTiuTCzqiB4QU4ukgiTTb81P0jmd4CucusdQ1pximfWrBp8JNPz0ahVU3tquUQavQelcsQjwspvA-9o053u0RzTWnPFK_auOdpnPY48vMxVtrRELEOzxBZrxKdVVh1XKiujy14iQGQcPDzAVPkpfcCkd1R8DRSFxK7N3uFsJK-slmzp65wih_Wza2Kq4Uj46EhdJNq64p8iuyYQA26jTKrWaOQYIMDTcgteJpBq9Vo1J0mDBznXOq8ejz3XdT81_toHnvK99oKOP34Wo', 'profileData': {'id': 'lC60EpwYzm', 'username': 'Joe Rachel', 'displayName': 'Joe Rachel', 'profilePicture': None, 'email': 't7746398@gmail.com'}, 'connectedAt': '2025-09-18T17:38:05.702Z', 'userProfile': {'id': 'lC60EpwYzm', 'username': 'Joe Rachel', 'displayName': 'Joe Rachel', 'profilePicture': None, 'email': 't7746398@gmail.com'}, 'accountType': 'personal'}, 'permissions': ['email,openid,profile,w_member_social,w_organization_social'], 'platformUserId': 'lC60EpwYzm', 'refreshToken': 'AQVM2hQssEt92lIEp6bYPX_fYN5-xO2laspPa5_gWwuVoGtEfWIQTYhH03UEKMaVybSa-T_tCzbDw3y8tQa76Ehu_aNURRoC-DbOPWtK1Bc1UUwabLvn_B8OUG9a9N9i1aQP3q5bcC2LomKd1CfHSePa-k2tkCi4GZNA1KGGdZjF18R4TTOqcwh2k-8LSJQZRcHRBe_5XTGnDB6K8HyFBX924yRClU2nW-n14wm9CrBttYS4qVDiYVez3c82fwveGtfZ28sUY3-BLm7kXA04Vs2clijocJEVYrRCMbuONf9ytVxX5PhYBi-naK5QWwU7z7-z6vVEaFvyilTPzhUXcGu0LLmc3w', 'tokenExpiresAt': '2025-11-17T17:38:04.702Z', 'updatedAt': '2025-09-18T17:38:05.702Z', 'userId': '68ca93a130e2ec0b8a01b910', 'username': 'Joe Rachel'}, {'byokCredentials': {'isActive': False}, '_id': '68cc432a666e6297f4476ba2', 'platform': 'twitter', 'profileId': {'_id': '68cb98c76bac81c253f768e2', 'userId': '68ca93a130e2ec0b8a01b910', 'name': 'Dhiwin Samrich', 'description': 'test1', 'isDefault': True, 'color': '#db1a1a', 'createdAt': '2025-09-18T05:29:43.556Z', 'updatedAt': '2025-09-18T05:29:43.556Z', '__v': 0}, '__v': 0, 'accessToken': 'cUprMDJNLWdqYVI1RWNkdWo1S3BsOWg2aTRuQU5VZHc4QklaSldmSVVaVGRwOjE3NTgyMTcwMDE3NjE6MToxOmF0OjE', 'createdAt': '2025-09-18T17:36:41.964Z', 'displayName': 'test1', 'isActive': True, 'metadata': {'token_type': 'bearer', 'expires_in': 7200, 'access_token': 'cUprMDJNLWdqYVI1RWNkdWo1S3BsOWg2aTRuQU5VZHc4QklaSldmSVVaVGRwOjE3NTgyMTcwMDE3NjE6MToxOmF0OjE', 'scope': 'offline.access tweet.write media.write users.read tweet.read', 'refresh_token': 'ZmxXVTRXVnRDMUxKb1FkVGM3OFFzZE15cldycTRKUzhQNkVpYjFwVjBJSVJDOjE3NTgyMTcwMDE3NjE6MTowOnJ0OjE', 'profileData': {'id': '1967446893728026624', 'username': 'test112298', 'displayName': 'test1', 'profilePicture': 'https://pbs.twimg.com/profile_images/1967447330749329409/76_9XqyV_normal.png'}, 'connectedAt': '2025-09-18T17:36:41.963Z'}, 'permissions': ['offline.access', 'tweet.write', 'media.write', 'users.read', 'tweet.read'], 'platformUserId': '1967446893728026624', 'profilePicture': 'https://pbs.twimg.com/profile_images/1967447330749329409/76_9XqyV_normal.png', 'refreshToken': 'ZmxXVTRXVnRDMUxKb1FkVGM3OFFzZE15cldycTRKUzhQNkVpYjFwVjBJSVJDOjE3NTgyMTcwMDE3NjE6MTowOnJ0OjE', 'tokenExpiresAt': '2025-09-18T19:36:41.963Z', 'updatedAt': '2025-09-18T17:36:41.964Z', 'userId': '68ca93a130e2ec0b8a01b910', 'username': 'test112298'}]}
+2025-09-20 11:52:36 - src.services.getlate_service - INFO - get_accounts:299 - Successfully retrieved 4 connected accounts
+2025-09-20 11:52:36 - src.services.workflow_service - INFO - post_content_workflow:365 - Available platform content: ['instagram']
+2025-09-20 11:52:36 - src.services.workflow_service - INFO - post_content_workflow:384 - Checking content for platform: instagram, platform_content keys: ['instagram']
+2025-09-20 11:52:36 - src.services.workflow_service - INFO - post_content_workflow:400 - Posting to instagram
+2025-09-20 11:52:36 - src.services.workflow_service - WARNING - post_content_workflow:419 - No generated images available, using placeholder for Instagram
+2025-09-20 11:52:36 - src.services.getlate_service - INFO - create_post:370 - create_post called with data: content="AGI's rise brings unprecedented cyber threats. Are we prepared for the sophisticated attacks it could unleash? Stay informed, stay secure. #CyberSecurity" platforms=[{'platform': 'instagram'}] media_items=None schedule_at=None
+2025-09-20 11:52:36 - src.services.getlate_service - INFO - create_post:371 - create_post platforms: [{'platform': 'instagram'}]
+2025-09-20 11:52:38 - getlate.api - INFO - log_api_call:185 - API POST /v1/posts - Status: 400 - Duration: 1350.51ms
+2025-09-20 11:52:38 - src.services.getlate_service - INFO - create_post:379 - GetLateAPIError caught in create_post: status_code=400, message=Bad request: Invalid request
+2025-09-20 11:52:38 - src.services.getlate_service - INFO - create_post:380 - Status code type: <class 'int'>, value: 400
+2025-09-20 11:52:38 - src.services.getlate_service - ERROR - create_post:394 - Failed to create post: Bad request: Invalid request
+2025-09-20 11:52:38 - src.services.workflow_service - ERROR - post_content_workflow:482 - Failed to post to instagram: Bad request: Invalid request
+2025-09-20 11:52:38 - api_service - INFO - post_content:144 - Post response: total_success=0, total_failed=1, results=1
+2025-09-20 11:52:38 - api_service - ERROR - post_content:158 - Posting failed: Bad request: Invalid request, failed_results=1, total_failed=1
+2025-09-20 11:52:38 - src.routes.main_routes - ERROR - publish_content_api:481 - Content publishing failed for workflow be1f7644-7aa4-47aa-8fca-c33cded3a085: Bad request: Invalid request
+2025-09-20 12:14:52 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 12:14:52 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 12:14:52 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:14:52 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 12:14:52 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 12:14:52 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:14:55 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:14:55 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:14:55 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 12:14:55 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 12:14:55 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:14:55 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:14:55 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:14:55 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:14:55 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 0fae268d-a4c6-4f56-8cbd-a0a2b0cb62b9
+2025-09-20 12:14:55 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 12:14:55 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:14:56 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:14:56 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 12:14:56 - src.services.redis_service - INFO - connect:34 - Connected to Redis successfully
+2025-09-20 12:14:56 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:14:56 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:14:56 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:14:56 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:14:56 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: e3d1f66e-f3ec-43c7-827a-60e89990eba3
+2025-09-20 12:14:56 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 12:16:26 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 12:16:26 - src.services.redis_service - INFO - disconnect:47 - Disconnected from Redis
+2025-09-20 12:16:26 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 12:16:26 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:16:27 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 12:16:27 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 12:16:27 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:16:30 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:16:30 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:16:30 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 12:16:30 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 12:16:30 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:16:30 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:16:30 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:16:30 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:16:30 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 04fc5034-628b-4553-a67e-278cb7982189
+2025-09-20 12:16:30 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 12:16:30 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:16:30 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:16:30 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 12:16:30 - src.services.redis_service - INFO - connect:34 - Connected to Redis successfully
+2025-09-20 12:16:30 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:16:30 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:16:30 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:16:30 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:16:30 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 158d634d-e38d-489a-9782-156be233aae3
+2025-09-20 12:16:30 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 12:18:03 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 12:18:03 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 12:18:03 - src.services.redis_service - INFO - disconnect:47 - Disconnected from Redis
+2025-09-20 12:18:03 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 12:18:03 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:18:03 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:18:05 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:18:05 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:18:05 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 12:18:05 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 12:18:05 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:18:05 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:18:05 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:18:05 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:18:05 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 609a3d7d-f993-4e9e-a2be-3233ed02be9b
+2025-09-20 12:18:05 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 12:18:06 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:18:06 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:18:06 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 12:18:06 - src.services.redis_service - INFO - connect:34 - Connected to Redis successfully
+2025-09-20 12:18:06 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:18:06 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:18:06 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:18:06 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:18:06 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 5757505f-a11d-4303-9e89-9c56acc3cabf
+2025-09-20 12:18:06 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 12:19:05 - src.routes.main_routes - INFO - home:24 - Rendering home page
+2025-09-20 12:19:38 - src.routes.main_routes - INFO - create_content_api:110 - Creating content for workflow 74ac80e8-e4ce-49ab-84b4-bc54a44f3197
+2025-09-20 12:19:38 - api_service - INFO - __init__:21 - API service initialized
+2025-09-20 12:19:38 - api_service - INFO - create_content:36 - Starting content creation workflow: 03571668-dbf5-4f81-9976-26366381a007
+2025-09-20 12:19:38 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:19:38 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:19:38 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:19:38 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: a903f3ae-b0c3-4c1d-a2d3-019431802509
+2025-09-20 12:19:38 - src.services.workflow_service - INFO - create_content_workflow:108 - Generating content for instagram
+2025-09-20 12:19:38 - ai_service - INFO - generate_social_media_content:89 - Generating instagram content for topic: Create a Instagram post on the content: NVIDIA Rapids
+2025-09-20 12:19:41 - ai_service - INFO - generate_social_media_content:141 - Generated content for instagram: 232 characters
+2025-09-20 12:19:41 - ai_service - INFO - analyze_content_performance:391 - Analyzing content performance for instagram
+2025-09-20 12:19:51 - ai_service - WARNING - analyze_content_performance:423 - Failed to parse performance analysis JSON, using enhanced fallback
+2025-09-20 12:19:51 - api_service - INFO - create_content:68 - Content created successfully: 03571668-dbf5-4f81-9976-26366381a007
+2025-09-20 12:19:51 - src.routes.main_routes - INFO - create_content_api:152 - Content created successfully for workflow 74ac80e8-e4ce-49ab-84b4-bc54a44f3197
+2025-09-20 12:19:58 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 12:19:58 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 12:19:58 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:20:00 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:20:00 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:20:00 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 12:20:00 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 12:20:00 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:20:00 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:20:00 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:20:00 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:20:00 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 93a85ef6-d54f-4627-9e29-0fd1891e1fe9
+2025-09-20 12:20:00 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 12:20:01 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 12:20:01 - src.services.redis_service - INFO - disconnect:47 - Disconnected from Redis
+2025-09-20 12:20:01 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 12:20:01 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:20:06 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:20:06 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:20:06 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 12:20:06 - src.services.redis_service - INFO - connect:34 - Connected to Redis successfully
+2025-09-20 12:20:06 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:20:06 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:20:06 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:20:06 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:20:06 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 39971950-cc46-4b5f-9d4e-e4617da2f445
+2025-09-20 12:20:06 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 12:20:06 - src.routes.main_routes - INFO - review_page:30 - Rendering review page via GET request
+2025-09-20 12:20:19 - src.routes.main_routes - INFO - home:24 - Rendering home page
+2025-09-20 12:21:06 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 12:21:06 - src.services.redis_service - INFO - disconnect:47 - Disconnected from Redis
+2025-09-20 12:21:06 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 12:21:06 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:21:09 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 12:21:09 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 12:21:09 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:21:10 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:21:10 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:21:11 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 12:21:11 - src.services.redis_service - INFO - connect:34 - Connected to Redis successfully
+2025-09-20 12:21:11 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:21:11 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:21:11 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:21:11 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:21:11 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 603bc8de-58c9-4f32-8b28-3ea654c57c4e
+2025-09-20 12:21:11 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 12:21:11 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:21:12 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:21:12 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 12:21:12 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 12:21:12 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:21:12 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:21:12 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:21:12 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:21:12 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: b2b22d44-bd46-4710-bb16-8283f88681a1
+2025-09-20 12:21:12 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 12:21:36 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 12:21:36 - src.services.redis_service - INFO - disconnect:47 - Disconnected from Redis
+2025-09-20 12:21:36 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 12:21:36 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:21:37 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 12:21:37 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 12:21:37 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:21:38 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:21:38 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:21:38 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 12:21:38 - src.services.redis_service - INFO - connect:34 - Connected to Redis successfully
+2025-09-20 12:21:38 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:21:38 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:21:38 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:21:38 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:21:38 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: d634869e-fff7-42f0-adb8-31b6983dc204
+2025-09-20 12:21:38 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 12:21:39 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:21:39 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:21:39 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 12:21:39 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 12:21:39 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:21:39 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:21:39 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:21:39 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:21:39 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 0ae862df-0cc1-42fc-9ff7-97a0be9c0707
+2025-09-20 12:21:39 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 12:21:58 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 12:21:58 - src.services.redis_service - INFO - disconnect:47 - Disconnected from Redis
+2025-09-20 12:21:58 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 12:21:58 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:21:58 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 12:21:58 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 12:21:58 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:22:01 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:22:01 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:22:01 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 12:22:01 - src.services.redis_service - INFO - connect:34 - Connected to Redis successfully
+2025-09-20 12:22:01 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:22:01 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:22:01 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:22:01 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:22:01 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 33732d29-b0d3-4b49-8ec5-fff6b7df91a7
+2025-09-20 12:22:01 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 12:22:01 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:22:01 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:22:01 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 12:22:01 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 12:22:01 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:22:01 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:22:01 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:22:01 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:22:01 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: d0406363-8b43-4ac9-ba58-59847d797ff7
+2025-09-20 12:22:01 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 12:22:03 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 12:22:03 - src.services.redis_service - INFO - disconnect:47 - Disconnected from Redis
+2025-09-20 12:22:03 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 12:22:04 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:22:05 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 12:22:05 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 12:22:05 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:22:06 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:22:07 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:22:07 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 12:22:07 - src.services.redis_service - INFO - connect:34 - Connected to Redis successfully
+2025-09-20 12:22:07 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:22:07 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:22:07 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:22:07 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:22:07 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: d6975562-2d96-4624-95b6-df052f49ced5
+2025-09-20 12:22:07 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 12:22:07 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:22:07 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:22:07 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 12:22:07 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 12:22:07 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:22:07 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:22:07 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:22:07 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:22:07 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: ca3a618b-aa2a-4ad1-9195-edcca5ec1835
+2025-09-20 12:22:07 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 12:22:10 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:22:10 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:22:10 - test - ERROR - test_complete_workflow:208 - Complete workflow test failed
+2025-09-20 12:22:10 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:22:10 - test.errors - INFO - test_error_handling:245 - Error handling test completed
+2025-09-20 12:22:10 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:22:46 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 12:22:46 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 12:22:46 - src.services.redis_service - INFO - disconnect:47 - Disconnected from Redis
+2025-09-20 12:22:46 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 12:22:46 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:22:46 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:22:49 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:22:49 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:22:49 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 12:22:49 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 12:22:49 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:22:49 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:22:49 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:22:49 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:22:49 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: edb2ffc3-618e-42b8-b5ef-2177ec5f82c0
+2025-09-20 12:22:49 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 12:22:49 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:22:49 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:22:49 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 12:22:49 - src.services.redis_service - INFO - connect:34 - Connected to Redis successfully
+2025-09-20 12:22:49 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:22:49 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:22:49 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:22:49 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:22:49 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 33c5ad04-303c-4cd7-aca6-257d6e2dc6e7
+2025-09-20 12:22:49 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 12:22:52 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 12:22:52 - src.services.redis_service - INFO - disconnect:47 - Disconnected from Redis
+2025-09-20 12:22:52 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 12:22:52 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:22:52 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 12:22:52 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 12:22:53 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:22:55 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:22:55 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:22:55 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 12:22:55 - src.services.redis_service - INFO - connect:34 - Connected to Redis successfully
+2025-09-20 12:22:55 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:22:55 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:22:55 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:22:55 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:22:55 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: cd9b5053-60cc-4b64-89ca-28e26a382ccd
+2025-09-20 12:22:55 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 12:22:55 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:22:55 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:22:55 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 12:22:55 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 12:22:55 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:22:55 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:22:55 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:22:55 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:22:55 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 0ff1b887-c213-4639-b165-a8c32a6d6abb
+2025-09-20 12:22:55 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 12:22:57 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 12:22:57 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 12:22:57 - src.services.redis_service - INFO - disconnect:47 - Disconnected from Redis
+2025-09-20 12:22:57 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 12:22:57 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:22:57 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:23:00 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:23:00 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:23:00 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 12:23:00 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 12:23:00 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:23:00 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:23:00 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:23:00 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:23:00 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 5c6bb655-f843-4bb7-80d4-956a4f621344
+2025-09-20 12:23:00 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 12:23:00 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:23:00 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:23:01 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 12:23:01 - src.services.redis_service - INFO - connect:34 - Connected to Redis successfully
+2025-09-20 12:23:01 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:23:01 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:23:01 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:23:01 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:23:01 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 53b3bd15-dd83-4047-905a-7c5f3cf757bd
+2025-09-20 12:23:01 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 12:23:03 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:23:03 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:23:03 - text_gen - INFO - __init__:29 - Text generation service initialized with Gemini API
+2025-09-20 12:23:03 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:23:03 - poster_service - INFO - _register_posters:48 - Registered all platform posters
+2025-09-20 12:23:03 - text_gen - INFO - __init__:29 - Text generation service initialized with Gemini API
+2025-09-20 12:23:03 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:23:03 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:23:03 - poster_service - INFO - _register_posters:48 - Registered all platform posters
+2025-09-20 12:23:03 - user_workflow - INFO - __init__:38 - User workflow service initialized
+2025-09-20 12:23:03 - user_workflow - INFO - process_user_input:64 - Processing user input for session 00d4a7d3-00aa-4502-a932-95b64fa0961a
+2025-09-20 12:23:03 - workflow - INFO - process_user_input:65 - WORKFLOW START: Session 00d4a7d3-00aa-4502-a932-95b64fa0961a
+2025-09-20 12:23:03 - user_workflow - INFO - process_user_input:79 - Analyzing user input: 'Share an inspiring quote about technology and innovation for tech professionals...'
+2025-09-20 12:23:03 - workflow - INFO - process_user_input:84 - Input analysis completed in 0.00s
+2025-09-20 12:23:03 - user_workflow - INFO - process_user_input:96 - Generating content package for platforms: ['linkedin', 'twitter', 'facebook']
+2025-09-20 12:23:03 - text_gen - INFO - generate_caption_and_hashtags:57 - Generating caption and hashtags for linkedin - Topic: Share an inspiring quote about technology and innovation for tech professionals
+2025-09-20 12:23:10 - text_gen - WARNING - generate_caption_and_hashtags:109 - Generated caption exceeds max length (738 > 280)
+2025-09-20 12:23:10 - text_gen - INFO - generate_caption_and_hashtags:116 - Generated caption: 280 characters, 6 hashtags
+2025-09-20 12:23:10 - text_gen - INFO - generate_caption_and_hashtags:57 - Generating caption and hashtags for twitter - Topic: Share an inspiring quote about technology and innovation for tech professionals
+2025-09-20 12:23:17 - text_gen - WARNING - generate_caption_and_hashtags:109 - Generated caption exceeds max length (578 > 280)
+2025-09-20 12:23:17 - text_gen - INFO - generate_caption_and_hashtags:116 - Generated caption: 280 characters, 3 hashtags
+2025-09-20 12:23:17 - text_gen - INFO - generate_caption_and_hashtags:57 - Generating caption and hashtags for facebook - Topic: Share an inspiring quote about technology and innovation for tech professionals
+2025-09-20 12:23:25 - text_gen - WARNING - generate_caption_and_hashtags:109 - Generated caption exceeds max length (794 > 280)
+2025-09-20 12:23:25 - text_gen - INFO - generate_caption_and_hashtags:116 - Generated caption: 280 characters, 0 hashtags
+2025-09-20 12:23:25 - image_gen - INFO - generate_image_ideas:637 - Generating 1 image ideas for topic: Share an inspiring quote about technology and innovation for tech professionals
+2025-09-20 12:23:27 - image_gen - WARNING - generate_image_ideas:684 - Failed to parse image ideas JSON, using fallback
+2025-09-20 12:23:27 - image_gen - INFO - generate_social_media_image:332 - Generating social media image for linkedin - Topic: Share an inspiring quote about technology and innovation for tech professionals
+2025-09-20 12:23:27 - image_gen - INFO - generate_image_from_text_async:66 - Async generating image from text prompt: 
+            Create a engaging social media image ... (retry 0)
+2025-09-20 12:23:35 - image_gen - INFO - generate_image_from_text_async:171 - Image saved to static\uploads\generated_20250920_122335_7150.png
+2025-09-20 12:23:35 - image_gen - INFO - generate_image_from_text_async:199 - Image generated successfully - Style: artistic, Quality: high, Size: 1024x1024
+2025-09-20 12:23:35 - image_gen - INFO - generate_social_media_image:382 - Social media image generated for linkedin
+2025-09-20 12:23:35 - workflow - INFO - process_user_input:106 - Content package generated in 32.14s
+2025-09-20 12:23:35 - user_workflow - INFO - process_user_input:133 - Making 1 images public using ngrok
+2025-09-20 12:23:35 - src.utils.ngrok_manager - INFO - _check_ngrok_installed:30 - Ngrok found: ngrok version 3.23.3
+2025-09-20 12:23:35 - src.utils.ngrok_manager - INFO - _start_ngrok_if_needed:47 - Ngrok is already running
+2025-09-20 12:23:36 - src.utils.ngrok_manager - INFO - create_public_url:117 - Created public URL for static\uploads\generated_20250920_122335_7150.png: https://43d3dda256d5.ngrok-free.app/static/images/generated_20250920_122335_7150.png
+2025-09-20 12:23:36 - workflow - INFO - process_user_input:139 - Images made public in 0.57s
+2025-09-20 12:23:36 - user_workflow - INFO - process_user_input:152 - Initial content generated for session 00d4a7d3-00aa-4502-a932-95b64fa0961a in 32.71s
+2025-09-20 12:23:36 - workflow - INFO - process_user_input:153 - WORKFLOW STEP COMPLETE: Content generation
+2025-09-20 12:23:36 - test - INFO - test_complete_workflow:132 - Test case 1 completed successfully
+2025-09-20 12:23:36 - user_workflow - INFO - process_user_input:64 - Processing user input for session 29e6e1be-b112-4cea-b234-4f2f5e915682
+2025-09-20 12:23:36 - workflow - INFO - process_user_input:65 - WORKFLOW START: Session 29e6e1be-b112-4cea-b234-4f2f5e915682
+2025-09-20 12:23:36 - user_workflow - INFO - process_user_input:79 - Analyzing user input: 'Create a fun, engaging post about weekend vibes with a beautiful sunset image...'
+2025-09-20 12:23:36 - workflow - INFO - process_user_input:84 - Input analysis completed in 0.00s
+2025-09-20 12:23:36 - user_workflow - INFO - process_user_input:96 - Generating content package for platforms: ['instagram', 'facebook', 'pinterest']
+2025-09-20 12:23:36 - text_gen - INFO - generate_caption_and_hashtags:57 - Generating caption and hashtags for instagram - Topic: Create a fun, engaging post about weekend vibes with a beautiful sunset image
+2025-09-20 12:23:42 - text_gen - WARNING - generate_caption_and_hashtags:109 - Generated caption exceeds max length (805 > 280)
+2025-09-20 12:23:42 - text_gen - INFO - generate_caption_and_hashtags:116 - Generated caption: 280 characters, 0 hashtags
+2025-09-20 12:23:42 - text_gen - INFO - generate_caption_and_hashtags:57 - Generating caption and hashtags for facebook - Topic: Create a fun, engaging post about weekend vibes with a beautiful sunset image
+2025-09-20 12:23:48 - text_gen - WARNING - generate_caption_and_hashtags:109 - Generated caption exceeds max length (589 > 280)
+2025-09-20 12:23:48 - text_gen - INFO - generate_caption_and_hashtags:116 - Generated caption: 280 characters, 0 hashtags
+2025-09-20 12:23:48 - text_gen - INFO - generate_caption_and_hashtags:57 - Generating caption and hashtags for pinterest - Topic: Create a fun, engaging post about weekend vibes with a beautiful sunset image
+2025-09-20 12:23:55 - text_gen - WARNING - generate_caption_and_hashtags:109 - Generated caption exceeds max length (830 > 280)
+2025-09-20 12:23:55 - text_gen - INFO - generate_caption_and_hashtags:116 - Generated caption: 280 characters, 12 hashtags
+2025-09-20 12:23:55 - image_gen - INFO - generate_image_ideas:637 - Generating 1 image ideas for topic: Create a fun, engaging post about weekend vibes with a beautiful sunset image
+2025-09-20 12:23:57 - image_gen - WARNING - generate_image_ideas:684 - Failed to parse image ideas JSON, using fallback
+2025-09-20 12:23:57 - image_gen - INFO - generate_social_media_image:332 - Generating social media image for instagram - Topic: Create a fun, engaging post about weekend vibes with a beautiful sunset image
+2025-09-20 12:23:57 - image_gen - INFO - generate_image_from_text_async:66 - Async generating image from text prompt: 
+            Create a engaging social media image ... (retry 0)
+2025-09-20 12:24:05 - image_gen - INFO - generate_image_from_text_async:171 - Image saved to static\uploads\generated_20250920_122405_4752.png
+2025-09-20 12:24:05 - image_gen - INFO - generate_image_from_text_async:199 - Image generated successfully - Style: artistic, Quality: high, Size: 1024x1024
+2025-09-20 12:24:05 - image_gen - INFO - generate_social_media_image:382 - Social media image generated for instagram
+2025-09-20 12:24:05 - workflow - INFO - process_user_input:106 - Content package generated in 29.28s
+2025-09-20 12:24:05 - user_workflow - INFO - process_user_input:133 - Making 1 images public using ngrok
+2025-09-20 12:24:05 - src.utils.ngrok_manager - INFO - _check_ngrok_installed:30 - Ngrok found: ngrok version 3.23.3
+2025-09-20 12:24:05 - src.utils.ngrok_manager - INFO - _start_ngrok_if_needed:47 - Ngrok is already running
+2025-09-20 12:24:05 - src.utils.ngrok_manager - INFO - create_public_url:117 - Created public URL for static\uploads\generated_20250920_122405_4752.png: https://43d3dda256d5.ngrok-free.app/static/images/generated_20250920_122405_4752.png
+2025-09-20 12:24:05 - workflow - INFO - process_user_input:139 - Images made public in 0.53s
+2025-09-20 12:24:05 - user_workflow - INFO - process_user_input:152 - Initial content generated for session 29e6e1be-b112-4cea-b234-4f2f5e915682 in 29.81s
+2025-09-20 12:24:05 - workflow - INFO - process_user_input:153 - WORKFLOW STEP COMPLETE: Content generation
+2025-09-20 12:24:05 - test - INFO - test_complete_workflow:132 - Test case 2 completed successfully
+2025-09-20 12:24:05 - user_workflow - INFO - process_user_input:64 - Processing user input for session 90094428-7e79-404a-840d-1747148367aa
+2025-09-20 12:24:05 - workflow - INFO - process_user_input:65 - WORKFLOW START: Session 90094428-7e79-404a-840d-1747148367aa
+2025-09-20 12:24:05 - user_workflow - INFO - process_user_input:79 - Analyzing user input: 'Share a thought-provoking discussion starter about AI and the future of work...'
+2025-09-20 12:24:05 - workflow - INFO - process_user_input:84 - Input analysis completed in 0.00s
+2025-09-20 12:24:05 - user_workflow - INFO - process_user_input:96 - Generating content package for platforms: ['reddit', 'linkedin', 'twitter']
+2025-09-20 12:24:05 - text_gen - INFO - generate_caption_and_hashtags:57 - Generating caption and hashtags for reddit - Topic: Share a thought-provoking discussion starter about AI and the future of work
+2025-09-20 12:24:13 - text_gen - WARNING - generate_caption_and_hashtags:109 - Generated caption exceeds max length (689 > 280)
+2025-09-20 12:24:13 - text_gen - INFO - generate_caption_and_hashtags:116 - Generated caption: 280 characters, 6 hashtags
+2025-09-20 12:24:13 - text_gen - INFO - generate_caption_and_hashtags:57 - Generating caption and hashtags for linkedin - Topic: Share a thought-provoking discussion starter about AI and the future of work
+2025-09-20 12:24:20 - text_gen - WARNING - generate_caption_and_hashtags:109 - Generated caption exceeds max length (718 > 280)
+2025-09-20 12:24:20 - text_gen - INFO - generate_caption_and_hashtags:116 - Generated caption: 280 characters, 6 hashtags
+2025-09-20 12:24:20 - text_gen - INFO - generate_caption_and_hashtags:57 - Generating caption and hashtags for twitter - Topic: Share a thought-provoking discussion starter about AI and the future of work
+2025-09-20 12:24:27 - text_gen - WARNING - generate_caption_and_hashtags:109 - Generated caption exceeds max length (613 > 280)
+2025-09-20 12:24:27 - text_gen - INFO - generate_caption_and_hashtags:116 - Generated caption: 280 characters, 3 hashtags
+2025-09-20 12:24:27 - image_gen - INFO - generate_image_ideas:637 - Generating 1 image ideas for topic: Share a thought-provoking discussion starter about AI and the future of work
+2025-09-20 12:24:29 - image_gen - WARNING - generate_image_ideas:684 - Failed to parse image ideas JSON, using fallback
+2025-09-20 12:24:29 - image_gen - INFO - generate_social_media_image:332 - Generating social media image for reddit - Topic: Share a thought-provoking discussion starter about AI and the future of work
+2025-09-20 12:24:29 - image_gen - INFO - generate_image_from_text_async:66 - Async generating image from text prompt: 
+            Create a engaging social media image ... (retry 0)
+2025-09-20 12:24:37 - image_gen - INFO - generate_image_from_text_async:171 - Image saved to static\uploads\generated_20250920_122437_2841.png
+2025-09-20 12:24:37 - image_gen - INFO - generate_image_from_text_async:199 - Image generated successfully - Style: artistic, Quality: high, Size: 1024x1024
+2025-09-20 12:24:37 - image_gen - INFO - generate_social_media_image:382 - Social media image generated for reddit
+2025-09-20 12:24:37 - workflow - INFO - process_user_input:106 - Content package generated in 31.70s
+2025-09-20 12:24:37 - user_workflow - INFO - process_user_input:133 - Making 1 images public using ngrok
+2025-09-20 12:24:37 - src.utils.ngrok_manager - INFO - _check_ngrok_installed:30 - Ngrok found: ngrok version 3.23.3
+2025-09-20 12:24:37 - src.utils.ngrok_manager - INFO - _start_ngrok_if_needed:47 - Ngrok is already running
+2025-09-20 12:24:38 - src.utils.ngrok_manager - INFO - create_public_url:117 - Created public URL for static\uploads\generated_20250920_122437_2841.png: https://43d3dda256d5.ngrok-free.app/static/images/generated_20250920_122437_2841.png
+2025-09-20 12:24:38 - workflow - INFO - process_user_input:139 - Images made public in 0.54s
+2025-09-20 12:24:38 - user_workflow - INFO - process_user_input:152 - Initial content generated for session 90094428-7e79-404a-840d-1747148367aa in 32.24s
+2025-09-20 12:24:38 - workflow - INFO - process_user_input:153 - WORKFLOW STEP COMPLETE: Content generation
+2025-09-20 12:24:38 - test - INFO - test_complete_workflow:132 - Test case 3 completed successfully
+2025-09-20 12:24:38 - poster_service - INFO - get_poster:67 - Created poster for platform: instagram
+2025-09-20 12:24:38 - test - ERROR - test_complete_workflow:185 - Platform test failed
+2025-09-20 12:24:38 - poster_service - INFO - get_poster:67 - Created poster for platform: facebook
+2025-09-20 12:24:38 - test - ERROR - test_complete_workflow:185 - Platform test failed
+2025-09-20 12:24:38 - poster_service - INFO - get_poster:67 - Created poster for platform: twitter
+2025-09-20 12:24:38 - test - ERROR - test_complete_workflow:185 - Platform test failed
+2025-09-20 12:24:38 - poster_service - INFO - get_poster:67 - Created poster for platform: linkedin
+2025-09-20 12:24:38 - test - ERROR - test_complete_workflow:185 - Platform test failed
+2025-09-20 12:24:38 - poster_service - INFO - get_poster:67 - Created poster for platform: reddit
+2025-09-20 12:24:38 - test - ERROR - test_complete_workflow:185 - Platform test failed
+2025-09-20 12:24:38 - poster_service - INFO - get_poster:67 - Created poster for platform: pinterest
+2025-09-20 12:24:38 - test - ERROR - test_complete_workflow:185 - Platform test failed
+2025-09-20 12:24:38 - test - ERROR - test_complete_workflow:202 - Complete workflow test failed
+2025-09-20 12:24:38 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:24:38 - test.errors - INFO - test_error_handling:239 - Error handling test completed
+2025-09-20 12:24:38 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:25:32 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 12:25:32 - src.services.redis_service - INFO - disconnect:47 - Disconnected from Redis
+2025-09-20 12:25:32 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 12:25:32 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:25:33 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 12:25:33 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 12:25:33 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:25:35 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:25:35 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:25:35 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 12:25:35 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 12:25:35 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:25:35 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:25:35 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:25:35 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:25:35 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: b075b2ca-bc6d-4220-9e90-e2deb1f4be5e
+2025-09-20 12:25:35 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 12:25:36 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:25:36 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:25:36 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 12:25:36 - src.services.redis_service - INFO - connect:34 - Connected to Redis successfully
+2025-09-20 12:25:36 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:25:36 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:25:36 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:25:36 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:25:36 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: bd74cfcf-1fda-4c40-b4e4-9e8c95d8cd1f
+2025-09-20 12:25:36 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 12:25:39 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 12:25:39 - src.services.redis_service - INFO - disconnect:47 - Disconnected from Redis
+2025-09-20 12:25:39 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 12:25:39 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:25:39 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 12:25:39 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 12:25:39 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:25:42 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:25:42 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:25:42 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 12:25:42 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 12:25:42 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:25:42 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:25:42 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:25:42 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:25:42 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 6d8930c4-f1eb-4df1-a612-defdb89ef2f9
+2025-09-20 12:25:42 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 12:25:42 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:25:42 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:25:42 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 12:25:42 - src.services.redis_service - INFO - connect:34 - Connected to Redis successfully
+2025-09-20 12:25:42 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:25:42 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:25:42 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:25:42 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:25:42 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: a4dd363e-4a90-43d8-accf-ed0e833ede9c
+2025-09-20 12:25:42 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 12:25:46 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 12:25:46 - src.services.redis_service - INFO - disconnect:47 - Disconnected from Redis
+2025-09-20 12:25:46 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 12:25:46 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:25:47 - app - INFO - lifespan:61 - Shutting down GetLate Social Media Automation...
+2025-09-20 12:25:47 - app - INFO - lifespan:66 - Redis service disconnected
+2025-09-20 12:25:47 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels
+2025-09-20 12:25:49 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:25:49 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:25:49 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:25:49 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:25:49 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 12:25:49 - src.services.redis_service - WARNING - connect:36 - REDIS_URL not configured, Redis caching disabled
+2025-09-20 12:25:49 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:25:49 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:25:49 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:25:49 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:25:49 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: f6c8b30e-5a42-4e3f-9b73-8ab85cc3d47e
+2025-09-20 12:25:49 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 12:25:49 - app - INFO - lifespan:37 - Starting GetLate Social Media Automation...
+2025-09-20 12:25:49 - src.services.redis_service - INFO - connect:34 - Connected to Redis successfully
+2025-09-20 12:25:49 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:25:49 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:25:49 - ai_service - INFO - __init__:31 - AI service initialized with Gemini API
+2025-09-20 12:25:49 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:25:49 - src.services.workflow_service - INFO - __init__:74 - Social media workflow initialized: 39515437-5523-4903-8465-3bc2cc4d3562
+2025-09-20 12:25:49 - app - INFO - lifespan:52 - Services initialized successfully
+2025-09-20 12:25:52 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:25:52 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:25:52 - text_gen - INFO - __init__:29 - Text generation service initialized with Gemini API
+2025-09-20 12:25:52 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:25:52 - poster_service - INFO - _register_posters:48 - Registered all platform posters
+2025-09-20 12:25:52 - text_gen - INFO - __init__:29 - Text generation service initialized with Gemini API
+2025-09-20 12:25:52 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:25:52 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:25:52 - poster_service - INFO - _register_posters:48 - Registered all platform posters
+2025-09-20 12:25:52 - user_workflow - INFO - __init__:38 - User workflow service initialized
+2025-09-20 12:25:52 - user_workflow - INFO - process_user_input:64 - Processing user input for session 485c1e1d-98d5-4499-9188-3a6ced7313a7
+2025-09-20 12:25:52 - workflow - INFO - process_user_input:65 - WORKFLOW START: Session 485c1e1d-98d5-4499-9188-3a6ced7313a7
+2025-09-20 12:25:52 - user_workflow - INFO - process_user_input:79 - Analyzing user input: 'Share an inspiring quote about technology and innovation for tech professionals...'
+2025-09-20 12:25:52 - workflow - INFO - process_user_input:84 - Input analysis completed in 0.00s
+2025-09-20 12:25:52 - user_workflow - INFO - process_user_input:96 - Generating content package for platforms: ['linkedin', 'twitter', 'facebook']
+2025-09-20 12:25:52 - text_gen - INFO - generate_caption_and_hashtags:57 - Generating caption and hashtags for linkedin - Topic: Share an inspiring quote about technology and innovation for tech professionals
+2025-09-20 12:26:02 - text_gen - WARNING - generate_caption_and_hashtags:109 - Generated caption exceeds max length (797 > 280)
+2025-09-20 12:26:02 - text_gen - INFO - generate_caption_and_hashtags:116 - Generated caption: 280 characters, 0 hashtags
+2025-09-20 12:26:02 - text_gen - INFO - generate_caption_and_hashtags:57 - Generating caption and hashtags for twitter - Topic: Share an inspiring quote about technology and innovation for tech professionals
+2025-09-20 12:26:09 - text_gen - WARNING - generate_caption_and_hashtags:109 - Generated caption exceeds max length (688 > 280)
+2025-09-20 12:26:09 - text_gen - INFO - generate_caption_and_hashtags:116 - Generated caption: 280 characters, 3 hashtags
+2025-09-20 12:26:09 - text_gen - INFO - generate_caption_and_hashtags:57 - Generating caption and hashtags for facebook - Topic: Share an inspiring quote about technology and innovation for tech professionals
+2025-09-20 12:26:18 - text_gen - WARNING - generate_caption_and_hashtags:109 - Generated caption exceeds max length (781 > 280)
+2025-09-20 12:26:18 - text_gen - INFO - generate_caption_and_hashtags:116 - Generated caption: 280 characters, 5 hashtags
+2025-09-20 12:26:18 - image_gen - INFO - generate_image_ideas:637 - Generating 1 image ideas for topic: Share an inspiring quote about technology and innovation for tech professionals
+2025-09-20 12:26:20 - image_gen - WARNING - generate_image_ideas:684 - Failed to parse image ideas JSON, using fallback
+2025-09-20 12:26:20 - image_gen - INFO - generate_social_media_image:332 - Generating social media image for linkedin - Topic: Share an inspiring quote about technology and innovation for tech professionals
+2025-09-20 12:26:20 - image_gen - INFO - generate_image_from_text_async:66 - Async generating image from text prompt: 
+            Create a engaging social media image ... (retry 0)
+2025-09-20 12:26:28 - image_gen - INFO - generate_image_from_text_async:171 - Image saved to static\uploads\generated_20250920_122628_4769.png
+2025-09-20 12:26:28 - image_gen - INFO - generate_image_from_text_async:199 - Image generated successfully - Style: artistic, Quality: high, Size: 1024x1024
+2025-09-20 12:26:28 - image_gen - INFO - generate_social_media_image:382 - Social media image generated for linkedin
+2025-09-20 12:26:28 - workflow - INFO - process_user_input:106 - Content package generated in 35.27s
+2025-09-20 12:26:28 - user_workflow - INFO - process_user_input:133 - Making 1 images public using ngrok
+2025-09-20 12:26:28 - src.utils.ngrok_manager - INFO - _check_ngrok_installed:30 - Ngrok found: ngrok version 3.23.3
+2025-09-20 12:26:28 - src.utils.ngrok_manager - INFO - _start_ngrok_if_needed:47 - Ngrok is already running
+2025-09-20 12:26:28 - src.utils.ngrok_manager - INFO - create_public_url:117 - Created public URL for static\uploads\generated_20250920_122628_4769.png: https://43d3dda256d5.ngrok-free.app/static/images/generated_20250920_122628_4769.png
+2025-09-20 12:26:28 - workflow - INFO - process_user_input:139 - Images made public in 0.54s
+2025-09-20 12:26:28 - user_workflow - INFO - process_user_input:152 - Initial content generated for session 485c1e1d-98d5-4499-9188-3a6ced7313a7 in 35.80s
+2025-09-20 12:26:28 - workflow - INFO - process_user_input:153 - WORKFLOW STEP COMPLETE: Content generation
+2025-09-20 12:26:28 - test - INFO - test_complete_workflow:132 - Test case 1 completed successfully
+2025-09-20 12:26:28 - user_workflow - INFO - process_user_input:64 - Processing user input for session fc025b95-9b72-4b09-9be8-6cb07c446f40
+2025-09-20 12:26:28 - workflow - INFO - process_user_input:65 - WORKFLOW START: Session fc025b95-9b72-4b09-9be8-6cb07c446f40
+2025-09-20 12:26:28 - user_workflow - INFO - process_user_input:79 - Analyzing user input: 'Create a fun, engaging post about weekend vibes with a beautiful sunset image...'
+2025-09-20 12:26:28 - workflow - INFO - process_user_input:84 - Input analysis completed in 0.00s
+2025-09-20 12:26:28 - user_workflow - INFO - process_user_input:96 - Generating content package for platforms: ['instagram', 'facebook', 'pinterest']
+2025-09-20 12:26:28 - text_gen - INFO - generate_caption_and_hashtags:57 - Generating caption and hashtags for instagram - Topic: Create a fun, engaging post about weekend vibes with a beautiful sunset image
+2025-09-20 12:26:37 - text_gen - WARNING - generate_caption_and_hashtags:109 - Generated caption exceeds max length (850 > 280)
+2025-09-20 12:26:37 - text_gen - INFO - generate_caption_and_hashtags:116 - Generated caption: 280 characters, 0 hashtags
+2025-09-20 12:26:37 - text_gen - INFO - generate_caption_and_hashtags:57 - Generating caption and hashtags for facebook - Topic: Create a fun, engaging post about weekend vibes with a beautiful sunset image
+2025-09-20 12:26:42 - text_gen - WARNING - generate_caption_and_hashtags:109 - Generated caption exceeds max length (520 > 280)
+2025-09-20 12:26:42 - text_gen - INFO - generate_caption_and_hashtags:116 - Generated caption: 280 characters, 4 hashtags
+2025-09-20 12:26:42 - text_gen - INFO - generate_caption_and_hashtags:57 - Generating caption and hashtags for pinterest - Topic: Create a fun, engaging post about weekend vibes with a beautiful sunset image
+2025-09-20 12:26:50 - text_gen - WARNING - generate_caption_and_hashtags:109 - Generated caption exceeds max length (935 > 280)
+2025-09-20 12:26:50 - text_gen - INFO - generate_caption_and_hashtags:116 - Generated caption: 280 characters, 12 hashtags
+2025-09-20 12:26:50 - image_gen - INFO - generate_image_ideas:637 - Generating 1 image ideas for topic: Create a fun, engaging post about weekend vibes with a beautiful sunset image
+2025-09-20 12:26:59 - image_gen - ERROR - generate_image_ideas:698 - Failed to generate image ideas: The `response.text` quick accessor only works for simple (single-`Part`) text responses. This response contains multiple `Parts`. Use the `result.parts` accessor or the full `result.candidates[index].content.parts` lookup instead
+2025-09-20 12:26:59 - user_workflow - WARNING - _generate_content_package:503 - Image generation failed: Image ideas generation failed: The `response.text` quick accessor only works for simple (single-`Part`) text responses. This response contains multiple `Parts`. Use the `result.parts` accessor or the full `result.candidates[index].content.parts` lookup instead
+2025-09-20 12:26:59 - workflow - INFO - process_user_input:106 - Content package generated in 30.74s
+2025-09-20 12:26:59 - user_workflow - INFO - process_user_input:152 - Initial content generated for session fc025b95-9b72-4b09-9be8-6cb07c446f40 in 30.74s
+2025-09-20 12:26:59 - workflow - INFO - process_user_input:153 - WORKFLOW STEP COMPLETE: Content generation
+2025-09-20 12:26:59 - test - INFO - test_complete_workflow:132 - Test case 2 completed successfully
+2025-09-20 12:26:59 - user_workflow - INFO - process_user_input:64 - Processing user input for session cc7ea5c0-dd36-4817-ad63-4021dd3157ec
+2025-09-20 12:26:59 - workflow - INFO - process_user_input:65 - WORKFLOW START: Session cc7ea5c0-dd36-4817-ad63-4021dd3157ec
+2025-09-20 12:26:59 - user_workflow - INFO - process_user_input:79 - Analyzing user input: 'Share a thought-provoking discussion starter about AI and the future of work...'
+2025-09-20 12:26:59 - workflow - INFO - process_user_input:84 - Input analysis completed in 0.00s
+2025-09-20 12:26:59 - user_workflow - INFO - process_user_input:96 - Generating content package for platforms: ['reddit', 'linkedin', 'twitter']
+2025-09-20 12:26:59 - text_gen - INFO - generate_caption_and_hashtags:57 - Generating caption and hashtags for reddit - Topic: Share a thought-provoking discussion starter about AI and the future of work
+2025-09-20 12:27:05 - text_gen - WARNING - generate_caption_and_hashtags:109 - Generated caption exceeds max length (538 > 280)
+2025-09-20 12:27:05 - text_gen - INFO - generate_caption_and_hashtags:116 - Generated caption: 280 characters, 5 hashtags
+2025-09-20 12:27:05 - text_gen - INFO - generate_caption_and_hashtags:57 - Generating caption and hashtags for linkedin - Topic: Share a thought-provoking discussion starter about AI and the future of work
+2025-09-20 12:27:13 - text_gen - WARNING - generate_caption_and_hashtags:109 - Generated caption exceeds max length (628 > 280)
+2025-09-20 12:27:13 - text_gen - INFO - generate_caption_and_hashtags:116 - Generated caption: 280 characters, 6 hashtags
+2025-09-20 12:27:13 - text_gen - INFO - generate_caption_and_hashtags:57 - Generating caption and hashtags for twitter - Topic: Share a thought-provoking discussion starter about AI and the future of work
+2025-09-20 12:27:20 - text_gen - WARNING - generate_caption_and_hashtags:109 - Generated caption exceeds max length (578 > 280)
+2025-09-20 12:27:20 - text_gen - INFO - generate_caption_and_hashtags:116 - Generated caption: 280 characters, 3 hashtags
+2025-09-20 12:27:20 - image_gen - INFO - generate_image_ideas:637 - Generating 1 image ideas for topic: Share a thought-provoking discussion starter about AI and the future of work
+2025-09-20 12:27:22 - image_gen - WARNING - generate_image_ideas:684 - Failed to parse image ideas JSON, using fallback
+2025-09-20 12:27:22 - image_gen - INFO - generate_social_media_image:332 - Generating social media image for reddit - Topic: Share a thought-provoking discussion starter about AI and the future of work
+2025-09-20 12:27:22 - image_gen - INFO - generate_image_from_text_async:66 - Async generating image from text prompt: 
+            Create a engaging social media image ... (retry 0)
+2025-09-20 12:27:30 - image_gen - INFO - generate_image_from_text_async:171 - Image saved to static\uploads\generated_20250920_122730_6671.png
+2025-09-20 12:27:30 - image_gen - INFO - generate_image_from_text_async:199 - Image generated successfully - Style: artistic, Quality: high, Size: 1024x1024
+2025-09-20 12:27:30 - image_gen - INFO - generate_social_media_image:382 - Social media image generated for reddit
+2025-09-20 12:27:30 - workflow - INFO - process_user_input:106 - Content package generated in 31.04s
+2025-09-20 12:27:30 - user_workflow - INFO - process_user_input:133 - Making 1 images public using ngrok
+2025-09-20 12:27:30 - src.utils.ngrok_manager - INFO - _check_ngrok_installed:30 - Ngrok found: ngrok version 3.23.3
+2025-09-20 12:27:30 - src.utils.ngrok_manager - INFO - _start_ngrok_if_needed:47 - Ngrok is already running
+2025-09-20 12:27:31 - src.utils.ngrok_manager - INFO - create_public_url:117 - Created public URL for static\uploads\generated_20250920_122730_6671.png: https://43d3dda256d5.ngrok-free.app/static/images/generated_20250920_122730_6671.png
+2025-09-20 12:27:31 - workflow - INFO - process_user_input:139 - Images made public in 0.52s
+2025-09-20 12:27:31 - user_workflow - INFO - process_user_input:152 - Initial content generated for session cc7ea5c0-dd36-4817-ad63-4021dd3157ec in 31.56s
+2025-09-20 12:27:31 - workflow - INFO - process_user_input:153 - WORKFLOW STEP COMPLETE: Content generation
+2025-09-20 12:27:31 - test - INFO - test_complete_workflow:132 - Test case 3 completed successfully
+2025-09-20 12:27:31 - poster_service - INFO - get_poster:67 - Created poster for platform: instagram
+2025-09-20 12:27:31 - test - INFO - test_complete_workflow:177 - Platform validation test completed
+2025-09-20 12:27:31 - poster_service - INFO - get_poster:67 - Created poster for platform: facebook
+2025-09-20 12:27:31 - test - INFO - test_complete_workflow:177 - Platform validation test completed
+2025-09-20 12:27:31 - poster_service - INFO - get_poster:67 - Created poster for platform: twitter
+2025-09-20 12:27:31 - test - INFO - test_complete_workflow:177 - Platform validation test completed
+2025-09-20 12:27:31 - poster_service - INFO - get_poster:67 - Created poster for platform: linkedin
+2025-09-20 12:27:31 - test - INFO - test_complete_workflow:177 - Platform validation test completed
+2025-09-20 12:27:31 - poster_service - INFO - get_poster:67 - Created poster for platform: reddit
+2025-09-20 12:27:31 - test - INFO - test_complete_workflow:177 - Platform validation test completed
+2025-09-20 12:27:31 - poster_service - INFO - get_poster:67 - Created poster for platform: pinterest
+2025-09-20 12:27:31 - test - INFO - test_complete_workflow:177 - Platform validation test completed
+2025-09-20 12:27:31 - src.utils.logger_config - INFO - setup_logging:176 - Logging configured successfully. Level: INFO, Directory: logs
+2025-09-20 12:27:31 - text_gen - INFO - __init__:29 - Text generation service initialized with Gemini API
+2025-09-20 12:27:31 - image_gen - INFO - __init__:38 - Image generation service initialized with Gemini API
+2025-09-20 12:27:31 - src.services.getlate_service - INFO - __init__:47 - GetLate service initialized with base URL: https://getlate.dev/api/v1
+2025-09-20 12:27:31 - poster_service - INFO - _register_posters:48 - Registered all platform posters
+2025-09-20 12:27:31 - user_workflow - INFO - __init__:38 - User workflow service initialized
+2025-09-20 12:27:31 - user_workflow - INFO - process_user_input:64 - Processing user input for session fefd6a3d-3711-47bb-82d7-a2be7a242f89
+2025-09-20 12:27:31 - workflow - INFO - process_user_input:65 - WORKFLOW START: Session fefd6a3d-3711-47bb-82d7-a2be7a242f89
+2025-09-20 12:27:31 - user_workflow - INFO - process_user_input:79 - Analyzing user input: 'Test input...'
+2025-09-20 12:27:31 - workflow - INFO - process_user_input:84 - Input analysis completed in 0.00s
+2025-09-20 12:27:31 - user_workflow - INFO - process_user_input:96 - Generating content package for platforms: ['instagram']
+2025-09-20 12:27:31 - text_gen - INFO - generate_caption_and_hashtags:57 - Generating caption and hashtags for instagram - Topic: Test input
+2025-09-20 12:27:38 - text_gen - WARNING - generate_caption_and_hashtags:109 - Generated caption exceeds max length (810 > 280)
+2025-09-20 12:27:38 - text_gen - INFO - generate_caption_and_hashtags:116 - Generated caption: 280 characters, 11 hashtags
+2025-09-20 12:27:38 - image_gen - INFO - generate_image_ideas:637 - Generating 1 image ideas for topic: Test input
+2025-09-20 12:27:40 - image_gen - WARNING - generate_image_ideas:684 - Failed to parse image ideas JSON, using fallback
+2025-09-20 12:27:40 - image_gen - INFO - generate_social_media_image:332 - Generating social media image for instagram - Topic: Test input
+2025-09-20 12:27:40 - image_gen - INFO - generate_image_from_text_async:66 - Async generating image from text prompt: 
+            Create a engaging social media image ... (retry 0)
+2025-09-20 12:27:47 - image_gen - INFO - generate_image_from_text_async:171 - Image saved to static\uploads\generated_20250920_122747_3824.png
+2025-09-20 12:27:47 - image_gen - INFO - generate_image_from_text_async:199 - Image generated successfully - Style: artistic, Quality: high, Size: 1024x1024
+2025-09-20 12:27:47 - image_gen - INFO - generate_social_media_image:382 - Social media image generated for instagram
+2025-09-20 12:27:47 - workflow - INFO - process_user_input:106 - Content package generated in 16.53s
+2025-09-20 12:27:47 - user_workflow - INFO - process_user_input:133 - Making 1 images public using ngrok
+2025-09-20 12:27:47 - src.utils.ngrok_manager - INFO - _check_ngrok_installed:30 - Ngrok found: ngrok version 3.23.3
+2025-09-20 12:27:47 - src.utils.ngrok_manager - INFO - _start_ngrok_if_needed:47 - Ngrok is already running
+2025-09-20 12:27:48 - src.utils.ngrok_manager - INFO - create_public_url:117 - Created public URL for static\uploads\generated_20250920_122747_3824.png: https://43d3dda256d5.ngrok-free.app/static/images/generated_20250920_122747_3824.png
+2025-09-20 12:27:48 - workflow - INFO - process_user_input:139 - Images made public in 0.52s
+2025-09-20 12:27:48 - user_workflow - INFO - process_user_input:152 - Initial content generated for session fefd6a3d-3711-47bb-82d7-a2be7a242f89 in 17.05s
+2025-09-20 12:27:48 - workflow - INFO - process_user_input:153 - WORKFLOW STEP COMPLETE: Content generation
+2025-09-20 12:27:48 - src.utils.ngrok_manager - INFO - cleanup_all_tunnels:205 - Cleaned up all tunnels

@@ -406,14 +406,23 @@ class SocialMediaWorkflow:
                     
                     elif platform == Platform.INSTAGRAM:
                         # Instagram requires media
-                        if "image_ideas" in content_data and content_data["image_ideas"]:
-                            # Use generated image ideas (in real implementation, these would be actual images)
-                            media_urls = ["https://example.com/image1.jpg"]  # Placeholder
+                        generated_images = content_data.get("generated_images", [])
+                        if generated_images:
+                            # Use actual generated images instead of placeholders
+                            media_urls = generated_images[:1]  # Use first generated image
+                            logger.info(f"Posting to Instagram with media URLs: {media_urls}")
+                            result = await asyncio.get_event_loop().run_in_executor(
+                                None, self.getlate_service.post_to_instagram, content_text, media_urls
+                            )
+                        elif "image_ideas" in content_data and content_data["image_ideas"]:
+                            # Fallback: Use placeholder if no generated images but have ideas
+                            logger.warning("No generated images available, using placeholder for Instagram")
+                            media_urls = ["https://via.placeholder.com/1080x1080.png?text=AI+Generated+Content"]
                             result = await asyncio.get_event_loop().run_in_executor(
                                 None, self.getlate_service.post_to_instagram, content_text, media_urls
                             )
                         else:
-                            raise ValueError("Instagram posts require images")
+                            raise ValueError("Instagram posts require images. Please generate images first.")
                     
                     elif platform == Platform.LINKEDIN:
                         result = await asyncio.get_event_loop().run_in_executor(
@@ -435,14 +444,25 @@ class SocialMediaWorkflow:
                     elif platform == Platform.PINTEREST:
                         # Pinterest requires board and media
                         board_id = "default_board"  # This would come from configuration
-                        if "image_ideas" in content_data and content_data["image_ideas"]:
-                            media_urls = ["https://example.com/image1.jpg"]  # Placeholder
+                        generated_images = content_data.get("generated_images", [])
+                        if generated_images:
+                            # Use actual generated images
+                            media_urls = generated_images[:1]  # Use first generated image
+                            logger.info(f"Posting to Pinterest with media URLs: {media_urls}")
+                            result = await asyncio.get_event_loop().run_in_executor(
+                                None, self.getlate_service.post_to_pinterest, 
+                                content_text, board_id, media_urls
+                            )
+                        elif "image_ideas" in content_data and content_data["image_ideas"]:
+                            # Fallback: Use placeholder if no generated images
+                            logger.warning("No generated images available, using placeholder for Pinterest")
+                            media_urls = ["https://via.placeholder.com/1000x1500.png?text=AI+Generated+Content"]
                             result = await asyncio.get_event_loop().run_in_executor(
                                 None, self.getlate_service.post_to_pinterest, 
                                 content_text, board_id, media_urls
                             )
                         else:
-                            raise ValueError("Pinterest posts require images")
+                            raise ValueError("Pinterest posts require images. Please generate images first.")
                     
                     else:
                         logger.warning(f"Unsupported platform: {platform.value}")

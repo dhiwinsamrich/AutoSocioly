@@ -1,0 +1,75 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: autosocioly-dev
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - HOST=0.0.0.0
+      - PORT=8000
+      - DEBUG=true
+      - LOG_LEVEL=DEBUG
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+      - ./static/uploads:/app/static/uploads
+      - ./logs:/app/logs
+    depends_on:
+      - redis
+    networks:
+      - autosocioly-dev
+    command: uvicorn app:app --host 0.0.0.0 --port 8000 --reload --log-level debug
+
+  redis:
+    image: redis:7-alpine
+    container_name: autosocioly-redis-dev
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_dev_data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf:ro
+    command: redis-server /usr/local/etc/redis/redis.conf
+    networks:
+      - autosocioly-dev
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: autosocioly-redis-commander-dev
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+    networks:
+      - autosocioly-dev
+
+  # Optional: Add PostgreSQL for future database needs
+  postgres:
+    image: postgres:15-alpine
+    container_name: autosocioly-postgres-dev
+    environment:
+      - POSTGRES_DB=autosocioly
+      - POSTGRES_USER=autosocioly
+      - POSTGRES_PASSWORD=dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    networks:
+      - autosocioly-dev
+    profiles:
+      - db
+
+volumes:
+  redis_dev_data:
+  postgres_dev_data:
+
+networks:
+  autosocioly-dev:
+    driver: bridge

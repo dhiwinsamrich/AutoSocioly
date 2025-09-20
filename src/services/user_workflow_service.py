@@ -56,21 +56,65 @@ class UserWorkflowService:
         Returns:
             Initial content package for user review
         """
+        start_time = datetime.now()
+        workflow_logger = get_logger('workflow')
         session_id = str(uuid.uuid4())
         
         try:
             logger.info(f"Processing user input for session {session_id}")
+            workflow_logger.info(
+                f"WORKFLOW START: Session {session_id}",
+                extra={
+                    'session_id': session_id,
+                    'action': 'workflow_start',
+                    'user_input': user_input,
+                    'platforms': platforms,
+                    'tone': tone,
+                    'include_image': include_image,
+                    'timestamp': start_time.isoformat()
+                }
+            )
             
             # Step 1: Parse and analyze user input using Gemini
+            logger.info(f"Analyzing user input: '{user_input[:100]}...'")
+            analysis_start = datetime.now()
             analysis = await self._analyze_user_input(user_input)
+            analysis_duration = (datetime.now() - analysis_start).total_seconds()
+            
+            workflow_logger.info(
+                f"Input analysis completed in {analysis_duration:.2f}s",
+                extra={
+                    'session_id': session_id,
+                    'action': 'input_analysis',
+                    'duration': analysis_duration,
+                    'analysis_result': analysis
+                }
+            )
             
             # Step 2: Generate content based on analysis
+            content_start = datetime.now()
+            logger.info(f"Generating content package for platforms: {platforms}")
             content_package = await self._generate_content_package(
                 topic=analysis.get("topic", user_input),
                 platforms=platforms,
                 tone=tone,
                 include_image=include_image,
                 hashtags_count=analysis.get("hashtags_count", 10)
+            )
+            content_duration = (datetime.now() - content_start).total_seconds()
+            
+            workflow_logger.info(
+                f"Content package generated in {content_duration:.2f}s",
+                extra={
+                    'session_id': session_id,
+                    'action': 'content_generation',
+                    'duration': content_duration,
+                    'platforms': platforms,
+                    'topic': analysis.get("topic", user_input),
+                    'tone': tone,
+                    'image_count': len(content_package.get("images", [])),
+                    'has_platform_content': bool(content_package.get("platform_content"))
+                }
             )
             
             # Step 3: Store session for user confirmation
@@ -86,10 +130,37 @@ class UserWorkflowService:
             
             # Step 4: Make images publicly available if generated
             if include_image and content_package.get("images"):
+                logger.info(f"Making {len(content_package['images'])} images public using ngrok")
+                ngrok_start = datetime.now()
                 public_images = await self._make_images_public(content_package["images"])
                 content_package["public_images"] = public_images
+                ngrok_duration = (datetime.now() - ngrok_start).total_seconds()
+                
+                workflow_logger.info(
+                    f"Images made public in {ngrok_duration:.2f}s",
+                    extra={
+                        'session_id': session_id,
+                        'action': 'ngrok_public_urls',
+                        'duration': ngrok_duration,
+                        'original_count': len(content_package["images"]),
+                        'public_count': len(public_images),
+                        'success_rate': len(public_images) / len(content_package["images"]) if content_package["images"] else 0
+                    }
+                )
             
-            logger.info(f"Initial content generated for session {session_id}")
+            total_duration = (datetime.now() - start_time).total_seconds()
+            logger.info(f"Initial content generated for session {session_id} in {total_duration:.2f}s")
+            workflow_logger.info(
+                f"WORKFLOW STEP COMPLETE: Content generation",
+                extra={
+                    'session_id': session_id,
+                    'action': 'content_generation_complete',
+                    'total_duration': total_duration,
+                    'status': 'awaiting_confirmation',
+                    'public_images_count': len(content_package.get("public_images", [])),
+                    'platforms_ready': platforms
+                }
+            )
             
             return {
                 "success": True,
@@ -101,7 +172,22 @@ class UserWorkflowService:
             }
             
         except Exception as e:
+            total_duration = (datetime.now() - start_time).total_seconds()
             logger.error(f"Failed to process user input: {e}")
+            workflow_logger.error(
+                f"WORKFLOW ERROR: Content generation failed",
+                extra={
+                    'session_id': session_id,
+                    'action': 'workflow_error',
+                    'duration': total_duration,
+                    'error': str(e),
+                    'error_type': type(e).__name__,
+                    'user_input': user_input,
+                    'platforms': platforms,
+                    'tone': tone,
+                    'include_image': include_image
+                }
+            )
             return {
                 "success": False,
                 "session_id": session_id,
@@ -109,57 +195,141 @@ class UserWorkflowService:
                 "message": "Failed to process user input"
             }
     
-    async def confirm_and_post(self, session_id: str, confirmed: bool = True) -> Dict[str, Any]:
+    async def confirm_and_post(self, session_id: str, user_confirmation: bool = True, 
+                               modifications: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """
-        Handle user confirmation and post content
+        Confirm and post content to social media platforms
         
         Args:
-            session_id: User session ID
-            confirmed: Whether user confirmed the content
+            session_id: Session ID for tracking
+            user_confirmation: Whether user confirmed to post
+            modifications: Optional modifications to content
             
         Returns:
-            Posting results or modification request
+            Posting results
         """
+        start_time = datetime.now()
+        workflow_logger = get_logger('workflow')
+        
         try:
-            if session_id not in self.active_sessions:
+            # Retrieve session data
+            session_data = self.active_sessions.get(session_id)
+            if not session_data:
+                logger.error(f"Session {session_id} not found")
+                workflow_logger.error(
+                    f"WORKFLOW ERROR: Session not found",
+                    extra={
+                        'session_id': session_id,
+                        'action': 'session_retrieval_error',
+                        'error': 'Session not found'
+                    }
+                )
                 return {"success": False, "error": "Session not found"}
             
-            session = self.active_sessions[session_id]
-            
-            if confirmed:
-                # User confirmed - post the content
-                logger.info(f"User confirmed content for session {session_id}")
-                
-                posting_results = await self._post_content_to_platforms(
-                    content_package=session["content_package"],
-                    platforms=list(session["content_package"]["platform_content"].keys())
+            if not user_confirmation:
+                # User cancelled posting
+                session_data["status"] = "cancelled"
+                logger.info(f"Posting cancelled by user for session {session_id}")
+                workflow_logger.info(
+                    f"WORKFLOW CANCELLED: User cancelled posting",
+                    extra={
+                        'session_id': session_id,
+                        'action': 'user_cancelled',
+                        'status': 'cancelled',
+                        'timestamp': datetime.now().isoformat()
+                    }
                 )
+                return {"success": True, "status": "cancelled", "message": "Posting cancelled by user"}
+            
+            # Apply modifications if provided
+            if modifications:
+                logger.info(f"Applying modifications for session {session_id}")
+                modification_start = datetime.now()
+                await self._apply_modifications(session_data, modifications)
+                modification_duration = (datetime.now() - modification_start).total_seconds()
                 
-                session["status"] = "posted"
-                session["posted_at"] = datetime.now()
-                session["posting_results"] = posting_results
-                
-                return {
-                    "success": True,
-                    "session_id": session_id,
-                    "status": "posted",
-                    "results": posting_results,
-                    "message": "Content posted successfully!"
+                workflow_logger.info(
+                    f"Modifications applied in {modification_duration:.2f}s",
+                    extra={
+                        'session_id': session_id,
+                        'action': 'content_modification',
+                        'duration': modification_duration,
+                        'modifications_applied': list(modifications.keys()) if modifications else []
+                    }
+                )
+            
+            # Post to platforms
+            logger.info(f"Posting content for session {session_id}")
+            posting_start = datetime.now()
+            posting_results = await self._post_content_to_platforms(
+                content_package=session_data["content_package"],
+                platforms=list(session_data["content_package"]["platform_content"].keys())
+            )
+            posting_duration = (datetime.now() - posting_start).total_seconds()
+            
+            # Calculate posting statistics
+            successful_posts = sum(1 for result in posting_results.values() if result.get("success"))
+            total_platforms = len(posting_results)
+            success_rate = successful_posts / total_platforms if total_platforms > 0 else 0
+            
+            workflow_logger.info(
+                f"Posting completed in {posting_duration:.2f}s",
+                extra={
+                    'session_id': session_id,
+                    'action': 'platform_posting',
+                    'duration': posting_duration,
+                    'total_platforms': total_platforms,
+                    'successful_posts': successful_posts,
+                    'failed_posts': total_platforms - successful_posts,
+                    'success_rate': success_rate,
+                    'platform_results': {platform: result.get("success", False) for platform, result in posting_results.items()}
                 }
-            else:
-                # User didn't confirm - request modifications
-                logger.info(f"User requested modifications for session {session_id}")
-                session["status"] = "awaiting_modification"
-                
-                return {
-                    "success": True,
-                    "session_id": session_id,
-                    "status": "awaiting_modification",
-                    "message": "Please provide modification instructions"
+            )
+            
+            # Update session status
+            session_data["status"] = "posted"
+            session_data["posting_results"] = posting_results
+            session_data["posted_at"] = datetime.now()
+            
+            total_duration = (datetime.now() - start_time).total_seconds()
+            logger.info(f"Content posted successfully for session {session_id}")
+            workflow_logger.info(
+                f"WORKFLOW COMPLETE: Content posted successfully",
+                extra={
+                    'session_id': session_id,
+                    'action': 'workflow_complete',
+                    'total_duration': total_duration,
+                    'status': 'posted',
+                    'successful_platforms': successful_posts,
+                    'total_platforms': total_platforms,
+                    'success_rate': success_rate,
+                    'posting_results': posting_results
                 }
-                
+            )
+            
+            return {
+                "success": True,
+                "session_id": session_id,
+                "status": "posted",
+                "results": posting_results,
+                "message": f"Content posted successfully to {successful_posts}/{total_platforms} platforms"
+            }
+            
         except Exception as e:
+            total_duration = (datetime.now() - start_time).total_seconds()
             logger.error(f"Failed to handle confirmation: {e}")
+            workflow_logger.error(
+                f"WORKFLOW ERROR: Posting failed",
+                extra={
+                    'session_id': session_id,
+                    'action': 'posting_error',
+                    'duration': total_duration,
+                    'error': str(e),
+                    'error_type': type(e).__name__,
+                    'user_confirmation': user_confirmation,
+                    'modifications_provided': bool(modifications)
+                }
+            )
             return {"success": False, "error": str(e)}
     
     async def modify_content(

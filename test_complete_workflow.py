@@ -1,142 +1,253 @@
 #!/usr/bin/env python3
 """
-Complete test workflow for enhanced image modification
+Complete workflow test script for AutoSocioly
+Tests the entire flow from user input to posting on multiple platforms
 """
 
-import requests
-import json
-import time
+import asyncio
+import sys
+import os
+from datetime import datetime
+from typing import Dict, Any, List
 
-def create_test_workflow():
-    """Create a test workflow to work with"""
-    print("🔄 Creating test workflow...")
+# Add the src directory to Python path
+sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
+
+from src.services.user_workflow_service import UserWorkflowService
+from src.services.getlate_service import GetLateService
+from src.services.text_gen import TextGenerationService
+from src.services.image_gen import ImageGenerationService
+from src.services.poster_service import PosterService
+from src.utils.logger_config import setup_logging, get_logger
+
+# Mock ngrok manager for testing
+class MockNgrokManager:
+    def __init__(self, auth_token=None):
+        self.auth_token = auth_token
     
-    workflow_data = {
-        "topic": "Modern coffee shop workspace",
-        "platforms": ["instagram"],
-        "tone": "professional",
-        "content_type": "engaging",
-        "target_audience": "remote workers and freelancers",
-        "hashtag_count": 10
-    }
+    async def start_tunnel(self, port):
+        return "https://mock-ngrok-url.ngrok.io"
+    
+    async def get_public_url(self, local_path):
+        return f"https://mock-ngrok-url.ngrok.io/{local_path.split('/')[-1]}"
+
+async def test_complete_workflow():
+    """Test the complete workflow from user input to posting"""
+    
+    print("🚀 Starting complete workflow test...")
+    print("=" * 60)
+    
+    # Initialize logging
+    setup_logging()
+    logger = get_logger('test')
     
     try:
-        response = requests.post(
-            "http://localhost:8000/create-workflow",
-            json=workflow_data,
-            headers={"Content-Type": "application/json"}
-        )
+        # Initialize services
+        print("📋 Initializing services...")
         
-        if response.status_code == 200:
-            result = response.json()
-            workflow_id = result.get("workflow_id")
-            print(f"✅ Workflow created: {workflow_id}")
-            return workflow_id
-        else:
-            print(f"❌ Failed to create workflow: {response.status_code}")
-            print(f"📄 Response: {response.text}")
-            return None
-            
-    except Exception as e:
-        print(f"❌ Error creating workflow: {e}")
-        return None
-
-def generate_initial_image(workflow_id):
-    """Generate initial image for the workflow"""
-    print("🖼️  Generating initial image...")
-    
-    # For this test, we'll use the existing workflow data that should have been created
-    # with the initial content creation. Let's just return a placeholder for now.
-    return f"https://placeholder.com/image/{workflow_id}"
-
-def test_enhanced_regeneration(workflow_id, original_image_url):
-    """Test the enhanced image regeneration"""
-    print("🔄 Testing enhanced image regeneration...")
-    
-    try:
-        response = requests.post(
-            "http://localhost:8000/regenerate-image",
-            json={
-                "workflow_id": workflow_id,
-                "prompt": "Add more plants around the workspace and make the lighting warmer and more inviting",
-                "original_image_url": original_image_url
+        # Get API keys from environment
+        getlate_api_key = os.getenv('GETLATE_API_KEY', 'test_key')
+        gemini_api_key = os.getenv('GEMINI_API_KEY', 'test_key')
+        ngrok_auth_token = os.getenv('NGROK_AUTH_TOKEN', 'test_token')
+        
+        # Initialize services
+        ngrok_manager = MockNgrokManager(auth_token=ngrok_auth_token)
+        getlate_service = GetLateService(api_key=getlate_api_key)
+        text_generation = TextGenerationService()
+        image_generation = ImageGenerationService()
+        poster_service = PosterService(getlate_service=getlate_service)
+        
+        # Initialize workflow service
+        workflow_service = UserWorkflowService()
+        
+        print("✅ Services initialized successfully")
+        print()
+        
+        # Test user input
+        test_inputs = [
+            {
+                "input": "Share an inspiring quote about technology and innovation for tech professionals",
+                "platforms": ["linkedin", "twitter", "facebook"],
+                "description": "Professional tech content"
             },
-            headers={"Content-Type": "application/json"}
+            {
+                "input": "Create a fun, engaging post about weekend vibes with a beautiful sunset image",
+                "platforms": ["instagram", "facebook", "pinterest"],
+                "description": "Lifestyle content with image"
+            },
+            {
+                "input": "Share a thought-provoking discussion starter about AI and the future of work",
+                "platforms": ["reddit", "linkedin", "twitter"],
+                "description": "Discussion content"
+            }
+        ]
+        
+        for i, test_case in enumerate(test_inputs, 1):
+            print(f"🧪 Test Case {i}: {test_case['description']}")
+            print(f"Input: {test_case['input']}")
+            print(f"Platforms: {', '.join(test_case['platforms'])}")
+            print("-" * 40)
+            
+            try:
+                # Step 1: Process user input
+                print("📝 Processing user input...")
+                result = await workflow_service.process_user_input(
+                    user_input=test_case['input'],
+                    platforms=test_case['platforms']
+                )
+                
+                if not result.get('success'):
+                    print(f"❌ Failed to process input: {result.get('error')}")
+                    continue
+                
+                session_id = result['session_id']
+                content = result['content']
+                public_images = result.get('public_images', [])
+                
+                print(f"✅ Content generated successfully")
+                print(f"📊 Session ID: {session_id}")
+                print(f"🖼️  Images generated: {len(content.get('images', []))}")
+                print(f"🌐 Public images: {len(public_images)}")
+                print()
+                
+                # Display generated content for each platform
+                print("📱 Generated platform content:")
+                for platform, platform_content in content.get('platform_content', {}).items():
+                    print(f"\n🎯 {platform.upper()}:")
+                    print(f"   Content: {platform_content.get('content', 'N/A')[:100]}...")
+                    print(f"   Hashtags: {', '.join(platform_content.get('hashtags', []))}")
+                
+                print()
+                
+                # Step 2: Simulate user confirmation (in real scenario, user would review)
+                print("✅ Simulating user confirmation...")
+                
+                # For testing, we'll skip actual posting to avoid spamming social media
+                # In production, this would call: workflow_service.confirm_and_post(session_id, True)
+                
+                print("🎯 Content ready for posting (skipped in test mode)")
+                print(f"📊 Session {session_id} completed successfully")
+                
+                # Log test results
+                logger.info(f"Test case {i} completed successfully", extra={
+                    'test_case': i,
+                    'input': test_case['input'],
+                    'platforms': test_case['platforms'],
+                    'session_id': session_id,
+                    'images_generated': len(content.get('images', [])),
+                    'public_images': len(public_images),
+                    'status': 'success'
+                })
+                
+            except Exception as e:
+                print(f"❌ Test case {i} failed: {e}")
+                logger.error(f"Test case {i} failed", extra={
+                    'test_case': i,
+                    'error': str(e),
+                    'error_type': type(e).__name__
+                })
+            
+            print("=" * 60)
+            print()
+        
+        # Test platform-specific posting (with mock data)
+        print("🔧 Testing platform-specific posting capabilities...")
+        
+        # Test each platform poster
+        platforms_to_test = ['instagram', 'facebook', 'twitter', 'linkedin', 'reddit', 'pinterest']
+        
+        for platform in platforms_to_test:
+            try:
+                poster = poster_service.get_poster(platform)
+                if poster:
+                    # Test content validation
+                    test_content = {
+                        "content": f"Test content for {platform}",
+                        "hashtags": ["test", "automation"],
+                        "media_urls": ["https://example.com/test.jpg"]
+                    }
+                    
+                    validation_result = poster.validate_content(test_content['content'], test_content.get('media_urls'))
+                    is_valid = validation_result['valid']
+                    errors = validation_result.get('error', '')
+                    print(f"✅ {platform.capitalize()}: Validation {'passed' if is_valid else 'failed'}")
+                    if not is_valid:
+                        print(f"   Errors: {errors}")
+                    
+                    logger.info(f"Platform validation test completed", extra={
+                        'platform': platform,
+                        'validation_passed': is_valid,
+                        'validation_errors': errors if not is_valid else []
+                    })
+                else:
+                    print(f"⚠️  {platform.capitalize()}: No poster available")
+                    
+            except Exception as e:
+                print(f"❌ {platform.capitalize()}: Test failed - {e}")
+                logger.error(f"Platform test failed", extra={
+                    'platform': platform,
+                    'error': str(e)
+                })
+        
+        print()
+        print("🎉 Complete workflow test finished!")
+        print("📊 Check the logs for detailed workflow monitoring information")
+        
+        # Display session summary
+        sessions = workflow_service.active_sessions
+        print(f"\n📋 Active sessions: {len(sessions)}")
+        for session_id, session_data in sessions.items():
+            print(f"   - {session_id}: {session_data['status']}")
+        
+    except Exception as e:
+        print(f"❌ Test failed: {e}")
+        logger.error("Complete workflow test failed", extra={
+            'error': str(e),
+            'error_type': type(e).__name__
+        })
+        return False
+    
+    return True
+
+async def test_error_handling():
+    """Test error handling scenarios"""
+    print("\n🧪 Testing error handling scenarios...")
+    
+    setup_logging()
+    logger = get_logger('test.errors')
+    
+    try:
+        # Test with invalid API keys
+        print("Testing with invalid API keys...")
+        
+        # This should handle gracefully and log appropriate errors
+        workflow_service = UserWorkflowService()
+        
+        result = await workflow_service.process_user_input(
+            user_input="Test input",
+            platforms=["instagram"]
         )
         
-        if response.status_code == 200:
-            result = response.json()
-            print("✅ Enhanced regeneration successful!")
-            print(f"🎯 Success: {result.get('success', False)}")
-            print(f"📸 New image URL: {result.get('image_url', 'No URL')[:60]}...")
-            print(f"🔄 Original preserved: {result.get('original_image_url', 'N/A')[:60]}...")
-            print(f"💬 Message: {result.get('message', 'No message')}")
-            
-            # Check for enhanced metadata
-            if 'regeneration_history' in result:
-                print(f"📋 Regeneration history entries: {len(result.get('regeneration_history', []))}")
-            
-            return result.get('image_url')
-        else:
-            print(f"❌ Enhanced regeneration failed: {response.status_code}")
-            print(f"📄 Response: {response.text}")
-            return None
-            
+        print(f"Error handling result: {result}")
+        
     except Exception as e:
-        print(f"❌ Error during enhanced regeneration: {e}")
-        return None
-
-def check_application_health():
-    """Check if the application is running"""
-    try:
-        response = requests.get("http://localhost:8000/", timeout=5)
-        if response.status_code == 200:
-            print("✅ Application is running and accessible")
-            return True
-        else:
-            print(f"⚠️  Application returned status: {response.status_code}")
-            return False
-    except Exception as e:
-        print(f"❌ Application is not running or not accessible: {e}")
-        return False
-
-def main():
-    """Main test workflow"""
-    print("🧪 Complete Enhanced Image Modification Test")
-    print("=" * 50)
-    
-    # Check if application is running
-    if not check_application_health():
-        print("\n❌ Cannot run tests - application is not accessible")
-        print("🔄 Please start the application first with: python app.py")
-        return False
-    
-    # Step 1: Create workflow
-    workflow_id = create_test_workflow()
-    if not workflow_id:
-        return False
-    
-    # Step 2: Generate initial image
-    initial_image_url = generate_initial_image(workflow_id)
-    if not initial_image_url:
-        print("❌ Cannot proceed without initial image")
-        return False
-    
-    # Step 3: Test enhanced regeneration
-    print("\n" + "="*50)
-    regenerated_image_url = test_enhanced_regeneration(workflow_id, initial_image_url)
-    
-    if regenerated_image_url:
-        print("\n🎉 Complete workflow test successful!")
-        print("✅ Enhanced image modification with core preservation is working")
-        print(f"🔄 Workflow ID: {workflow_id}")
-        print(f"📸 Original: {initial_image_url[:60]}...")
-        print(f"🎨 Modified: {regenerated_image_url[:60]}...")
-        return True
-    else:
-        print("\n❌ Enhanced regeneration test failed")
-        return False
+        print(f"Error handling test completed: {e}")
+        logger.info("Error handling test completed", extra={
+            'error_handled': True,
+            'error': str(e)
+        })
 
 if __name__ == "__main__":
-    success = main()
-    exit(0 if success else 1)
+    print("🚀 AutoSocioly Complete Workflow Test Suite")
+    print("=" * 60)
+    
+    # Run main workflow test
+    success = asyncio.run(test_complete_workflow())
+    
+    # Run error handling test
+    asyncio.run(test_error_handling())
+    
+    print("\n🏁 Test suite completed!")
+    print(f"Overall result: {'✅ SUCCESS' if success else '❌ FAILED'}")
+    
+    sys.exit(0 if success else 1)

@@ -39,7 +39,7 @@ class GetLateService:
         self.timeout = timeout
         self.session = requests.Session()
         self.session.headers.update({
-            'Authorization': api_key,  # GetLate API uses API key directly, not Bearer
+            'Authorization': f'Bearer {api_key}',  # Use Bearer token format
             'Content-Type': 'application/json',
             'User-Agent': 'GetLate-SocialMediaAutomation/1.0.0'
         })
@@ -370,7 +370,7 @@ class GetLateService:
         logger.info(f"create_post called with data: {post_data}")
         logger.info(f"create_post platforms: {post_data.platforms}")
         try:
-            response = self._make_request('POST', '/posts', data=post_data.dict(exclude_none=True))
+            response = self._make_request('POST', '/v1/posts', data=post_data.dict(exclude_none=True))
             logger.info(f"Post created successfully: {response.get('id', 'unknown')}")
             return response
             
@@ -860,7 +860,7 @@ class GetLateService:
     ) -> Dict[str, Any]:
         """
         Make HTTP request to Getlate API with proper error handling and media support
-        
+
         Args:
             method: HTTP method
             endpoint: API endpoint
@@ -868,22 +868,45 @@ class GetLateService:
             params: Query parameters
             files: Files to upload
             use_multipart: Whether to use multipart form data
-            
+
         Returns:
             API response data
         """
-        try:
-            url = f"{self.base_url}{endpoint}"
-            
-            headers = {
-                "Authorization": f"Bearer {self.api_key}",
-                "Content-Type": "application/json"
+        import uuid
+        from datetime import datetime
+        from ..utils.logger_config import log_api_call
+
+        request_id = str(uuid.uuid4())[:8]
+        start_time = datetime.now()
+        api_logger = logging.getLogger('api.getlate')
+
+        url = f"{self.base_url}{endpoint}"
+
+        # Log request start
+        api_logger.info(
+            f"API REQUEST START: {method} {endpoint}",
+            extra={
+                'request_id': request_id,
+                'action': 'api_request_start',
+                'method': method,
+                'endpoint': endpoint,
+                'has_data': bool(data),
+                'has_files': bool(files),
+                'data_keys': list(data.keys()) if data else [],
+                'file_count': len(files) if files else 0
             }
-            
+        )
+
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json"
+        }
+
+        try:
             # Handle multipart requests
             if use_multipart and files:
-                headers.pop("Content-Type", None)  # Let requests library set the boundary
-                
+                headers.pop("Content-Type", None)  # Let aiohttp set boundary
+
                 # Convert data to form fields
                 form_data = {}
                 for key, value in (data or {}).items():
@@ -891,18 +914,17 @@ class GetLateService:
                         form_data[key] = json.dumps(value)
                     else:
                         form_data[key] = str(value)
-                
+
                 # Prepare files
                 prepared_files = []
                 for field_name, file_handle in files:
                     if isinstance(file_handle, str):
-                        # If it's a file path, open it
                         if os.path.exists(file_handle):
                             file_handle = open(file_handle, 'rb')
                             prepared_files.append((field_name, file_handle))
                     else:
                         prepared_files.append((field_name, file_handle))
-                
+
                 async with aiohttp.ClientSession() as session:
                     async with session.request(
                         method=method,
@@ -913,20 +935,48 @@ class GetLateService:
                         params=params,
                         timeout=self.timeout
                     ) as response:
-                        
+
                         response_text = await response.text()
-                        
-                        if response.status >= 400:
-                            error_msg = f"API Error {response.status}: {response_text}"
+                        response_time = (datetime.now() - start_time).total_seconds()
+                        status_code = response.status
+
+                        # Log response
+                        api_logger.info(
+                            f"API RESPONSE: {method} {endpoint} - Status: {status_code}",
+                            extra={
+                                'request_id': request_id,
+                                'action': 'api_response',
+                                'method': method,
+                                'endpoint': endpoint,
+                                'status_code': status_code,
+                                'response_time': response_time,
+                                'response_size': len(response_text),
+                                'has_error': status_code >= 400
+                            }
+                        )
+
+                        # Log API call for monitoring
+                        log_api_call(
+                            service="getlate",
+                            endpoint=endpoint,
+                            method=method,
+                            status_code=status_code,
+                            response_time=response_time,
+                            request_size=len(str(data)) if data else 0,
+                            response_size=len(response_text)
+                        )
+
+                        if status_code >= 400:
+                            error_msg = f"API Error {status_code}: {response_text}"
                             logger.error(error_msg)
                             raise GetLateAPIError(error_msg)
-                        
+
                         try:
                             return await response.json()
                         except json.JSONDecodeError:
                             logger.warning(f"Non-JSON response: {response_text}")
-                            return {"status": response.status, "message": response_text}
-            
+                            return {"status": status_code, "message": response_text}
+
             # Regular JSON request
             else:
                 async with aiohttp.ClientSession() as session:
@@ -938,26 +988,95 @@ class GetLateService:
                         params=params,
                         timeout=self.timeout
                     ) as response:
-                        
+
                         response_text = await response.text()
-                        
-                        if response.status >= 400:
-                            error_msg = f"API Error {response.status}: {response_text}"
+                        response_time = (datetime.now() - start_time).total_seconds()
+                        status_code = response.status
+
+                        # Log response
+                        api_logger.info(
+                            f"API RESPONSE: {method} {endpoint} - Status: {status_code}",
+                            extra={
+                                'request_id': request_id,
+                                'action': 'api_response',
+                                'method': method,
+                                'endpoint': endpoint,
+                                'status_code': status_code,
+                                'response_time': response_time,
+                                'response_size': len(response_text),
+                                'has_error': status_code >= 400
+                            }
+                        )
+
+                        # Log API call for monitoring
+                        log_api_call(
+                            service="getlate",
+                            endpoint=endpoint,
+                            method=method,
+                            status_code=status_code,
+                            response_time=response_time,
+                            request_size=len(str(data)) if data else 0,
+                            response_size=len(response_text)
+                        )
+
+                        if status_code >= 400:
+                            error_msg = f"API Error {status_code}: {response_text}"
                             logger.error(error_msg)
                             raise GetLateAPIError(error_msg)
-                        
+
                         try:
                             return await response.json()
                         except json.JSONDecodeError:
                             logger.warning(f"Non-JSON response: {response_text}")
-                            return {"status": response.status, "message": response_text}
-                            
+                            return {"status": status_code, "message": response_text}
+
         except asyncio.TimeoutError:
-            logger.error(f"Request timeout after {self.timeout}s")
-            raise GetLateAPIError(f"Request timeout after {self.timeout} seconds")
+            response_time = (datetime.now() - start_time).total_seconds()
+            error_msg = f"Request timeout after {self.timeout}s"
+            api_logger.error(
+                f"API ERROR: {method} {endpoint} - {error_msg}",
+                extra={
+                    'request_id': request_id,
+                    'action': 'api_error',
+                    'method': method,
+                    'endpoint': endpoint,
+                    'response_time': response_time,
+                    'error': error_msg
+                }
+            )
+            logger.error(error_msg)
+            raise GetLateAPIError(error_msg)
+
         except aiohttp.ClientError as e:
-            logger.error(f"Network error: {e}")
-            raise GetLateAPIError(f"Network error: {str(e)}")
+            response_time = (datetime.now() - start_time).total_seconds()
+            error_msg = f"Network error: {str(e)}"
+            api_logger.error(
+                f"API ERROR: {method} {endpoint} - {error_msg}",
+                extra={
+                    'request_id': request_id,
+                    'action': 'api_error',
+                    'method': method,
+                    'endpoint': endpoint,
+                    'response_time': response_time,
+                    'error': str(e)
+                }
+            )
+            logger.error(error_msg)
+            raise GetLateAPIError(error_msg)
+
         except Exception as e:
-            logger.error(f"Unexpected error in API request: {e}")
-            raise GetLateAPIError(f"Unexpected error: {str(e)}")
+            response_time = (datetime.now() - start_time).total_seconds()
+            error_msg = f"Unexpected error: {str(e)}"
+            api_logger.error(
+                f"API ERROR: {method} {endpoint} - {error_msg}",
+                extra={
+                    'request_id': request_id,
+                    'action': 'api_error',
+                    'method': method,
+                    'endpoint': endpoint,
+                    'response_time': response_time,
+                    'error': str(e)
+                }
+            )
+            logger.error(error_msg)
+            raise GetLateAPIError(error_msg)

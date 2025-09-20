@@ -24,6 +24,52 @@ async def home(request: Request):
     logger.info("Rendering home page")
     return templates.TemplateResponse("index.html", {"request": request})
 
+@router.get("/review", response_class=HTMLResponse)
+async def review_page(request: Request):
+    """Render the review page - handles direct navigation to /review"""
+    logger.info("Rendering review page via GET request")
+    
+    # Check if there's a workflow_id in query params
+    workflow_id = request.query_params.get("workflow_id")
+    
+    if workflow_id and workflow_id in active_workflows:
+        # Load existing workflow data
+        workflow_data = active_workflows[workflow_id]
+        
+        # Generate enhanced prompt
+        from ..utils.input_parser import enhance_topic_for_generation
+        enhanced_prompt = enhance_topic_for_generation(
+            workflow_data.get("topic", ""), 
+            workflow_data.get("tone", "professional")
+        )
+        
+        return templates.TemplateResponse("review.html", {
+            "request": request,
+            "workflow_id": workflow_id,
+            "topic": workflow_data.get("topic", ""),
+            "platforms": workflow_data.get("platforms", []),
+            "tone": workflow_data.get("tone", "professional"),
+            "content": workflow_data.get("content", {}),
+            "image_url": workflow_data.get("image_url", ""),
+            "generated_images": workflow_data.get("generated_images", []),
+            "enhanced_prompt": enhanced_prompt,
+            "analytics": workflow_data.get("analytics", {})
+        })
+    else:
+        # No workflow data available - redirect to home or show message
+        return templates.TemplateResponse("review.html", {
+            "request": request,
+            "workflow_id": None,
+            "topic": "No content available",
+            "platforms": [],
+            "tone": "professional",
+            "content": {},
+            "image_url": "",
+            "generated_images": [],
+            "enhanced_prompt": "Please create content first",
+            "analytics": {}
+        })
+
 @router.post("/create-content")
 async def create_content_api(
     request: Request,
@@ -109,19 +155,24 @@ async def create_content_api(
         from ..utils.input_parser import enhance_topic_for_generation
         enhanced_prompt = enhance_topic_for_generation(topic, tone)
         
-        # Redirect to review page with all the data
-        return templates.TemplateResponse("review.html", {
-            "request": request,
-            "workflow_id": workflow_id,
+        # Store workflow data for review page access
+        active_workflows[workflow_id] = {
+            "id": workflow_id,
+            "status": "content_created",
+            "created_at": datetime.now(),
             "topic": topic,
             "platforms": platform_list,
             "tone": tone,
             "content": platform_content,
             "image_url": first_image_url,
-            "generated_images": generated_images,
-            "enhanced_prompt": enhanced_prompt,
+            "original_image_url": first_image_url,  # Store original image separately
+            "generated_images": generated_images,  # Store all generated images
             "analytics": performance_analysis
-        })
+        }
+        
+        # Redirect to review page with workflow ID in URL
+        from fastapi.responses import RedirectResponse
+        return RedirectResponse(url=f"/review?workflow_id={workflow_id}", status_code=303)
         
     except Exception as e:
         logger.error(f"Error creating content: {str(e)}", exc_info=True)

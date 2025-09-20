@@ -90,10 +90,18 @@ class PosterService:
         Returns:
             Posting result
         """
+        start_time = datetime.utcnow()
+        workflow_logger = get_logger('workflow')
+        platform_logger = get_logger(f'platform.{platform}')
+        
         poster = self.get_poster(platform)
         if not poster:
             error_msg = f"Unsupported platform: {platform}"
             self.logger.error(error_msg)
+            platform_logger.error(f"POST ERROR: Platform not supported", extra={
+                'action': 'platform_error',
+                'error': error_msg
+            })
             return {
                 "success": False,
                 "platform": platform,
@@ -104,13 +112,64 @@ class PosterService:
         
         try:
             self.logger.info(f"Posting to {platform} - Content length: {len(content)}")
+            platform_logger.info(f"POST START: {platform}", extra={
+                'action': 'post_start',
+                'platform': platform,
+                'content_length': len(content),
+                'has_media': bool(media_urls),
+                'media_count': len(media_urls) if media_urls else 0
+            })
+            
             result = await poster.post_content(content, media_urls, **kwargs)
-            self.logger.info(f"Successfully posted to {platform}")
+            success = result.get("success", False)
+            post_id = result.get("post_id", "unknown")
+            
+            total_duration = (datetime.utcnow() - start_time).total_seconds()
+            
+            if success:
+                self.logger.info(f"Successfully posted to {platform}")
+                platform_logger.info(f"POST SUCCESS: {platform}", extra={
+                    'action': 'post_success',
+                    'duration': total_duration,
+                    'post_id': post_id,
+                    'platform': platform
+                })
+                
+                workflow_logger.info(f"Platform posting success: {platform}", extra={
+                    'action': 'platform_post_success',
+                    'platform': platform,
+                    'duration': total_duration,
+                    'post_id': post_id
+                })
+            else:
+                error_msg = result.get("error", "Unknown error")
+                self.logger.error(f"Failed to post to {platform}: {error_msg}")
+                platform_logger.error(f"POST FAILED: {platform}", extra={
+                    'action': 'post_failed',
+                    'duration': total_duration,
+                    'error': error_msg,
+                    'platform': platform
+                })
+                
+                workflow_logger.error(f"Platform posting failed: {platform}", extra={
+                    'action': 'platform_post_failed',
+                    'platform': platform,
+                    'duration': total_duration,
+                    'error': error_msg
+                })
+            
             return result
             
         except Exception as e:
+            total_duration = (datetime.utcnow() - start_time).total_seconds()
             error_msg = f"Exception while posting to {platform}: {str(e)}"
             self.logger.error(error_msg)
+            platform_logger.error(f"POST ERROR: Exception occurred", extra={
+                'action': 'post_exception',
+                'duration': total_duration,
+                'error': str(e),
+                'error_type': type(e).__name__
+            })
             return {
                 "success": False,
                 "platform": platform,
