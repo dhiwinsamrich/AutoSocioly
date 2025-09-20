@@ -50,7 +50,7 @@ class NgrokManager:
                 logger.info("Starting ngrok...")
                 # Start ngrok in background
                 self.ngrok_process = subprocess.Popen(
-                    ['ngrok', 'http', '80', '--log=stdout'],
+                    ['ngrok', 'http', '8000', '--log=stdout'],
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE
                 )
@@ -109,7 +109,7 @@ class NgrokManager:
                         
                         # Create public URL for the specific file
                         file_name = file_path.name
-                        public_url = f"{tunnel_url}/static/images/{file_name}"
+                        public_url = f"{tunnel_url}/static/uploads/{file_name}"
                         
                         # Store the tunnel mapping
                         self.active_tunnels[str(file_path)] = public_url
@@ -148,7 +148,7 @@ class NgrokManager:
                     shutil.copy2(file_path, target_path)
                     logger.info(f"Copied {file_path} to static directory")
             
-            local_url = f"http://localhost:8000/static/images/{file_name}"
+            local_url = f"http://localhost:8000/static/uploads/{file_name}"
             logger.info(f"Using local fallback URL: {local_url}")
             
             return local_url

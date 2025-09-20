@@ -1,13 +1,37 @@
-2025-09-20 11:52:38 - src.services.getlate_service - ERROR - create_post:394 - Failed to create post: Bad request: Invalid request
-2025-09-20 11:52:38 - src.services.workflow_service - ERROR - post_content_workflow:482 - Failed to post to instagram: Bad request: Invalid request
-2025-09-20 11:52:38 - api_service - ERROR - post_content:158 - Posting failed: Bad request: Invalid request, failed_results=1, total_failed=1
-2025-09-20 11:52:38 - src.routes.main_routes - ERROR - publish_content_api:481 - Content publishing failed for workflow be1f7644-7aa4-47aa-8fca-c33cded3a085: Bad request: Invalid request
-2025-09-20 12:22:10 - test - ERROR - test_complete_workflow:208 - Complete workflow test failed
-2025-09-20 12:24:38 - test - ERROR - test_complete_workflow:185 - Platform test failed
-2025-09-20 12:24:38 - test - ERROR - test_complete_workflow:185 - Platform test failed
-2025-09-20 12:24:38 - test - ERROR - test_complete_workflow:185 - Platform test failed
-2025-09-20 12:24:38 - test - ERROR - test_complete_workflow:185 - Platform test failed
-2025-09-20 12:24:38 - test - ERROR - test_complete_workflow:185 - Platform test failed
-2025-09-20 12:24:38 - test - ERROR - test_complete_workflow:185 - Platform test failed
-2025-09-20 12:24:38 - test - ERROR - test_complete_workflow:202 - Complete workflow test failed
-2025-09-20 12:26:59 - image_gen - ERROR - generate_image_ideas:698 - Failed to generate image ideas: The `response.text` quick accessor only works for simple (single-`Part`) text responses. This response contains multiple `Parts`. Use the `result.parts` accessor or the full `result.candidates[index].content.parts` lookup instead
+2025-09-20 15:46:29 - src.services.getlate_service - ERROR - create_post:394 - Failed to create post: Bad request: Invalid request
+2025-09-20 15:46:29 - src.services.workflow_service - ERROR - post_content_workflow:482 - Failed to post to instagram: Bad request: Invalid request
+2025-09-20 15:46:29 - api_service - ERROR - post_content:158 - Posting failed: Bad request: Invalid request, failed_results=1, total_failed=1
+2025-09-20 15:46:29 - src.routes.main_routes - ERROR - publish_content_api:481 - Content publishing failed for workflow 65d79508-fa3e-472d-ad60-43ff3fc0566e: Bad request: Invalid request
+2025-09-20 16:04:58 - src.services.getlate_service - ERROR - create_post:381 - Failed to create post: Server error: Internal server error
+2025-09-20 16:04:58 - src.services.workflow_service - ERROR - post_content_workflow:488 - Failed to post to instagram: Server error: Internal server error
+2025-09-20 16:04:58 - api_service - ERROR - post_content:158 - Posting failed: Server error: Internal server error, failed_results=1, total_failed=1
+2025-09-20 16:04:58 - src.routes.main_routes - ERROR - publish_content_api:481 - Content publishing failed for workflow 54669437-c13f-4220-af4d-19ab86da9e64: Server error: Internal server error
+2025-09-20 16:36:29 - src.services.workflow_service - ERROR - post_content_workflow:506 - Failed to post to instagram: GetLateService.post_to_instagram() takes 3 positional arguments but 4 were given
+2025-09-20 16:36:29 - api_service - ERROR - post_content:166 - Posting failed: GetLateService.post_to_instagram() takes 3 positional arguments but 4 were given, failed_results=1, total_failed=1
+2025-09-20 16:36:29 - src.routes.main_routes - ERROR - publish_content_api:497 - Content publishing failed for workflow 9b91ee0d-53f8-4855-bd83-e24f14c22230: GetLateService.post_to_instagram() takes 3 positional arguments but 4 were given
+2025-09-20 16:39:27 - src.services.workflow_service - ERROR - post_content_workflow:506 - Failed to post to instagram: GetLateService.post_to_instagram() takes 3 positional arguments but 4 were given
+2025-09-20 16:39:27 - api_service - ERROR - post_content:166 - Posting failed: GetLateService.post_to_instagram() takes 3 positional arguments but 4 were given, failed_results=1, total_failed=1
+2025-09-20 16:39:27 - src.routes.main_routes - ERROR - publish_content_api:497 - Content publishing failed for workflow 9b91ee0d-53f8-4855-bd83-e24f14c22230: GetLateService.post_to_instagram() takes 3 positional arguments but 4 were given
+2025-09-20 16:42:49 - src.services.workflow_service - ERROR - post_content_workflow:506 - Failed to post to linkedin: GetLateService.post_to_linkedin() takes from 2 to 3 positional arguments but 4 were given
+2025-09-20 16:42:49 - api_service - ERROR - post_content:166 - Posting failed: GetLateService.post_to_linkedin() takes from 2 to 3 positional arguments but 4 were given, failed_results=1, total_failed=1
+2025-09-20 16:42:49 - src.routes.main_routes - ERROR - publish_content_api:497 - Content publishing failed for workflow dd8c05b0-46f8-4c30-891b-3e3d17c3fbb4: GetLateService.post_to_linkedin() takes from 2 to 3 positional arguments but 4 were given
+2025-09-20 16:51:27 - src.services.getlate_service - ERROR - create_post:382 - Failed to create post: Server error: Internal server error
+2025-09-20 16:51:27 - src.services.workflow_service - ERROR - post_content_workflow:506 - Failed to post to instagram: Server error: Internal server error
+2025-09-20 16:51:27 - api_service - ERROR - post_content:166 - Posting failed: Server error: Internal server error, failed_results=1, total_failed=1
+2025-09-20 16:51:27 - src.routes.main_routes - ERROR - publish_content_api:497 - Content publishing failed for workflow 5b822f2e-45c7-4c7e-80c2-b83071cfdd4e: Server error: Internal server error
+2025-09-20 17:03:07 - image_gen - ERROR - generate_image_ideas:698 - Failed to generate image ideas: The `response.text` quick accessor only works for simple (single-`Part`) text responses. This response contains multiple `Parts`. Use the `result.parts` accessor or the full `result.candidates[index].content.parts` lookup instead
+2025-09-20 17:04:32 - image_gen - ERROR - generate_image_from_text_async:203 - Failed to generate image: 504 Deadline Exceeded
+2025-09-20 17:07:23 - src.services.workflow_service - ERROR - get_linked_accounts:744 - Failed to get linked accounts: object list can't be used in 'await' expression
+2025-09-20 18:00:37 - src.services.workflow_service - ERROR - get_linked_accounts:647 - Failed to get linked accounts: object list can't be used in 'await' expression
+2025-09-20 18:08:41 - src.services.getlate_service - ERROR - create_post:382 - Failed to create post: Server error: Internal server error
+2025-09-20 18:08:41 - src.services.workflow_service - ERROR - post_content_workflow:432 - Failed to post to instagram: Server error: Internal server error
+2025-09-20 18:08:41 - instagram_test - ERROR - test_instagram_workflow:163 - Instagram workflow test failed
+2025-09-20 18:09:06 - src.services.getlate_service - ERROR - create_post:382 - Failed to create post: Server error: Internal server error
+2025-09-20 18:09:06 - src.services.workflow_service - ERROR - post_content_workflow:432 - Failed to post to instagram: Server error: Internal server error
+2025-09-20 18:09:06 - instagram_scheduled_test - ERROR - test_instagram_scheduled_posting:260 - Instagram scheduled posting test failed
+2025-09-20 18:14:24 - src.services.getlate_service - ERROR - create_post:382 - Failed to create post: Server error: Internal server error
+2025-09-20 18:14:24 - src.services.workflow_service - ERROR - post_content_workflow:432 - Failed to post to instagram: Server error: Internal server error
+2025-09-20 18:14:24 - instagram_test - ERROR - test_instagram_workflow:163 - Instagram workflow test failed
+2025-09-20 18:14:50 - src.services.getlate_service - ERROR - create_post:382 - Failed to create post: Server error: Internal server error
+2025-09-20 18:14:50 - src.services.workflow_service - ERROR - post_content_workflow:432 - Failed to post to instagram: Server error: Internal server error
+2025-09-20 18:14:50 - instagram_scheduled_test - ERROR - test_instagram_scheduled_posting:260 - Instagram scheduled posting test failed

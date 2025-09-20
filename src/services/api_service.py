@@ -117,12 +117,20 @@ class APIService:
             workflow = SocialMediaWorkflow()
             self.active_workflows[workflow_id] = workflow
             
+            # Extract scheduling information from content_data
+            scheduling_params = {}
+            if 'publishNow' in content_data:
+                scheduling_params['publish_now'] = content_data['publishNow']
+            if 'scheduledFor' in content_data:
+                scheduling_params['scheduled_for'] = content_data['scheduledFor']
+            
             # Execute posting workflow
             result = await workflow.post_content_workflow(
                 content_data=content_data,
                 platforms=platforms,
                 schedule_time=schedule_time,
-                use_variants=use_variants
+                use_variants=use_variants,
+                **scheduling_params
             )
             
             # Clean up workflow

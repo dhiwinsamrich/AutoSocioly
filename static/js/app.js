@@ -191,7 +191,10 @@ class SocialMediaApp {
         }
         
         // Show results section
-        document.getElementById('resultsSection').style.display = 'block';
+        const resultsSection = document.getElementById('resultsSection');
+        if (resultsSection) {
+            resultsSection.style.display = 'block';
+        }
     }
 
     async publishContent() {
@@ -201,8 +204,14 @@ class SocialMediaApp {
         }
         
         // Show publishing status
-        document.getElementById('publishingStatus').style.display = 'block';
-        document.getElementById('publishBtn').disabled = true;
+        const publishingStatus = document.getElementById('publishingStatus');
+        const publishBtn = document.getElementById('publishBtn');
+        if (publishingStatus) {
+            publishingStatus.style.display = 'block';
+        }
+        if (publishBtn) {
+            publishBtn.disabled = true;
+        }
         
         try {
             const formData = new FormData();
@@ -226,8 +235,14 @@ class SocialMediaApp {
             console.error('Error publishing content:', error);
             this.showAlert('Error publishing content: ' + error.message, 'danger');
         } finally {
-            document.getElementById('publishingStatus').style.display = 'none';
-            document.getElementById('publishBtn').disabled = false;
+            const publishingStatus = document.getElementById('publishingStatus');
+            const publishBtn = document.getElementById('publishBtn');
+            if (publishingStatus) {
+                publishingStatus.style.display = 'none';
+            }
+            if (publishBtn) {
+                publishBtn.disabled = false;
+            }
         }
     }
 
@@ -252,7 +267,9 @@ class SocialMediaApp {
         }
         
         publishDetails.innerHTML = detailsHtml;
-        publishResults.style.display = 'block';
+        if (publishResults) {
+            publishResults.style.display = 'block';
+        }
     }
 
     async showAnalytics() {
@@ -385,12 +402,21 @@ class SocialMediaApp {
 
     // Utility functions
     showLoading(show) {
-        document.getElementById('loadingSpinner').style.display = show ? 'block' : 'none';
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        if (loadingSpinner) {
+            loadingSpinner.style.display = show ? 'block' : 'none';
+        }
     }
 
     hideResults() {
-        document.getElementById('resultsSection').style.display = 'none';
-        document.getElementById('publishResults').style.display = 'none';
+        const resultsSection = document.getElementById('resultsSection');
+        const publishResults = document.getElementById('publishResults');
+        if (resultsSection) {
+            resultsSection.style.display = 'none';
+        }
+        if (publishResults) {
+            publishResults.style.display = 'none';
+        }
     }
 
     showAlert(message, type) {

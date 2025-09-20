@@ -12,6 +12,7 @@ from fastapi.responses import HTMLResponse
 from ..services.user_workflow_service import UserWorkflowService
 from ..models import Platform, Tone
 from ..utils.logger_config import get_logger
+from ..utils.ngrok_manager import get_ngrok_manager
 
 logger = get_logger('user_workflow_routes')
 
@@ -91,7 +92,7 @@ async def confirm_user_content(request: ContentConfirmationRequest):
             # User confirmed - post content
             result = await workflow_service.confirm_and_post(
                 session_id=request.session_id,
-                confirmed=True
+                user_confirmation=True
             )
             
             if result["success"]:
@@ -199,17 +200,40 @@ async def get_active_sessions():
     Get all active user sessions
     """
     try:
-        sessions = workflow_service.get_active_sessions()
-        
+        sessions = workflow_service.get_all_sessions()
         return {
             "success": True,
-            "count": len(sessions),
-            "sessions": sessions
+            "sessions": sessions,
+            "count": len(sessions)
         }
-        
     except Exception as e:
         logger.error(f"Failed to get active sessions: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/ngrok-status")
+async def get_ngrok_status():
+    """
+    Get ngrok tunnel status and information
+    """
+    try:
+        ngrok_manager = get_ngrok_manager()
+        tunnel_info = ngrok_manager.get_tunnel_info()
+        
+        return {
+            "success": True,
+            "ngrok_status": tunnel_info
+        }
+    except Exception as e:
+        logger.error(f"Failed to get ngrok status: {e}")
+        return {
+            "success": False,
+            "error": str(e),
+            "ngrok_status": {
+                "ngrok_running": False,
+                "error": str(e),
+                "active_mappings": {}
+            }
+        }
 
 @router.delete("/session/{session_id}")
 async def delete_session(session_id: str):
@@ -249,7 +273,7 @@ async def quick_post(request: UserInputRequest, background_tasks: BackgroundTask
             # Auto-confirm and post
             confirm_result = await workflow_service.confirm_and_post(
                 session_id=result["session_id"],
-                confirmed=True
+                user_confirmation=True
             )
             
             if confirm_result["success"]:

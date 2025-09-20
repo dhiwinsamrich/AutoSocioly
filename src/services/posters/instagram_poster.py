@@ -65,11 +65,16 @@ class InstagramPoster(BasePoster):
                 )
             
             # Post to Instagram using GetLate service
+            self.logger.info(f"Posting to Instagram with content length: {len(content)}")
+            self.logger.info(f"Media URLs: {media_urls}")
+            
             result = await asyncio.to_thread(
                 self.getlate_service.post_to_instagram,
                 content,
                 media_urls
             )
+            
+            self.logger.info(f"Instagram posting result: {result}")
             
             if result.get("success"):
                 post_id = result.get("post_id", "")

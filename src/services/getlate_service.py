@@ -262,15 +262,20 @@ class GetLateService:
             
             # Convert to GetLateAccount objects
             accounts = []
+            print(f"DEBUG: Processing {len(accounts_data)} accounts")
             for account_data in accounts_data:
                 if isinstance(account_data, dict):
                     try:
+                        # The API uses 'platformUserId' as the account identifier
+                        account_id = account_data.get('platformUserId') or account_data.get('_id') or account_data.get('id', 'unknown')
+                        print(f"DEBUG: Processing account with ID: {account_id}")
+                        
                         # Determine if account is connected based on available data
                         is_connected = self._is_account_connected(account_data)
                         
                         account = GetLateAccount(
-                            id=account_data.get('id', ''),
-                            platform=account_data.get('platform', ''),
+                            id=account_id,
+                            platform=Platform(account_data.get('platform', 'unknown')),
                             username=account_data.get('username', ''),
                             name=account_data.get('name', ''),
                             connected=is_connected,
@@ -280,14 +285,15 @@ class GetLateService:
                             connected_at=account_data.get('connected_at')
                         )
                         accounts.append(account)
+                        print(f"DEBUG: Created account: {account}")
                     except Exception as e:
                         logger.warning(f"Failed to parse account data: {e}, data: {account_data}")
                         # Try to create a minimal account object
                         try:
                             is_connected = self._is_account_connected(account_data)
                             account = GetLateAccount(
-                                id=account_data.get('id', ''),
-                                platform=account_data.get('platform', ''),
+                                id=account_id,
+                                platform=Platform(account_data.get('platform', 'unknown')),
                                 username=account_data.get('username', ''),
                                 name=account_data.get('name', ''),
                                 connected=is_connected
@@ -303,35 +309,6 @@ class GetLateService:
             logger.error(f"Failed to get accounts from GetLate API: {e}")
             # Return empty list on error
             return []
-            
-            accounts = []
-            
-            # Handle different response formats
-            if isinstance(response, dict):
-                accounts_data = response.get('accounts', [])
-            elif isinstance(response, list):
-                accounts_data = response
-            else:
-                logger.warning(f"Unexpected response format: {type(response)}")
-                accounts_data = []
-            
-            for account_data in accounts_data:
-                try:
-                    account = GetLateAccount(
-                        id=account_data.get('id', 'unknown'),
-                        platform=Platform(account_data.get('platform', 'unknown')),
-                        name=account_data.get('name', ''),
-                        username=account_data.get('username'),
-                        connected=account_data.get('connected', True),
-                        last_used=datetime.fromisoformat(account_data['last_used']) if account_data.get('last_used') else None
-                    )
-                    accounts.append(account)
-                except Exception as e:
-                    logger.error(f"Error processing account data: {e}, data: {account_data}")
-                    continue
-            
-            logger.info(f"Retrieved {len(accounts)} connected accounts")
-            return accounts
             
         except GetLateAPIError as e:
             logger.error(f"Failed to get accounts: {e}")
@@ -369,8 +346,19 @@ class GetLateService:
         """
         logger.info(f"create_post called with data: {post_data}")
         logger.info(f"create_post platforms: {post_data.platforms}")
+        
+        # Log the actual data being sent
+        request_data = post_data.dict(exclude_none=True)
+        logger.info(f"Request data being sent to API: {request_data}")
+        
+        # Convert datetime objects to ISO format strings for JSON serialization
+        if 'schedule_at' in request_data and request_data['schedule_at']:
+            if hasattr(request_data['schedule_at'], 'isoformat'):
+                request_data['scheduledFor'] = request_data['schedule_at'].strftime("%Y-%m-%dT%H:%M:%S")
+                del request_data['schedule_at']
+        
         try:
-            response = self._make_request('POST', '/v1/posts', data=post_data.dict(exclude_none=True))
+            response = self._make_request('POST', '/v1/posts', data=request_data)
             logger.info(f"Post created successfully: {response.get('id', 'unknown')}")
             return response
             
@@ -387,7 +375,7 @@ class GetLateService:
                     "platforms": post_data.platforms,
                     "content": post_data.content,
                     "status": "published",
-                    "created_at": datetime.now().isoformat(),
+                    "created_at": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
                     "url": f"https://mock-platform.com/post/{int(time.time())}"
                 }
             else:
@@ -467,13 +455,21 @@ class GetLateService:
         Returns:
             Post result
         """
+        # Get actual Facebook account ID from connected accounts
+        facebook_account = self.get_account_by_platform(Platform.FACEBOOK)
+        account_id = facebook_account.id if facebook_account else "FACEBOOK_ACCOUNT_ID"
+        
         post_data = {
             "content": content,
-            "platforms": [{"platform": "facebook"}]
+            "platforms": [{"platform": "facebook", "accountId": account_id}],
+            "publishNow": True
         }
         
         if media_urls:
             post_data["mediaItems"] = [{"type": "image", "url": url} for url in media_urls]
+        
+        # Set scheduledFor to current time for immediate publishing
+        post_data["scheduledFor"] = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
         
         try:
             result = self.create_post(GetLatePostData(**post_data))
@@ -490,29 +486,45 @@ class GetLateService:
                 "id": f"mock_facebook_post_{int(time.time())}",
                 "platform": "facebook",
                 "status": "published",
-                "created_at": datetime.now().isoformat(),
+                "created_at": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
                 "url": f"https://facebook.com/mock-post-{int(time.time())}"
             }
     
-    def post_to_instagram(self, content: str, media_urls: List[str]) -> Dict[str, Any]:
+    def post_to_instagram(self, content: str, media_urls: List[str], schedule_time: Optional[str] = None) -> Dict[str, Any]:
         """
         Post to Instagram
         
         Args:
             content: Post content
             media_urls: Media URLs (required for Instagram)
+            schedule_time: Optional scheduled posting time
             
         Returns:
             Post result
         """
+        logger.info(f"post_to_instagram called with content: {content[:50]}...")
+        logger.info(f"Media URLs: {media_urls}")
+        
         if not media_urls:
             raise ValueError("Instagram posts require at least one media URL")
         
+        # Get actual Instagram account ID from connected accounts
+        instagram_account = self.get_account_by_platform(Platform.INSTAGRAM)
+        account_id = instagram_account.id if instagram_account else "INSTAGRAM_ACCOUNT_ID"
+        
         post_data = {
             "content": content,
-            "platforms": [{"platform": "instagram"}],
+            "platforms": [{"platform": "instagram", "accountId": account_id}],
             "mediaItems": [{"type": "image", "url": url} for url in media_urls]
         }
+        
+        # Handle scheduling
+        if schedule_time:
+            post_data["scheduledFor"] = schedule_time
+        else:
+            post_data["publishNow"] = True
+        
+        logger.info(f"Post data being sent: {post_data}")
         
         try:
             result = self.create_post(GetLatePostData(**post_data))
@@ -529,26 +541,37 @@ class GetLateService:
                 "id": f"mock_instagram_post_{int(time.time())}",
                 "platform": "instagram",
                 "status": "published",
-                "created_at": datetime.now().isoformat(),
+                "created_at": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
                 "url": f"https://instagram.com/mock-post-{int(time.time())}"
             }
     
-    def post_to_linkedin(self, content: str, media_urls: Optional[List[str]] = None) -> Dict[str, Any]:
+    def post_to_linkedin(self, content: str, media_urls: Optional[List[str]] = None, schedule_time: Optional[str] = None) -> Dict[str, Any]:
         """
         Post to LinkedIn
         
         Args:
             content: Post content
             media_urls: Optional media URLs
+            schedule_time: Optional scheduled posting time
             
         Returns:
             Post result
         """
         logger.info(f"post_to_linkedin called with content: {content[:50]}...")
+        # Get actual LinkedIn account ID from connected accounts
+        linkedin_account = self.get_account_by_platform(Platform.LINKEDIN)
+        account_id = linkedin_account.id if linkedin_account else "LINKEDIN_ACCOUNT_ID"
+        
         post_data = {
             "content": content,
-            "platforms": [{"platform": "linkedin"}]
+            "platforms": [{"platform": "linkedin", "accountId": account_id}]
         }
+        
+        # Handle scheduling
+        if schedule_time:
+            post_data["scheduledFor"] = schedule_time
+        else:
+            post_data["publishNow"] = True
         
         if media_urls:
             post_data["mediaItems"] = [{"type": "image", "url": url} for url in media_urls]
@@ -572,25 +595,36 @@ class GetLateService:
                 "id": f"mock_linkedin_post_{int(time.time())}",
                 "platform": "linkedin",
                 "status": "published",
-                "created_at": datetime.now().isoformat(),
+                "created_at": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
                 "url": f"https://linkedin.com/mock-post-{int(time.time())}"
             }
     
-    def post_to_x(self, content: str, media_urls: Optional[List[str]] = None) -> Dict[str, Any]:
+    def post_to_x(self, content: str, media_urls: Optional[List[str]] = None, schedule_time: Optional[str] = None) -> Dict[str, Any]:
         """
         Post to X (Twitter)
         
         Args:
             content: Post content
             media_urls: Optional media URLs
+            schedule_time: Optional scheduled posting time
             
         Returns:
             Post result
         """
+        # Get actual X account ID from connected accounts
+        x_account = self.get_account_by_platform(Platform.X)
+        account_id = x_account.id if x_account else "X_ACCOUNT_ID"
+        
         post_data = {
             "content": content,
-            "platforms": [{"platform": "x"}]
+            "platforms": [{"platform": "x", "accountId": account_id}]
         }
+        
+        # Handle scheduling
+        if schedule_time:
+            post_data["scheduledFor"] = schedule_time
+        else:
+            post_data["publishNow"] = True
         
         if media_urls:
             post_data["mediaItems"] = [{"type": "image", "url": url} for url in media_urls]
@@ -610,11 +644,11 @@ class GetLateService:
                 "id": f"mock_x_post_{int(time.time())}",
                 "platform": "x",
                 "status": "published",
-                "created_at": datetime.now().isoformat(),
+                "created_at": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
                 "url": f"https://x.com/mock-post-{int(time.time())}"
             }
     
-    def post_to_reddit(self, content: str, subreddit: str, url: Optional[str] = None) -> Dict[str, Any]:
+    def post_to_reddit(self, content: str, subreddit: str, url: Optional[str] = None, schedule_time: Optional[str] = None) -> Dict[str, Any]:
         """
         Post to Reddit
         
@@ -622,6 +656,7 @@ class GetLateService:
             content: Post content
             subreddit: Target subreddit
             url: Optional URL for link posts
+            schedule_time: Optional scheduled posting time
             
         Returns:
             Post result
@@ -636,6 +671,12 @@ class GetLateService:
             }]
         }
         
+        # Handle scheduling
+        if schedule_time:
+            post_data["scheduledFor"] = schedule_time
+        else:
+            post_data["publishNow"] = True
+        
         if url:
             post_data["platforms"][0]["platformSpecificData"]["url"] = url
         
@@ -648,7 +689,7 @@ class GetLateService:
             log_social_media_action('reddit', 'post', False, error=str(e), subreddit=subreddit)
             raise
     
-    def post_to_pinterest(self, content: str, board_id: str, media_urls: List[str], link: Optional[str] = None) -> Dict[str, Any]:
+    def post_to_pinterest(self, content: str, board_id: str, media_urls: List[str], link: Optional[str] = None, schedule_time: Optional[str] = None) -> Dict[str, Any]:
         """
         Post to Pinterest
         
@@ -657,6 +698,7 @@ class GetLateService:
             board_id: Target board ID
             media_urls: Media URLs
             link: Optional destination link
+            schedule_time: Optional scheduled posting time
             
         Returns:
             Post result
@@ -672,8 +714,14 @@ class GetLateService:
                     "boardId": board_id
                 }
             }],
-            "mediaItems": [{"type": "image", "url": url} for url in media_urls]
+            "mediaItems": [{"type": "image", "url": url} for url in media_urls]  # Fixed: use mediaItems instead of media_items
         }
+        
+        # Handle scheduling
+        if schedule_time:
+            post_data["scheduledFor"] = schedule_time
+        else:
+            post_data["publishNow"] = True
         
         if link:
             post_data["platforms"][0]["platformSpecificData"]["link"] = link

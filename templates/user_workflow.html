@@ -399,13 +399,19 @@
         function displayContentPreview(data) {
             // Display analysis if available
             if (data.analysis) {
-                document.getElementById('analysisSection').style.display = 'block';
-                document.getElementById('analysisContent').innerHTML = `
-                    <p><strong>Topic:</strong> ${data.analysis.topic}</p>
-                    <p><strong>Audience:</strong> ${data.analysis.audience}</p>
-                    <p><strong>Tone:</strong> ${data.analysis.tone}</p>
-                    <p><strong>Hashtags:</strong> ${data.analysis.hashtags_count}</p>
-                `;
+                const analysisSection = document.getElementById('analysisSection');
+                const analysisContent = document.getElementById('analysisContent');
+                if (analysisSection) {
+                    analysisSection.style.display = 'block';
+                }
+                if (analysisContent) {
+                    analysisContent.innerHTML = `
+                        <p><strong>Topic:</strong> ${data.analysis.topic}</p>
+                        <p><strong>Audience:</strong> ${data.analysis.audience}</p>
+                        <p><strong>Tone:</strong> ${data.analysis.tone}</p>
+                        <p><strong>Hashtags:</strong> ${data.analysis.hashtags_count}</p>
+                    `;
+                }
             }
 
             // Display platform content
@@ -440,14 +446,20 @@
 
             // Display image if available
             if (data.content.public_images && data.content.public_images.length > 0) {
-                document.getElementById('imageSection').style.display = 'block';
-                const image = data.content.public_images[0];
-                document.getElementById('imagePreview').innerHTML = `
-                    <img src="${image.public_url}" alt="Generated Image" class="image-preview">
-                    <p class="text-muted mt-2">
-                        <small>AI-generated image for your content</small>
-                    </p>
-                `;
+                const imageSection = document.getElementById('imageSection');
+                const imagePreview = document.getElementById('imagePreview');
+                if (imageSection) {
+                    imageSection.style.display = 'block';
+                }
+                if (imagePreview) {
+                    const image = data.content.public_images[0];
+                    imagePreview.innerHTML = `
+                        <img src="${image.public_url}" alt="Generated Image" class="image-preview">
+                        <p class="text-muted mt-2">
+                            <small>AI-generated image for your content</small>
+                        </p>
+                    `;
+                }
             }
         }
 

@@ -119,8 +119,14 @@ class GetLatePostData(BaseModel):
     """GetLate API post data"""
     content: str = Field(..., description="Post content")
     platforms: List[Dict[str, Any]] = Field(..., description="Platform configurations")
-    media_items: Optional[List[Dict[str, Any]]] = Field(None, description="Media items")
+    mediaItems: Optional[List[Dict[str, Any]]] = Field(None, description="Media items")
     schedule_at: Optional[datetime] = Field(None, description="Schedule timestamp")
+    publishNow: Optional[bool] = Field(None, description="Publish immediately")
+    scheduledFor: Optional[str] = Field(None, description="Scheduled time")
+    timezone: Optional[str] = Field(None, description="Timezone for scheduling")
+    isDraft: Optional[bool] = Field(None, description="Save as draft")
+    visibility: Optional[str] = Field(None, description="Post visibility")
+    tags: Optional[List[str]] = Field(None, description="Post tags")
 
 class VoiceInputRequest(BaseModel):
     """Request model for voice input processing"""

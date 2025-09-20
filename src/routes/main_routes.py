@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Request, Form, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
+from typing import Optional
 import uuid
 from datetime import datetime
 import asyncio
@@ -396,7 +397,9 @@ async def modify_image_api(request: Request):
 @router.post("/publish-content")
 async def publish_content_api(
     request: Request,
-    workflow_id: str = Form(...)
+    workflow_id: str = Form(...),
+    publishNow: Optional[str] = Form(None),
+    scheduledFor: Optional[str] = Form(None)
 ):
     """Publish content to social media platforms"""
     try:
@@ -444,10 +447,23 @@ async def publish_content_api(
         # Prepare content data from workflow
         content_data = {
             "platform_content": workflow_data.get("content", {}),
-            "image_ideas": workflow_data.get("generated_images", []),
+            "generated_images": workflow_data.get("generated_images", []),
             "topic": workflow_data.get("topic", ""),
             "analytics": workflow_data.get("analytics", {})
         }
+        
+        # Add scheduling information
+        if publishNow == 'true':
+            content_data["publishNow"] = True
+        elif scheduledFor:
+            # Validate the scheduledFor format (should be YYYY-MM-DDTHH:MM:SS)
+            try:
+                # Parse and reformat to ensure consistent format
+                scheduled_datetime = datetime.fromisoformat(scheduledFor.replace('Z', '+00:00') if 'Z' in scheduledFor else scheduledFor)
+                content_data["scheduledFor"] = scheduled_datetime.strftime("%Y-%m-%dT%H:%M:%S")
+            except (ValueError, AttributeError) as e:
+                logger.error(f"Invalid scheduledFor format: {scheduledFor}, error: {e}")
+                raise HTTPException(status_code=400, detail=f"Invalid scheduledFor format. Expected YYYY-MM-DDTHH:MM:SS, got: {scheduledFor}")
         
         publish_request = PostRequest(
             content_id=workflow_id,

@@ -147,6 +147,9 @@ class UserWorkflowService:
                         'success_rate': len(public_images) / len(content_package["images"]) if content_package["images"] else 0
                     }
                 )
+                
+                # Update the session with the content package that includes public_images
+                self.active_sessions[session_id]["content_package"] = content_package
             
             total_duration = (datetime.now() - start_time).total_seconds()
             logger.info(f"Initial content generated for session {session_id} in {total_duration:.2f}s")
@@ -611,6 +614,11 @@ class UserWorkflowService:
                 )
                 
                 content_package["images"] = [modified_image]
+            
+            # Make images public again if modified
+            if content_package.get("images"):
+                public_images = await self._make_images_public(content_package["images"])
+                content_package["public_images"] = public_images
                 
         except Exception as e:
             logger.error(f"Failed to modify image content: {e}")

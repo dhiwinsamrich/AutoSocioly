@@ -14,6 +14,7 @@ from ..models import (
 from ..services.getlate_service import GetLateService
 from ..services.ai_service import AIService
 from ..services.image_gen import ImageGenerationService
+from ..services.auth_service import AuthService
 from ..utils.logger_config import log_social_media_action
 from ..config import settings
 
@@ -62,6 +63,7 @@ class SocialMediaWorkflow:
         )
         self.ai_service = AIService()
         self.image_gen_service = ImageGenerationService()
+        self.auth_service = AuthService(self.getlate_service)
         self.workflow_id = str(uuid.uuid4())
         self.status = "idle"
         self.current_step = None
@@ -147,8 +149,9 @@ class SocialMediaWorkflow:
                                 image_description,
                                 f"{topic}_{i}"
                             )
-                            if image_data and image_data.get("image_url"):
-                                generated_images.append(image_data["image_url"])
+                            if image_data and image_data.get("filepath"):
+                                # Store the actual file path for ngrok conversion later
+                                generated_images.append(image_data["filepath"])
                                 logger.info(f"Generated image {i+1} for topic: {topic}")
                             else:
                                 logger.warning(f"Failed to generate image {i+1}")
@@ -215,111 +218,16 @@ class SocialMediaWorkflow:
                 message="Content generation failed"
             )
     
-    async def post_content_workflow(
-        self,
-        workflow_id: str,
-        platforms: List[str],
-        selected_variants: Optional[Dict[str, int]] = None,
-        schedule_time: Optional[str] = None
-    ) -> Dict[str, Any]:
-        """
-        Post content to selected platforms
-        
-        Args:
-            workflow_id: Workflow ID
-            platforms: List of platforms to post to
-            selected_variants: Dict mapping platform to variant index
-            schedule_time: Optional schedule time
-            
-        Returns:
-            Posting results
-        """
-        try:
-            workflow = self.workflows.get(workflow_id)
-            if not workflow:
-                raise ValueError(f"Workflow {workflow_id} not found")
-            
-            if workflow['status'] != 'completed':
-                raise ValueError(f"Workflow {workflow_id} is not completed")
-            
-            # Update workflow status
-            workflow['status'] = 'publishing'
-            workflow['progress'] = 80
-            
-            results = {}
-            
-            # Get linked accounts
-            accounts = await self.get_linked_accounts()
-            if not accounts:
-                raise ValueError("No linked social media accounts found")
-            
-            # Post to each platform
-            for platform in platforms:
-                try:
-                    # Get account for platform
-                    account = next((acc for acc in accounts if acc['platform'] == platform), None)
-                    if not account:
-                        results[platform] = {"error": f"No account found for {platform}"}
-                        continue
-                    
-                    # Select variant if specified
-                    if selected_variants and platform in selected_variants:
-                        variant_index = selected_variants[platform]
-                        content = workflow['content']['variants'][variant_index]
-                    else:
-                        # Use first variant as default
-                        content = workflow['content']['variants'][0]
-                    
-                    # Get media files if available
-                    media_files = []
-                    if workflow.get('images'):
-                        media_files = workflow['images']
-                    
-                    # Post using Getlate API
-                    post_result = await self.getlate_service.post_content_with_media(
-                        account_id=account['id'],
-                        content=content['content'],
-                        media_files=media_files,
-                        platform=platform,
-                        scheduled_time=schedule_time,
-                        hashtags=content.get('hashtags', []),
-                        mentions=content.get('mentions', [])
-                    )
-                    
-                    results[platform] = {
-                        "success": True,
-                        "post_id": post_result.get('id'),
-                        "url": post_result.get('url'),
-                        "platform_data": post_result
-                    }
-                    
-                    logger.info(f"Successfully posted to {platform}: {post_result.get('id')}")
-                    
-                except Exception as e:
-                    logger.error(f"Failed to post to {platform}: {e}")
-                    results[platform] = {"error": str(e)}
-            
-            # Update workflow with results
-            workflow['posting_results'] = results
-            workflow['status'] = 'published'
-            workflow['progress'] = 100
-            workflow['completed_at'] = datetime.now().isoformat()
-            
-            return results
-            
-        except Exception as e:
-            logger.error(f"Posting workflow failed: {e}")
-            if workflow_id in self.workflows:
-                self.workflows[workflow_id]['status'] = 'failed'
-                self.workflows[workflow_id]['error'] = str(e)
-            raise
+
     
     async def post_content_workflow(
         self,
         content_data: Dict[str, Any],
         platforms: List[Platform],
         schedule_time: Optional[datetime] = None,
-        use_variants: bool = False
+        use_variants: bool = False,
+        publish_now: Optional[str] = None,
+        scheduled_for: Optional[str] = None
     ) -> PostResponse:
         """
         Complete workflow for posting content to social media platforms
@@ -361,6 +269,17 @@ class SocialMediaWorkflow:
                 "x": "x"
             }
             
+            # Handle scheduling parameters
+            if publish_now == 'true':
+                logger.info("Publishing immediately (publishNow=true)")
+                # Don't add any scheduling parameters
+            elif scheduled_for:
+                logger.info(f"Scheduling post for: {scheduled_for}")
+                # Use the scheduled time from the parameter
+                schedule_time = scheduled_for
+            else:
+                logger.info("No scheduling parameters provided, publishing immediately")
+            
             # Step 2: Post to each platform
             logger.info(f"Available platform content: {list(platform_content.keys())}")
             for platform in platforms:
@@ -399,46 +318,72 @@ class SocialMediaWorkflow:
                     # Post to platform
                     logger.info(f"Posting to {platform.value}")
                     
+                    # Prepare scheduling parameters for individual platform posts
+                    platform_schedule_time = None
+                    if scheduled_for:
+                        platform_schedule_time = scheduled_for
+                    
                     if platform == Platform.FACEBOOK:
                         result = await asyncio.get_event_loop().run_in_executor(
-                            None, self.getlate_service.post_to_facebook, content_text
+                            None, self.getlate_service.post_to_facebook, content_text, platform_schedule_time
                         )
                     
                     elif platform == Platform.INSTAGRAM:
                         # Instagram requires media
                         generated_images = content_data.get("generated_images", [])
                         if generated_images:
-                            # Use actual generated images instead of placeholders
-                            media_urls = generated_images[:1]  # Use first generated image
-                            logger.info(f"Posting to Instagram with media URLs: {media_urls}")
-                            result = await asyncio.get_event_loop().run_in_executor(
-                                None, self.getlate_service.post_to_instagram, content_text, media_urls
-                            )
+                            # Convert local image paths to public URLs using ngrok
+                            public_media_urls = self.auth_service.make_public_media_urls(generated_images[:1])
+                            if public_media_urls:
+                                media_urls = public_media_urls
+                                logger.info(f"Posting to Instagram with public media URLs: {media_urls}")
+                                result = await asyncio.get_event_loop().run_in_executor(
+                                    None, self.getlate_service.post_to_instagram, content_text, media_urls, platform_schedule_time
+                                )
+                            else:
+                                logger.error("Failed to create public URLs for generated images")
+                                raise ValueError("Failed to create public URLs for Instagram media")
                         elif "image_ideas" in content_data and content_data["image_ideas"]:
                             # Fallback: Use placeholder if no generated images but have ideas
                             logger.warning("No generated images available, using placeholder for Instagram")
                             media_urls = ["https://via.placeholder.com/1080x1080.png?text=AI+Generated+Content"]
                             result = await asyncio.get_event_loop().run_in_executor(
-                                None, self.getlate_service.post_to_instagram, content_text, media_urls
+                                None, self.getlate_service.post_to_instagram, content_text, media_urls, platform_schedule_time
                             )
                         else:
                             raise ValueError("Instagram posts require images. Please generate images first.")
                     
                     elif platform == Platform.LINKEDIN:
+                        # LinkedIn can support media
+                        generated_images = content_data.get("generated_images", [])
+                        if generated_images:
+                            # Convert local image paths to public URLs using ngrok
+                            public_media_urls = self.auth_service.make_public_media_urls(generated_images[:1])
+                            media_urls = public_media_urls if public_media_urls else None
+                        else:
+                            media_urls = None
                         result = await asyncio.get_event_loop().run_in_executor(
-                            None, self.getlate_service.post_to_linkedin, content_text
+                            None, self.getlate_service.post_to_linkedin, content_text, media_urls, platform_schedule_time
                         )
                     
                     elif platform == Platform.X:
+                        # X/Twitter can support media
+                        generated_images = content_data.get("generated_images", [])
+                        if generated_images:
+                            # Convert local image paths to public URLs using ngrok
+                            public_media_urls = self.auth_service.make_public_media_urls(generated_images[:1])
+                            media_urls = public_media_urls if public_media_urls else None
+                        else:
+                            media_urls = None
                         result = await asyncio.get_event_loop().run_in_executor(
-                            None, self.getlate_service.post_to_x, content_text
+                            None, self.getlate_service.post_to_x, content_text, media_urls, platform_schedule_time
                         )
                     
                     elif platform == Platform.REDDIT:
                         # Reddit requires subreddit
                         subreddit = self._get_default_subreddit(topic=content_data.get("topic", ""))
                         result = await asyncio.get_event_loop().run_in_executor(
-                            None, self.getlate_service.post_to_reddit, content_text, subreddit
+                            None, self.getlate_service.post_to_reddit, content_text, subreddit, platform_schedule_time
                         )
                     
                     elif platform == Platform.PINTEREST:
@@ -446,20 +391,25 @@ class SocialMediaWorkflow:
                         board_id = "default_board"  # This would come from configuration
                         generated_images = content_data.get("generated_images", [])
                         if generated_images:
-                            # Use actual generated images
-                            media_urls = generated_images[:1]  # Use first generated image
-                            logger.info(f"Posting to Pinterest with media URLs: {media_urls}")
-                            result = await asyncio.get_event_loop().run_in_executor(
-                                None, self.getlate_service.post_to_pinterest, 
-                                content_text, board_id, media_urls
-                            )
+                            # Convert local image paths to public URLs using ngrok
+                            public_media_urls = self.auth_service.make_public_media_urls(generated_images[:1])
+                            if public_media_urls:
+                                media_urls = public_media_urls
+                                logger.info(f"Posting to Pinterest with public media URLs: {media_urls}")
+                                result = await asyncio.get_event_loop().run_in_executor(
+                                    None, self.getlate_service.post_to_pinterest, 
+                                    content_text, board_id, media_urls, platform_schedule_time
+                                )
+                            else:
+                                logger.error("Failed to create public URLs for generated images")
+                                raise ValueError("Failed to create public URLs for Pinterest media")
                         elif "image_ideas" in content_data and content_data["image_ideas"]:
                             # Fallback: Use placeholder if no generated images
                             logger.warning("No generated images available, using placeholder for Pinterest")
                             media_urls = ["https://via.placeholder.com/1000x1500.png?text=AI+Generated+Content"]
                             result = await asyncio.get_event_loop().run_in_executor(
                                 None, self.getlate_service.post_to_pinterest, 
-                                content_text, board_id, media_urls
+                                content_text, board_id, media_urls, platform_schedule_time
                             )
                         else:
                             raise ValueError("Pinterest posts require images. Please generate images first.")
